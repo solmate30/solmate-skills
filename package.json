@@ -17,6 +17,14 @@
   ],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solmate30/solmate-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/solmate30/solmate-skills/issues"
+  },
+  "homepage": "https://github.com/solmate30/solmate-skills#readme",
   "engines": {
     "node": ">=14.0.0"
   }
