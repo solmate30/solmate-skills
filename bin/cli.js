@@ -35,7 +35,7 @@ function listSkills() {
     const skills = getAvailableSkills();
     console.log('\nAvailable skills to install:');
     skills.forEach(skill => console.log(` - ${skill}`));
-    console.log('\nUsage: npx solmate-skills install <skill-name> | install-all\n');
+    console.log('\nUsage: npx solmate-skills install <skill-name> | all\n');
 }
 
 function installSkill(skillName) {
