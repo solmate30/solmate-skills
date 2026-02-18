@@ -1,0 +1,23 @@
+{
+  "name": "solmate-skills",
+  "version": "1.0.0",
+  "description": "Curated skills for Solmate projects",
+  "main": "bin/cli.js",
+  "bin": {
+    "solmate-skills": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "skills",
+    "solmate",
+    "antigravity",
+    "automation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
