@@ -9,8 +9,7 @@ This skill ensures the AI agent follows the standard operating procedures for a 
 
 ## 1. Core Reference Document
 
-The AI MUST strictly follow the protocols defined in:
-- **Team Member Guide**: [11_COLLABORATION_GUIDE.md](../../../docs/03_Technical_Specs/11_COLLABORATION_GUIDE.md)
+The AI MUST strictly follow the protocols defined in this skill. A detailed copy of the guide is maintained in section 4 for project-agnostic execution.
 
 ## 2. Mandatory Protocols
 
@@ -39,3 +38,37 @@ Before finishing a "Member" task, confirm:
 1. "Did I use the correct branch name and commit format?"
 2. "Did I run a typecheck if applicable?"
 3. "Did I describe the changes clearly for the Team Lead's review?"
+
+## 4. Team Member Detailed Guide (Internal Copy)
+
+### 4.1. Initial Setup
+- **Clone & Install**: Clone the repo and run `npm install` in the `web/` directory.
+- **Environment**: Create `web/.env.local` based on `.env.example`. Request common secrets (Turso, Better Auth, OAuth keys) from the Team Lead.
+
+### 4.2. Branching & Commits
+- **Always branch from latest `main`**:
+    ```bash
+    git checkout main && git pull origin main
+    git checkout -b feat/your-feature
+    ```
+- **Commit Format**: `type(scope): 한국어 설명`
+    - Use `feat`, `fix`, `chore`, `refactor`, `docs`, `style`.
+    - Example: `feat(auth): 로그인 유효성 검사 추가`
+
+### 4.3. Development & PR
+- **Typecheck**: Always run `npm run typecheck` before pushing.
+- **Pushing**: `git push origin [branch-name]`
+- **PR Creation**: Target `main`. Include a clear description of changes and a checklist of verification steps.
+- **Conflicts**: Prefer `rebase` over `merge` to keep history clean.
+    ```bash
+    git fetch origin && git rebase origin/main
+    ```
+
+### 4.4. Project Structure (Typical)
+- `web/app/routes/`: Page routes.
+- `web/app/components/`: Shared UI components.
+- `web/app/db/`: Drizzle schemas and client.
+- `web/app/services/`: External integrations (AI, etc.).
+
+---
+*Note: This skill integrates the protocols from 11_COLLABORATION_GUIDE.md to ensure portability across different projects.*
