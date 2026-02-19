@@ -65,11 +65,13 @@
 - **배포 설정**: 배포 서비스의 Root Directory를 **App Directory(`web/`)** 로 지정하거나, Build Command를 `cd web && npm run build` 등으로 설정한다.
 
 ## 4. Skills & AI Capabilities
-AI 에이전트는 본 프로젝트에 설치된 다음 **14개 스킬**을 활용하여 작업을 수행하며, 모든 작업 결과물은 이 스킬들의 검증 가이드를 통과해야 한다.
+AI 에이전트는 본 프로젝트에 설치된 다음 **16개 스킬**을 활용하여 작업을 수행하며, 모든 작업 결과물은 이 스킬들의 검증 가이드를 통과해야 한다.
 
 | 카테고리 | 스킬명 | 주요 역할 |
 | :--- | :--- | :--- |
-| **운영 및 거버넌스** | `manage-collaboration` | 팀장/팀원 가이드 기반 협업 표준(브랜치, PR, 승인 등) 강제 |
+| **운영 및 거버넌스** | `role-team-member` | 팀원 가이드 기반 협업 표준(브랜치, 커밋, PR 등) 준수 |
+| | `role-team-lead` | 팀장 가이드 기반 프로젝트 관리(승인, 배포, DB 등) 책임 |
+| | `manage-collaboration` | 팀장/팀원 가이드 기반 협업 표준(브랜치, PR, 승인 등) 강제 |
 | | `manage-docs` | 5단계 문서 구조 및 메타데이터 표준 관리 |
 | | `manage-skills` | 검증 스킬의 누락 탐지 및 최신화 (Self-Maint.) |
 | **품질 검증 (QA)** | `verify-implementation` | 모든 `verify-*` 스킬의 통합 순차 실행 및 보고 (Template) |
