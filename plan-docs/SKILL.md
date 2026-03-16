@@ -34,6 +34,7 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 - `01_VISION_CORE.md` — 핵심 가치, 타겟 오디언스
 - `02_LEAN_CANVAS.md` — 문제, 솔루션, UVP, 지표
 - `03_PRODUCT_SPECS.md` — MVP 정의, NFR
+- `04_USER_RESEARCH.md` — 사용자 인터뷰, 페르소나, 행동 패턴 (선택, 권장)
 
 **Layer 2 — UI_Screens**
 - `00_SCREEN_FLOW.md` — 전체 사용자 여정
@@ -45,6 +46,7 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 ### Phase 1 — Project Definition (필수)
 
 1. **Why (Problem & Goal)**: 핵심 문제는? 성공 시 세상의 변화는? 단/장기 목표는?
+0. **User Research 보유 여부**: 실제 사용자 인터뷰나 관찰 데이터가 있는가? 있다면 `04_USER_RESEARCH.md`를 먼저 작성하고 이후 문서의 기반으로 활용한다.
 2. **Who (Target User)**: 핵심 고객은? Pain Point는? 현재 해결 방식은?
 3. **What (Value & Differentiation)**: UVP는? 경쟁 대비 차별점은? (Novelty Check)
 4. **How (Feasibility)**: MVP 필수 항목은? 플랫폼 제약은? 법적/보안 우려는? (Functionality Check)
@@ -68,6 +70,45 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 16. **The Future Weapon**: 6~18개월 뒤 시장에서 싸울 강력한 무기는 무엇인가?
 
 ## 4. Templates
+
+### Template 0 — User Research (`04_USER_RESEARCH.md`)
+
+```
+# User Research
+> Created: YYYY-MM-DD HH:mm
+> Last Updated: YYYY-MM-DD HH:mm
+
+## 1. 리서치 개요
+- 목적:
+- 방법: (인터뷰 / 설문 / 관찰 / 사용성 테스트)
+- 대상: N명, [직군/연령/특성]
+- 기간:
+
+## 2. 페르소나
+
+### Persona A — [이름/유형]
+- 배경:
+- 주요 목표:
+- Pain Point:
+- 현재 해결 방식:
+- 우리 제품에 기대하는 것:
+
+## 3. 핵심 인사이트
+(인터뷰/관찰에서 반복적으로 나온 패턴 3-5가지)
+- Insight 1:
+- Insight 2:
+- Insight 3:
+
+## 4. 검증된 가정 / 반증된 가정
+| 가정 | 결과 | 근거 |
+|:---|:---:|:---|
+| | 검증됨 / 반증됨 | |
+
+## 5. Related Documents
+- **Concept_Design**: [Vision & Core Values](./01_VISION_CORE.md) - 타겟 오디언스 정의
+- **Concept_Design**: [Lean Canvas](./02_LEAN_CANVAS.md) - Pain Point 및 솔루션 기반
+- **Concept_Design**: [Product Specs](./03_PRODUCT_SPECS.md) - MVP 기능 우선순위 기반
+```
 
 ### Template A — Concept_Design
 

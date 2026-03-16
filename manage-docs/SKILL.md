@@ -1,89 +1,122 @@
 ---
 name: manage-docs
-description: Router for project documentation. Delegates to plan-docs (Layer 1-2: product vision, lean canvas, UI screens) or dev-docs (Layer 3-5: technical specs, logic, QA). Also defines shared conventions used by both skills. Use when unsure which documentation skill to use, or to reference common formatting rules.
+description: Create and manage project documentation according to the 365 Principle (3 Investor Lenses, 6 Rubrics, 5 Documentation Layers) with mandatory cross-layer context linking. Use when the user asks to document features, update documentation, create spec files, or manage project docs. Always include "Related Documents" sections to maintain context continuity across layers.
 ---
 
-# Documentation Management (Router)
+# Documentation Management Skill
 
-This skill routes to the correct documentation sub-skill and defines **shared conventions** used by both.
+이 스킬은 모든 프로젝트 문서의 **마스터 규칙**을 정의한다. 실제 문서 작성은 하위 스킬(`plan-docs`, `dev-docs`, `pitch-deck`, `business-plan`)이 담당하며, 이 스킬은 그것들이 따르는 공통 기준을 정의한다.
 
-## 1. 어떤 스킬을 써야 하는가?
+> **365 Principle** -- 프로젝트 품질과 시장 경쟁력을 보장하는 통합 프레임워크.
+>
+> | 숫자 | 의미 | 내용 |
+> | :--- | :--- | :--- |
+> | **3** | Investor Lenses | Leverage, Realistic Money Flow, Defensibility |
+> | **6** | Global Rubric | Functionality, Impact, Novelty, UX, Open-source, Business Plan |
+> | **5** | Documentation Layers | Concept_Design, UI_Screens, Technical_Specs, Logic_Progress, QA_Validation |
 
-| 작업 내용 | 사용 스킬 |
-|:---|:---|
-| 제품 비전, Lean Canvas, 제품 기능 명세 | **plan-docs** |
-| UI 디자인 시스템, 화면 흐름, 프로토타입 리뷰 | **plan-docs** |
-| DB 스키마, API 명세, 개발 원칙 | **dev-docs** |
-| 로드맵, 백로그, 비즈니스 로직 | **dev-docs** |
-| 테스트 시나리오, QA 체크리스트 | **dev-docs** |
+## 0. Global Rubric (6 Core Criteria)
 
-## 2. 공통 규칙 (plan-docs, dev-docs 모두 적용)
+모든 프로젝트는 아래 6가지 기준으로 설계·검증되어야 한다.
 
-### 2.1. 기본 규칙
+1. **Functionality**: 실제로 돌아가는가? 코드가 깔끔한가?
+2. **Potential Impact**: TAM이 큰가? 생태계 기여도는?
+3. **Novelty**: 기존에 없던 접근인가? 차별점이 명확한가?
+4. **UX**: 성능을 UX로 전환했는가? (400ms 반응성 등)
+5. **Open-source**: 다른 빌더가 쓸 수 있는가?
+6. **Business Plan**: 지속 가능한 수익 모델이 있는가?
+
+## 1. 공통 규칙
 
 1. 이모지 금지. 전문적이고 명확한 텍스트로만 소통한다.
-2. Ask before Write: 초안 작성 전 핵심 질문을 던지고 답변을 바탕으로 작성한다.
-3. 기존 문서가 있으면 반드시 먼저 읽고 컨텍스트와 스타일을 유지하며 업데이트한다.
+2. **Ask before Write**: 초안 작성 전 핵심 질문을 먼저 던진다.
+3. 기존 문서가 있으면 먼저 읽고 컨텍스트를 유지하며 업데이트한다. 덮어쓰지 않는다.
 
-### 2.2. 파일 네이밍
+## 2. 5-Layer 구조
 
-2자리 순번 접두사 사용: `01_VISION_CORE.md`, `02_API_SPECS.md`
+| 순번 | 폴더명 | 역할 |
+| :--- | :--- | :--- |
+| 1 | `docs/01_Concept_Design/` | 비전, 제품 기획, 비즈니스 전략 |
+| 2 | `docs/02_UI_Screens/` | UI 디자인 시스템, 화면 흐름, 프로토타입 리뷰 |
+| 3 | `docs/03_Technical_Specs/` | DB 스키마, API 명세, 개발 원칙 |
+| 4 | `docs/04_Logic_Progress/` | 로드맵, 백로그, 비즈니스 로직, 알고리즘 |
+| 5 | `docs/05_QA_Validation/` | 테스트 시나리오, QA 체크리스트, 검증 보고서 |
 
-### 2.3. 메타데이터 (필수)
+**Context Flow**:
+- Concept_Design → UI_Screens (디자인 가이드라인)
+- Concept_Design → Technical_Specs (기능 명세 기반)
+- UI_Screens → Technical_Specs (구현 요구사항)
+- Technical_Specs → Logic_Progress (비즈니스 로직 기반)
+- 모든 레이어 → QA_Validation (테스트 시나리오 기반)
+
+## 3. 레이어 판별
+
+- 기획·제품 정의 → **01_Concept_Design**
+- UI 디자인·화면 흐름 → **02_UI_Screens**
+- DB, API, 개발 원칙 → **03_Technical_Specs**
+- 로드맵·백로그·비즈니스 로직 → **04_Logic_Progress**
+- 테스트·QA 보고 → **05_QA_Validation**
+
+## 4. 파일 작성 규칙
+
+### 네이밍
+
+파일명 앞에 2자리 순번을 붙인다: `01_VISION_CORE.md`, `02_API_SPECS.md`
+
+### 메타데이터 (필수)
 
 모든 문서 최상단:
-
 ```markdown
 # [Document Title]
 > Created: YYYY-MM-DD HH:mm
 > Last Updated: YYYY-MM-DD HH:mm
 ```
 
-Last Updated는 문서 수정 시마다 갱신한다.
+### Rubric-First Writing
 
-### 2.4. Related Documents 섹션 (필수)
+문서 성격에 맞는 루브릭 항목을 본문에서 언급한다. QA_Validation 레이어는 6개 루브릭 전체 테이블이 필수다.
 
-모든 문서 끝에 포함. 상대 경로 사용. 관계를 간략히 설명한다.
+### Related Documents 섹션 (필수)
 
-```
+모든 문서 끝에 관련 문서 링크를 포함한다.
+
+```markdown
 ## X. Related Documents
-- **Layer Name**: [Document Title](../layer-directory/filename.md) - 관계 설명
+- **Layer Name**: [Document Title](./relative/path.md) - 관계 설명
 ```
 
-경로 예시:
+링크 규칙:
+- 반드시 상대 경로 사용
 - 같은 레이어: `./02_LEAN_CANVAS.md`
 - 다른 레이어: `../01_Concept_Design/03_PRODUCT_SPECS.md`
+- 각 링크에 관계 설명 포함
 
-### 2.5. Rubric-First Writing
+## 5. Context Linking 규칙
 
-모든 문서는 **6 Core Rubrics** 관련 항목을 포함한다. Logic 문서라도 UX(Latency)와 Functionality(Edge cases)를 언급한다.
+**Concept_Design**: 같은 레이어 문서 + 관련 UI_Screens/Technical_Specs
 
-## 3. 5-Layer 구조 (전체 개요)
+**UI_Screens**: Concept_Design (Product Specs, UI Design) + 이전/다음 UI_Screens + Technical_Specs
 
-| Layer | Directory | Sub-skill |
-|:---|:---|:---|
-| Concept_Design | `docs/01_Concept_Design/` | plan-docs |
-| UI_Screens | `docs/02_UI_Screens/` | plan-docs |
-| Technical_Specs | `docs/03_Technical_Specs/` | dev-docs |
-| Logic_Progress | `docs/04_Logic_Progress/` | dev-docs |
-| QA_Validation | `docs/05_QA_Validation/` | dev-docs |
+**Technical_Specs**: Concept_Design + UI_Screens + 다른 Technical_Specs (DB ↔ API) + Logic_Progress
 
-## 4. 365 Principle
+**Logic_Progress**: Concept_Design + UI_Screens + Technical_Specs (DB, API) + QA_Validation
 
-| 숫자 | 의미 | 내용 |
-|:---|:---|:---|
-| **3** | Investor Lenses | Leverage, Realistic Money Flow, Defensibility |
-| **6** | Global Rubric | Functionality, Impact, Novelty, UX, Open-source, Business Plan |
-| **5** | Documentation Layers | Concept_Design, UI_Screens, Technical_Specs, Logic_Progress, QA_Validation |
+**QA_Validation**: 모든 상위 레이어 참조
 
-## 5. Context Continuity Checklist
+## 6. 스킬 위임 테이블
 
-문서 생성/수정 시 확인:
+| 작업 | 스킬 |
+|:---|:---|
+| Layer 1-2 기획/UI 문서 | `plan-docs` |
+| Layer 3-5 기술/로직/QA 문서 | `dev-docs` |
+| 피치덱 | `pitch-deck` |
+| 사업계획서 | `business-plan` |
+| 전체 파이프라인 진행 | `product-workflow` |
+| 문서 구조 검증 | `verify-docs` |
 
-- [ ] 관련 Concept_Design 문서가 링크되어 있는가?
-- [ ] 관련 UI_Screens 문서가 링크되어 있는가? (있을 경우)
-- [ ] 관련 Technical_Specs 문서가 링크되어 있는가? (있을 경우)
-- [ ] 관련 Logic_Progress 문서가 링크되어 있는가? (있을 경우)
-- [ ] 관련 QA_Validation 문서가 링크되어 있는가? (있을 경우)
-- [ ] 링크가 상대 경로로 정확하게 작성되었는가?
-- [ ] 각 링크에 관계 설명이 포함되어 있는가?
+## 7. Best Practices
+
+- **Keep it minimal**: 불필요한 내용 없이 정확하게.
+- **Maintain context continuity**: Related Documents 섹션으로 레이어 간 연결 유지.
+- **Preserve existing content**: 기존 문서 덮어쓰지 않기.
+- **Update Last Updated**: 문서 수정 시 타임스탬프 갱신.
