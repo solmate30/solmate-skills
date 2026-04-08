@@ -10,8 +10,8 @@ You don't need to install this package globally. Simply use `npx`:
 # List available skills
 npx solmate-skills list
 
-# Install all available skills
-npx solmate-skills install all
+# Install all available skills (use @latest to bypass npx cache)
+npx solmate-skills@latest install all
 
 # Install a specific skill
 npx solmate-skills install manage-docs
