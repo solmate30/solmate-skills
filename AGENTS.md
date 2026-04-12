@@ -38,8 +38,13 @@
 - **포함 예**: `DB_SCHEMA.md`, `API_SPECS.md`, `STORAGE_POLICY.md`, 구현 가이드
 
 ### 2.4. `docs/04_Logic_Progress` — 로직·진행
-- **역할**: 백로그(진행 상태)와 비즈니스 로직·상태 관리·알고리즘 결합. UI와 데이터(DB/API) 연결 설계.
-- **포함 예**: `00_BACKLOG.md`, `00_ARCHIVE/`, 상태 머신·알고리즘 설계 문서
+- **역할**: 백로그(진행 상태), 프로젝트 로드맵, 상세 개발 일정 관리 및 비즈니스 로직·상태 관리 설계.
+- **필수 준수**: 모든 **구현 일정, 실행 계획(Execution Plan), 백로그** 정리는 반드시 이 폴더 내에서 수행해야 하며, 타 폴더(01~03)에 생성을 금지한다.
+- **표준 파일명**:
+  - `00_BACKLOG.md`: 실무 단위의 작업 목록 및 진행 상태 관리 (ToDo/Doing/Done)
+  - `01_ROADMAP.md`: 프로젝트 전체 마일스톤 및 주요 단계별 일정
+  - `02_EXECUTION_PLAN.md`: 구체적인 기술적 실행 전략 및 타임라인
+- **포함 예**: 상태 머신·알고리즘 설계 문서, `00_ARCHIVE/` (완료된 로직 보관)
 
 ### 2.5. `docs/05_QA_Validation` — QA·검증
 - **역할**: 구현 기능의 검증. 단순 테스트를 넘어 시스템 검증.
@@ -65,30 +70,59 @@
 - **배포 설정**: 배포 서비스의 Root Directory를 **App Directory(`web/`)** 로 지정하거나, Build Command를 `cd web && npm run build` 등으로 설정한다.
 
 ## 4. Skills & AI Capabilities
-AI 에이전트는 본 프로젝트에 설치된 다음 **16개 스킬**을 활용하여 작업을 수행하며, 모든 작업 결과물은 이 스킬들의 검증 가이드를 통과해야 한다.
+AI 에이전트는 본 프로젝트에 설치된 다음 **24개 스킬**을 활용하여 작업을 수행하며, 모든 작업 결과물은 이 스킬들의 검증 가이드를 통과해야 한다.
 
 | 카테고리 | 스킬명 | 주요 역할 |
 | :--- | :--- | :--- |
 | **운영 및 거버넌스** | `role-team-member` | 팀원 가이드 기반 협업 표준(브랜치, 커밋, PR 등) 준수 |
 | | `role-team-lead` | 팀장 가이드 기반 프로젝트 관리(승인, 배포, DB 등) 책임 |
 | | `manage-collaboration` | 팀장/팀원 가이드 기반 협업 표준(브랜치, PR, 승인 등) 강제 |
-| | `manage-docs` | 5단계 문서 구조 및 메타데이터 표준 관리 |
+| | `manage-decisions` | 결정 유형별 질문 템플릿으로 대화 기반 의사결정 진행 |
+| | `rules-docs` | 5단계 문서 구조 및 메타데이터 표준 관리 |
 | | `manage-skills` | 검증 스킬의 누락 탐지 및 최신화 (Self-Maint.) |
+| | `rules-workflow` | 기능 구현 전 과정(18단계)의 워크플로우 가이드 |
+| **문서 작성** | `docs-plan` | Layer 1-2 기획·UI 문서 작성 (비전, 린캔버스, UI 스크린) |
+| | `docs-dev` | Layer 3-5 기술·진행·QA 문서 작성 (DB 스키마, API, 백로그) |
+| | `docs-pitch` | 피치덱 작성 (Markdown / Reveal.js HTML) |
+| | `docs-business` | 사업계획서 작성 (정부 지원, 투자 심사, 파트너십 목적별 구성) |
 | **품질 검증 (QA)** | `verify-implementation` | 모든 `verify-*` 스킬의 통합 순차 실행 및 보고 (Template) |
 | | `verify-docs` | 문서 레이어 정합성 및 네이밍/메타데이터 검증 (Template) |
 | | `verify-drizzle-schema` | Drizzle 스키마 설계 정합성 및 기술 표준 검증 (Template) |
-| **개발 및 설계** | `dev-conventions` | 코딩 표준 및 프로젝트 컨벤션 준수 여부 확인 |
-| | `design-md` | 디자인 명세 및 기획 문서 작성 최적화 |
-| | `react-components` | UI 컴포넌트 설계 및 구현 표준 가이드 |
-| | `shadcn-ui` | shadcn/ui 라이브러리 활용 및 커스텀 가이드 |
-| **워크플로우** | `product-workflow` | 기획→UI→Stitch→React→개발문서 전체 파이프라인 오케스트레이션 |
-| | `business-plan` | 사업계획서 작성 (정부 지원, 투자 심사, 파트너십 목적별 구성) |
-| **특수 도구** | `stitch-loop` | UI 디자인-코드 간의 반복 작업 고도화 |
-| | `remotion` | 비디오 프로그래밍을 통한 시각화 자료 생성 |
-| | `obsidian-sync` | 지식 베이스(Obsidian)와의 동기화 및 관리 |
-| | `enhance-prompt` | AI 프롬프트 최적화 및 페르소나 강화 |
+| | `verify-security` | OWASP Top 10 기준 보안 취약점 점검 (인증, 인젝션, 시크릿 노출 등) |
+| | `verify-performance` | Lighthouse·Core Web Vitals 기준 성능 점검 (LCP, CLS, 번들, 이미지) |
+| | `verify-code` | PR 전 코드 품질 종합 리뷰 (로직, 타입, 중복, 사이드 이펙트) |
+| **개발 및 설계** | `rules-dev` | 코딩 표준 및 프로젝트 컨벤션 준수 여부 확인 |
+| | `rules-react` | UI 컴포넌트 설계 및 구현 표준 가이드 |
+| | `rules-product` | 기획→UI→React→개발문서 전체 파이프라인 오케스트레이션 |
+| **특수 도구(Tools)** | `tools-shadcn` | shadcn/ui 라이브러리 활용 및 커스텀 가이드 |
+| | `tools-obsidian` | 지식 베이스(Obsidian)와의 동기화 및 관리 |
+| **외부 확장(External)** | `ext-awesome-design` | 프리미엄 디자인 시스템 및 마크다운 템플릿 라이브러리 |
+| | `ext-k-skill` | 한국 특화 전문 스킬 모음 (법률, 배송, 교통 등) |
 
 ---
 
-## 5. 최종 약속
+## 5. 스킬 능동 제안 원칙 (Proactive Skill Suggestion)
+
+AI 에이전트는 사용자가 스킬을 호출하지 않아도, 아래 상황을 스스로 인식하고 관련 스킬을 **먼저 제안**한다. 제안은 강제가 아니며, 사용자가 거절하면 즉시 중단한다.
+
+| 감지 상황 | 제안 스킬 | 제안 문구 예시 |
+| :--- | :--- | :--- |
+| 기술 선택, DB/API/아키텍처 설계 논의 시작 | `manage-decisions` | "결정이 필요한 상황입니다. `/manage-decisions`로 유형별 질문을 진행할까요?" |
+| 보안·인증·인가·환경변수 관련 코드 작성 전후 | `verify-security` | "보안 관련 변경입니다. `/verify-security`로 OWASP 점검을 실행할까요?" |
+| 성능·렌더링·이미지·번들 관련 작업 완료 후 | `verify-performance` | "성능 영향이 있을 수 있습니다. `/verify-performance`로 Lighthouse 점검을 실행할까요?" |
+| PR 생성 전, 코드 변경 완료 후 | `verify-code`, `verify-implementation` | "PR 전 최종 점검입니다. `/verify-implementation`으로 전체 검증을 실행할까요?" |
+| 기획·UI 문서 작성 요청 | `docs-plan` | "Layer 1-2 문서 작성은 `/docs-plan`을 사용하세요." |
+| DB 스키마·API 명세·백로그 작성 요청 | `docs-dev` | "Layer 3-5 문서 작성은 `/docs-dev`를 사용하세요." |
+| Drizzle 스키마 파일 수정 | `verify-drizzle-schema` | "스키마 변경 후 `/verify-drizzle-schema`로 정합성을 검증하세요." |
+| 기능 구현 시작 전 | `rules-workflow` | "기능 구현은 `/rules-workflow` 18단계 워크플로우로 진행하는 것을 권장합니다." |
+| 새 프로젝트 또는 단계 전환 | `rules-product` | "현재 단계를 진단하려면 `/rules-product`를 실행하세요." |
+
+**제안 방식**:
+- 현재 대화 맥락에서 위 상황이 감지되면, 작업 진행 **전** 한 줄로 스킬 실행을 제안한다.
+- 사용자가 이미 스킬을 실행 중이거나 "그냥 진행해줘"라고 하면 제안을 생략하고 작업을 계속한다.
+- 같은 스킬을 동일 대화에서 두 번 이상 중복 제안하지 않는다.
+
+---
+
+## 6. 최종 약속
 AI 에이전트는 본 **AGENTS.md**를 모든 판단의 최우선 근거로 삼는다. 문서에 정의되지 않은 작업을 수행할 경우 반드시 사용자에게 구현 전 문서 업데이트 필요성을 먼저 확인한다.
