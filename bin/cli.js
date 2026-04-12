@@ -2,9 +2,16 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const IGNORED_FOLDERS = ['bin', 'node_modules', '.git', '.github', '.gemini', '.agent'];
 const IGNORED_FILES = ['package.json', 'package-lock.json', 'AGENTS.md', 'SKILL.md', 'init-skills.sh', 'README.md', '.DS_Store', 'old_AGENTS.md'];
+
+// Skills that require a post-install script to be executed after copying.
+// Key: skill name, Value: path relative to the skill folder.
+const POST_INSTALL_SCRIPTS = {
+    'hooks': 'install.sh',
+};
 
 const packageRoot = path.join(__dirname, '..');
 const targetProjectRoot = process.cwd();
@@ -58,6 +65,19 @@ function installSkill(skillName) {
     console.log(`Installing ${skillName}...`);
     copyFolderSync(sourcePath, destPath);
     console.log(`Successfully installed ${skillName} to .agent/skills/${skillName}`);
+
+    // Run post-install script if defined for this skill
+    if (POST_INSTALL_SCRIPTS[skillName]) {
+        const scriptPath = path.join(destPath, POST_INSTALL_SCRIPTS[skillName]);
+        if (fs.existsSync(scriptPath)) {
+            console.log(`Running post-install for ${skillName}...`);
+            try {
+                execSync(`bash "${scriptPath}"`, { stdio: 'inherit', cwd: targetProjectRoot });
+            } catch (err) {
+                console.error(`Warning: post-install script for ${skillName} exited with an error.`);
+            }
+        }
+    }
 }
 
 const args = process.argv.slice(2);
