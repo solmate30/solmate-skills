@@ -22,13 +22,16 @@ mkdir -p "$HOOKS_DIR"
 echo "[1/4] Created $HOOKS_DIR"
 
 # --- Step 2: Copy hook scripts ---
-cp "$SCRIPT_DIR/suggest-skills.sh" "$HOOKS_DIR/solmate-suggest.sh"
-cp "$SCRIPT_DIR/watch-files.sh"    "$HOOKS_DIR/solmate-watch.sh"
+cp "$SCRIPT_DIR/suggest-skills.sh"   "$HOOKS_DIR/solmate-suggest.sh"
+cp "$SCRIPT_DIR/watch-files.sh"      "$HOOKS_DIR/solmate-watch.sh"
+cp "$SCRIPT_DIR/verify-suggest.sh"   "$HOOKS_DIR/solmate-verify-suggest.sh"
 chmod +x "$HOOKS_DIR/solmate-suggest.sh"
 chmod +x "$HOOKS_DIR/solmate-watch.sh"
+chmod +x "$HOOKS_DIR/solmate-verify-suggest.sh"
 echo "[2/4] Copied hook scripts:"
-echo "      .claude/hooks/solmate-suggest.sh  (UserPromptSubmit)"
-echo "      .claude/hooks/solmate-watch.sh    (PreToolUse)"
+echo "      .claude/hooks/solmate-suggest.sh         (UserPromptSubmit)"
+echo "      .claude/hooks/solmate-watch.sh           (PreToolUse)"
+echo "      .claude/hooks/solmate-verify-suggest.sh  (Stop)"
 
 # --- Step 3: Merge hook config into settings.json ---
 echo "[3/4] Merging hook config into $SETTINGS_FILE"
@@ -96,6 +99,28 @@ if not already_has_watch:
 else:
     print("  Skipped (already exists): PreToolUse → solmate-watch.sh")
 
+# --- Stop hook ---
+verify_cmd = "bash .claude/hooks/solmate-verify-suggest.sh"
+stop_hooks = hooks.setdefault('Stop', [])
+
+already_has_verify = any(
+    h.get('command') == verify_cmd
+    for entry in stop_hooks
+    for h in entry.get('hooks', [])
+)
+if not already_has_verify:
+    stop_hooks.append({
+        "hooks": [{
+            "type": "command",
+            "command": verify_cmd,
+            "timeout": 10,
+            "statusMessage": "변경 파일 분석 중..."
+        }]
+    })
+    print("  Added: Stop → solmate-verify-suggest.sh")
+else:
+    print("  Skipped (already exists): Stop → solmate-verify-suggest.sh")
+
 # Write back
 os.makedirs(os.path.dirname(settings_path), exist_ok=True)
 with open(settings_path, 'w') as f:
@@ -124,8 +149,9 @@ echo ""
 echo "Done. Hooks are active in this project."
 echo ""
 echo "What was installed:"
-echo "  UserPromptSubmit  → detects keywords in your prompts → suggests relevant skills"
-echo "  PreToolUse        → detects file patterns being edited → suggests relevant skills"
+echo "  UserPromptSubmit  → 프롬프트 키워드 감지 → 관련 스킬 제안"
+echo "  PreToolUse        → 편집 중인 파일 패턴 감지 → 관련 스킬 제안"
+echo "  Stop              → 작업 완료 후 변경 파일 분석 → verify-* 스킬 실행 시점 알림"
 echo ""
 echo "To review or disable hooks, open /hooks in Claude Code."
 echo "To uninstall, remove .claude/hooks/ and the 'hooks' section from .claude/settings.json."
