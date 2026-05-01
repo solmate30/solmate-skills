@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/verify-suggest.sh",
+            "timeout": 10,
+            "statusMessage": "변경 파일 분석 중..."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+.claude/
+.github/
+.gemini/
+.agent/
+*.sh
+old_AGENTS.md
