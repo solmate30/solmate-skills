@@ -2,5 +2,6 @@ node_modules
 .DS_Store
 .gemini
 .agent
+.codex
 package-lock.json
 *.log
