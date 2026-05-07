@@ -2,6 +2,17 @@
 
 Curated skills for Solmate projects. Easily share and install AI tool skills across your team.
 
+## What's New in 2.0.3
+
+`solmate-skills@2.0.3` adds **Backlog Context Lock**, a documentation rule that prevents implementation work from drifting away from the dense project documents already written in the 5-Layer structure.
+
+Key changes:
+
+- Every backlog task must link to related Concept, UI, Technical Spec, and QA documents.
+- `/rules-workflow` now treats linked backlog documents as implementation inputs before coding starts.
+- `/verify-docs` fails backlog items that omit required related-document fields.
+- Local Codex settings under `.codex/` are excluded from the npm package.
+
 ## Installation
 
 You don't need to install this package globally. Simply use `npx`:
@@ -139,6 +150,47 @@ docs/
 ```
 
 Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Progress/00_BACKLOG.md` must include related Concept, UI, Technical Spec, and QA documents, plus implementation preconditions, acceptance criteria, and a document sync check. If a related document does not exist, the item must say `N/A - 사유`; implementation should pause when the missing document is required for a safe decision.
+
+### Backlog Context Lock
+
+Backlog Context Lock makes `docs/04_Logic_Progress/00_BACKLOG.md` act as a bridge between planning documents and implementation. A backlog item is not considered ready for coding until it names the documents that define why the task exists, how the UI should behave, what technical constraints apply, and how the work will be verified.
+
+Required fields for every backlog item:
+
+- `Related Concept Docs`
+- `Related UI Docs`
+- `Related Technical Docs`
+- `Related QA Docs`
+- `Implementation Preconditions`
+- `Acceptance Criteria`
+- `Document Sync Check`
+
+If a related document does not exist, write `N/A - 사유`. Do not leave the field blank. If the missing document is required to make a safe implementation decision, pause implementation and write or update the document first.
+
+**Backlog item template:**
+
+```markdown
+### [ ] TASK-000: Implement feature name
+
+- Status: ToDo
+- Related Concept Docs:
+  - [Product Specs](../01_Concept_Design/03_PRODUCT_SPECS.md) - feature purpose and user value
+- Related UI Docs:
+  - [Screen Flow](../02_UI_Screens/00_SCREEN_FLOW.md) - target screen and interaction flow
+- Related Technical Docs:
+  - [API Specs](../03_Technical_Specs/02_API_SPECS.md) - endpoint and data contract
+- Related QA Docs:
+  - [QA Checklist](../05_QA_Validation/02_QA_CHECKLIST.md) - acceptance and release criteria
+- Implementation Preconditions:
+  - [ ] Read all related documents before coding
+  - [ ] Confirm implementation scope does not conflict with documented intent
+- Acceptance Criteria:
+  - [ ] Feature behavior matches linked Concept/UI/Technical docs
+  - [ ] QA criteria are testable and satisfied
+- Document Sync Check:
+  - [ ] No mismatch between implementation and linked documents
+  - [ ] Update related documents if implementation changes the agreed behavior
+```
 
 ---
 
