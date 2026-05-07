@@ -133,9 +133,12 @@ docs/
 1. /docs-plan    → Write VISION_CORE.md, LEAN_CANVAS.md, PRODUCT_SPECS.md
 2. /docs-plan    → Write SCREEN_FLOW.md, UI_DESIGN.md
 3. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
-4. /docs-dev     → Write ROADMAP.md, BACKLOG.md
-5. /verify-docs  → Audit all docs for structure and metadata compliance
+4. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
+5. /rules-workflow → Implement each backlog item only after reading linked docs
+6. /verify-docs  → Audit structure, metadata, and Backlog Context Lock compliance
 ```
+
+Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Progress/00_BACKLOG.md` must include related Concept, UI, Technical Spec, and QA documents, plus implementation preconditions, acceptance criteria, and a document sync check. If a related document does not exist, the item must say `N/A - 사유`; implementation should pause when the missing document is required for a safe decision.
 
 ---
 

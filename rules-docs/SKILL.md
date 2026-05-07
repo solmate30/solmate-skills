@@ -66,6 +66,20 @@ description: Create and manage project documentation according to the 365 Princi
 - `00_ROADMAP.md`: 마일스톤 및 단계별 일정 (Phase별 큰 줄기와 세부 항목 분할)
 - `01_EXECUTION_PLAN.md`: 기술 실행 전략 및 타임라인 (구체적인 구현 스텝 및 체크박스 필수)
 
+### Backlog Context Lock (필수)
+
+`docs/04_Logic_Progress/00_BACKLOG.md`의 모든 작업 항목은 다른 레이어의 관련 문서를 구현 입력값으로 연결해야 한다. 백로그는 단독 ToDo가 아니며, 다음 필드를 통해 문서 기반 구현을 강제한다.
+
+- `Related Concept Docs`
+- `Related UI Docs`
+- `Related Technical Docs`
+- `Related QA Docs`
+- `Implementation Preconditions`
+- `Acceptance Criteria`
+- `Document Sync Check`
+
+각 Related 필드는 상대 경로 링크와 관계 설명을 포함해야 한다. 관련 문서가 없으면 빈칸으로 두지 않고 `N/A - 사유`를 명시한다. 단, 구현 판단에 필요한 Concept, UI, Technical Spec, QA 기준이 아직 문서화되지 않은 경우에는 백로그만으로 구현을 시작할 수 없으며, 먼저 문서 작성 또는 보완 여부를 사용자에게 확인한다.
+
 ### 메타데이터 (필수)
 
 모든 문서 최상단:
@@ -103,6 +117,8 @@ description: Create and manage project documentation according to the 365 Princi
 **Technical_Specs**: Concept_Design + UI_Screens + 다른 Technical_Specs (DB ↔ API) + Logic_Progress
 
 **Logic_Progress**: Concept_Design + UI_Screens + Technical_Specs (DB, API) + QA_Validation
+
+**Backlog Items**: 각 항목 단위로 Concept_Design + UI_Screens + Technical_Specs + QA_Validation 링크를 포함한다. 구현자는 항목 착수 전 링크된 문서를 읽고 `Implementation Preconditions`를 확인해야 한다.
 
 **QA_Validation**: 모든 상위 레이어 참조
 

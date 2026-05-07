@@ -58,6 +58,32 @@ This skill manages **Layer 3 (Technical_Specs)**, **Layer 4 (Logic_Progress)**, 
 
 **중요 규칙**: 실무 문서(`00_BACKLOG.md`, `00_ROADMAP.md`, `01_EXECUTION_PLAN.md`) 작성 시, 모든 작업은 반드시 체크박스`[ ]`를 사용하여 원자적 단위(Atomic Task)로 최대한 상세히 나누어 기록해야 한다. "추상적인 작업" 대신 "실제로 실행 및 검증 가능한 단계"로 분할한다.
 
+**Backlog 문서 참조 강제 규칙**: `00_BACKLOG.md`의 모든 작업 항목은 관련 문서를 읽은 뒤 작성해야 하며, 구현자는 코드 작성 전에 해당 문서를 다시 확인해야 한다. 백로그는 단순 ToDo 목록이 아니라 Concept, UI, Technical Spec, QA 기준을 구현으로 연결하는 실행 티켓이어야 한다.
+
+Backlog 항목 작성 전 필수 확인 대상:
+- `docs/01_Concept_Design/`: 기능 목적, 사용자 가치, 제품 방향
+- `docs/02_UI_Screens/`: 화면 흐름, UI 상태, 인터랙션
+- `docs/03_Technical_Specs/`: API, DB, 데이터 구조, 기술 제약
+- `docs/05_QA_Validation/`: 테스트 기준, 수용 조건, 검증 시나리오
+
+각 Backlog 항목은 다음 필드를 반드시 포함한다:
+- `Related Concept Docs`: 관련 기획/디자인 문서
+- `Related UI Docs`: 관련 화면/플로우 문서
+- `Related Technical Docs`: 관련 기술 명세 문서
+- `Related QA Docs`: 관련 검증 문서
+- `Implementation Preconditions`: 구현 전 반드시 확인할 조건
+- `Acceptance Criteria`: 완료 판단 기준
+- `Document Sync Check`: 구현 후 문서와 코드의 일치 여부
+
+관련 문서가 아직 없거나 해당하지 않는 경우에도 비워둘 수 없다. 반드시 `N/A - 사유`를 적고, 구현 판단에 필요한 문서가 없으면 구현 전에 문서 작성 또는 보완을 사용자에게 확인한다.
+
+구현 시작 전 체크:
+- 관련 문서를 실제로 읽었는가?
+- 문서의 요구사항이 Backlog 항목에 반영되어 있는가?
+- 구현 범위가 관련 문서의 의도와 충돌하지 않는가?
+- 관련 QA 기준이 `Acceptance Criteria`에 반영되어 있는가?
+- 누락된 문서가 있다면 `N/A - 사유`가 타당한가?
+
 1. **Project Initialization**: CLI 프리셋 vs 수동 설정?
 2. **UI Theme Strategy**: 사전 정의된 테마 vs 커스텀 브랜드 색상? 폰트 선택?
 3. **Folder Structure**: Feature 기반 vs Type 기반?
@@ -141,6 +167,31 @@ This skill manages **Layer 3 (Technical_Specs)**, **Layer 4 (Logic_Progress)**, 
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 데이터 모델 참조
 - **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - API 엔드포인트 참조
 - **QA_Validation**: [Test Scenarios](../05_QA_Validation/01_TEST_SCENARIOS.md) - 관련 테스트 케이스
+```
+
+### Template D-1 — Backlog Item
+
+```
+### [ ] TASK-000: [작업명]
+
+- Status: ToDo | In Progress | Done
+- Related Concept Docs:
+  - [문서명](../01_Concept_Design/XX_DOCUMENT.md) - 기능 목적/사용자 가치 근거
+- Related UI Docs:
+  - [문서명](../02_UI_Screens/XX_DOCUMENT.md) - 화면 흐름/상태/인터랙션 근거
+- Related Technical Docs:
+  - [문서명](../03_Technical_Specs/XX_DOCUMENT.md) - API/DB/데이터 구조 근거
+- Related QA Docs:
+  - [문서명](../05_QA_Validation/XX_DOCUMENT.md) - 테스트 기준/수용 조건 근거
+- Implementation Preconditions:
+  - [ ] 관련 문서 전체 확인 완료
+  - [ ] 구현 범위와 문서 요구사항 충돌 없음
+- Acceptance Criteria:
+  - [ ] QA 기준이 구현 완료 판단에 반영됨
+  - [ ] 핵심 사용자 흐름이 검증됨
+- Document Sync Check:
+  - [ ] 구현 후 코드와 관련 문서 불일치 없음
+  - [ ] 불일치가 있으면 관련 문서 또는 백로그 항목 업데이트
 ```
 
 ### Template E — QA_Validation

@@ -13,8 +13,9 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 1. 계획 수립
 - 요구사항·목적을 문서 또는 이슈 기준으로 정리한다.
+- 백로그 항목이 있으면 `Related Concept Docs`, `Related UI Docs`, `Related Technical Docs`, `Related QA Docs`를 먼저 읽고 구현 입력값으로 요약한다.
 - 변경할 파일·추가할 컴포넌트·API·DB 영향 범위를 나열한다.
-- 체크: [ ] 목적이 명확한가? [ ] 영향 범위가 정리되었는가?
+- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] 영향 범위가 정리되었는가?
 
 ### Step 2. 계획 검토
 - 계획이 요구사항과 일치하는지, 누락된 시나리오는 없는지 검토한다.
@@ -34,7 +35,8 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 5. 구현
 - 승인된 계획대로 구현한다. AGENTS.md·프로젝트 컨벤션(커밋, Zod, Luxon 등)을 따른다.
-- 체크: [ ] 계획 대비 변경 사항이 일치하는가?
+- 코드 작성 전 백로그 항목의 `Implementation Preconditions`와 `Acceptance Criteria`를 확인한다. 관련 문서 링크가 비어 있거나 `N/A - 사유`가 부실하면 구현을 보류하고 문서 보완 필요 여부를 사용자에게 확인한다.
+- 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가?
 
 ---
 
@@ -90,7 +92,8 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 16. 관련 부분 반복 검토
 - 검토 중 발견된 이슈와 연관된 코드·설정·문서를 다시 점검한다. 관련된 부분을 놓치지 않도록 추가로 확인한다.
-- 체크: [ ] 발견 이슈의 연쇄 영향 [ ] 관련 모듈·설정까지 검토
+- 백로그 항목의 `Document Sync Check`를 기준으로 구현 결과와 관련 문서의 불일치 여부를 확인한다.
+- 체크: [ ] 발견 이슈의 연쇄 영향 [ ] 관련 모듈·설정까지 검토 [ ] 문서-구현 불일치 없음
 
 ### Step 17. 배포 가능 퀄리티 최종 검토
 - "이대로 배포해도 될 수준인가?"를 한 번 더 검토한다. 1–16단계에서 누락된 항목이 없는지 확인한다.
