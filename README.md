@@ -69,6 +69,37 @@ Gate: UI-First Gate 진행 중
 권장 스킬: /docs-plan
 ```
 
+### Using Skills in an Existing Project
+
+이미 진행 중인 프로젝트에도 최신 `solmate-skills`를 다시 설치해서 사용할 수 있습니다. 사용 방식은 신규 프로젝트와 같지만, 시작점은 항상 현재 프로젝트 상태를 먼저 진단하는 것입니다.
+
+**Update or reinstall skills from the project root:**
+
+```bash
+npx solmate-skills@latest install all
+npx solmate-skills@latest install hooks
+```
+
+**Recommended first prompt:**
+
+```text
+/rules-product를 사용해서 이 프로젝트의 현재 진행 상태를 진단하고, 다음 작업을 Flow Status Block 기준으로 안내해줘.
+```
+
+**When starting implementation work:**
+
+```text
+/rules-workflow를 사용해서 현재 기능 작업을 진행해줘. 먼저 Flow Status Block으로 현재 위치를 알려주고, UI-First 흐름에 맞춰 진행해줘.
+```
+
+**When verifying finished work:**
+
+```text
+/verify-implementation으로 현재 변경사항을 전체 검증해줘. Flow Status Block을 포함해서 보고해줘.
+```
+
+진행 중인 프로젝트에서는 Phase 1부터 강제로 다시 시작하지 않습니다. `/rules-product`가 기존 문서, 코드, 백로그, 변경사항을 보고 현재 위치를 진단한 뒤, 이어서 진행할 Phase와 필요한 Gate를 제안해야 합니다.
+
 ---
 
 ## Available Skills
