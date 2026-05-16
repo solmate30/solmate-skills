@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Member Role"
+  short_description: "Apply branch, commit, and PR protocols"
+  default_prompt: "Use $role-team-member to follow the team member branch, commit, and PR workflow."

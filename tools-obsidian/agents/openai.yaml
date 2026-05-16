@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian Sync"
+  short_description: "Synchronize project docs with Obsidian"
+  default_prompt: "Use $tools-obsidian to verify or set up documentation sync with an Obsidian vault."

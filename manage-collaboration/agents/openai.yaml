@@ -1,0 +1,4 @@
+interface:
+  display_name: "Collaboration Management"
+  short_description: "Enforce AI-human collaboration protocols"
+  default_prompt: "Use $manage-collaboration to check the repository collaboration rules before changing code."

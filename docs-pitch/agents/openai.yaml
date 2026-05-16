@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pitch Deck Docs"
+  short_description: "Create investor and demo day pitch decks"
+  default_prompt: "Use $docs-pitch to turn the product planning docs into a concise pitch deck."

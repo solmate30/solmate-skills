@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation Rules"
+  short_description: "Apply the five-layer documentation standard"
+  default_prompt: "Use $rules-docs to decide where a document belongs and how it should link context."

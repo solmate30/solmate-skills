@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Workflow"
+  short_description: "Orchestrate planning, UI, docs, and QA phases"
+  default_prompt: "Use $rules-product to diagnose the current product phase and choose the next skill."

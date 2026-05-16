@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Lead Role"
+  short_description: "Apply lead-level release and review protocols"
+  default_prompt: "Use $role-team-lead to review release, branch, migration, and deployment responsibilities."

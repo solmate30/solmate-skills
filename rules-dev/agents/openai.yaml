@@ -1,0 +1,4 @@
+interface:
+  display_name: "Development Rules"
+  short_description: "Apply coding, environment, and commit rules"
+  default_prompt: "Use $rules-dev to check development conventions before editing application code."

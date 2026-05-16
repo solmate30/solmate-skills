@@ -1,0 +1,4 @@
+interface:
+  display_name: "Performance Verification"
+  short_description: "Check Lighthouse and Core Web Vitals risks"
+  default_prompt: "Use $verify-performance to inspect rendering, bundle, image, and Lighthouse risks."

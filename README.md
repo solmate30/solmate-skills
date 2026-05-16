@@ -2,9 +2,9 @@
 
 Curated skills for Solmate projects. Easily share and install AI tool skills across your team.
 
-## What's New in 2.0.3
+## What's New in 2.0.4
 
-`solmate-skills@2.0.3` adds **Backlog Context Lock**, a documentation rule that prevents implementation work from drifting away from the dense project documents already written in the 5-Layer structure.
+`solmate-skills@2.0.4` keeps **Backlog Context Lock** as the current documentation guardrail and tightens package hygiene for Codex-local settings.
 
 Key changes:
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implementation Verification"
+  short_description: "Run all verification skills as one review"
+  default_prompt: "Use $verify-implementation to discover and run the relevant verify skills before PR."

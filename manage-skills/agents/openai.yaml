@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Maintenance"
+  short_description: "Detect and update drifting verification skills"
+  default_prompt: "Use $manage-skills to inspect whether changed files need new or updated verification skills."

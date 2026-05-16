@@ -19,7 +19,12 @@ const targetSkillsDir = path.join(targetProjectRoot, '.agent', 'skills');
 
 function getAvailableSkills() {
     return fs.readdirSync(packageRoot, { withFileTypes: true })
-        .filter(dirent => dirent.isDirectory() && !IGNORED_FOLDERS.includes(dirent.name))
+        .filter(dirent => {
+            if (!dirent.isDirectory() || IGNORED_FOLDERS.includes(dirent.name)) {
+                return false;
+            }
+            return fs.existsSync(path.join(packageRoot, dirent.name, 'SKILL.md'));
+        })
         .map(dirent => dirent.name);
 }
 

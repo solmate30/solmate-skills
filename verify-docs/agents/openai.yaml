@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docs Verification"
+  short_description: "Audit documentation structure and metadata"
+  default_prompt: "Use $verify-docs to audit the five-layer docs structure and metadata fields."

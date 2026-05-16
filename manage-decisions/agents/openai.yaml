@@ -1,0 +1,4 @@
+interface:
+  display_name: "Decision Management"
+  short_description: "Guide structured project decisions"
+  default_prompt: "Use $manage-decisions to walk through the questions needed for this technical decision."

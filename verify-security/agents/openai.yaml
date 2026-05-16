@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Verification"
+  short_description: "Review OWASP security risks before release"
+  default_prompt: "Use $verify-security to review authentication, authorization, inputs, secrets, and OWASP risks."

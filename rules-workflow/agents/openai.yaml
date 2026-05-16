@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implementation Workflow"
+  short_description: "Follow the full implementation lifecycle"
+  default_prompt: "Use $rules-workflow to plan, implement, verify, and prepare this feature for shipping."

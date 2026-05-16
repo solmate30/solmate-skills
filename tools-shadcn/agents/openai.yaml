@@ -1,0 +1,4 @@
+interface:
+  display_name: "shadcn UI Tools"
+  short_description: "Use and validate shadcn/ui components"
+  default_prompt: "Use $tools-shadcn to install, compose, or validate shadcn/ui components."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Drizzle Schema Verification"
+  short_description: "Check Drizzle schema and spec alignment"
+  default_prompt: "Use $verify-drizzle-schema to compare Drizzle schema changes against the technical docs."

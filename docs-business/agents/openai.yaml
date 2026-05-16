@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Documents"
+  short_description: "Create structured business plan documents"
+  default_prompt: "Use $docs-business to draft a grant-ready business plan from the project planning docs."
