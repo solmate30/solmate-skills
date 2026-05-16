@@ -60,6 +60,8 @@ This skill manages **Layer 3 (Technical_Specs)**, **Layer 4 (Logic_Progress)**, 
 
 **Backlog 문서 참조 강제 규칙**: `00_BACKLOG.md`의 모든 작업 항목은 관련 문서를 읽은 뒤 작성해야 하며, 구현자는 코드 작성 전에 해당 문서를 다시 확인해야 한다. 백로그는 단순 ToDo 목록이 아니라 Concept, UI, Technical Spec, QA 기준을 구현으로 연결하는 실행 티켓이어야 한다.
 
+**UI-First Gate 강제 규칙**: 구현 코드는 화면 확인 이후에만 작성한다. 백로그 항목은 관련 UI 문서에서 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태를 확인했음을 `Implementation Preconditions`에 포함해야 한다. 해당 정보가 없으면 `docs/02_UI_Screens/` 문서부터 보완한다.
+
 Backlog 항목 작성 전 필수 확인 대상:
 - `docs/01_Concept_Design/`: 기능 목적, 사용자 가치, 제품 방향
 - `docs/02_UI_Screens/`: 화면 흐름, UI 상태, 인터랙션
@@ -80,6 +82,9 @@ Backlog 항목 작성 전 필수 확인 대상:
 구현 시작 전 체크:
 - 관련 문서를 실제로 읽었는가?
 - 문서의 요구사항이 Backlog 항목에 반영되어 있는가?
+- 화면 구조와 사용자 동선을 먼저 확인했는가?
+- 화면별 입력·출력 데이터와 상태 변화를 확인했는가?
+- 로딩·빈 상태·오류 상태가 UI 문서나 백로그에 반영되어 있는가?
 - 구현 범위가 관련 문서의 의도와 충돌하지 않는가?
 - 관련 QA 기준이 `Acceptance Criteria`에 반영되어 있는가?
 - 누락된 문서가 있다면 `N/A - 사유`가 타당한가?
@@ -185,8 +190,13 @@ Backlog 항목 작성 전 필수 확인 대상:
   - [문서명](../05_QA_Validation/XX_DOCUMENT.md) - 테스트 기준/수용 조건 근거
 - Implementation Preconditions:
   - [ ] 관련 문서 전체 확인 완료
+  - [ ] 화면/UI 선확인 완료
+  - [ ] 사용자 진입·전환·이탈 동선 확인 완료
+  - [ ] 화면별 입력·출력 데이터 및 상태 변화 확인 완료
+  - [ ] 로딩·빈 상태·오류 상태 확인 완료
   - [ ] 구현 범위와 문서 요구사항 충돌 없음
 - Acceptance Criteria:
+  - [ ] 구현 결과가 확인된 화면 구조와 사용자 동선을 따른다
   - [ ] QA 기준이 구현 완료 판단에 반영됨
   - [ ] 핵심 사용자 흐름이 검증됨
 - Document Sync Check:

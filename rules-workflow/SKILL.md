@@ -14,8 +14,9 @@ Follow this workflow for feature implementation and significant code changes. Co
 ### Step 1. 계획 수립
 - 요구사항·목적을 문서 또는 이슈 기준으로 정리한다.
 - 백로그 항목이 있으면 `Related Concept Docs`, `Related UI Docs`, `Related Technical Docs`, `Related QA Docs`를 먼저 읽고 구현 입력값으로 요약한다.
+- 코드 작성보다 먼저 UI-First Gate를 확인한다. 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태가 문서화되지 않았으면 구현 계획을 보류하고 `docs-plan` 또는 `docs-dev` 문서 보완을 제안한다.
 - 변경할 파일·추가할 컴포넌트·API·DB 영향 범위를 나열한다.
-- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] 영향 범위가 정리되었는가?
+- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] UI-First Gate가 확인되었는가? [ ] 영향 범위가 정리되었는가?
 
 ### Step 2. 계획 검토
 - 계획이 요구사항과 일치하는지, 누락된 시나리오는 없는지 검토한다.
@@ -36,7 +37,8 @@ Follow this workflow for feature implementation and significant code changes. Co
 ### Step 5. 구현
 - 승인된 계획대로 구현한다. AGENTS.md·프로젝트 컨벤션(커밋, Zod, Luxon 등)을 따른다.
 - 코드 작성 전 백로그 항목의 `Implementation Preconditions`와 `Acceptance Criteria`를 확인한다. 관련 문서 링크가 비어 있거나 `N/A - 사유`가 부실하면 구현을 보류하고 문서 보완 필요 여부를 사용자에게 확인한다.
-- 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가?
+- UI-First Gate가 통과되지 않았거나 사용자가 화면/UI를 먼저 확인하지 않았다면 구현을 시작하지 않는다.
+- 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가? [ ] 화면·동선·데이터 흐름 확인 후 구현했는가?
 
 ---
 

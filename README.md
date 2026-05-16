@@ -4,11 +4,12 @@ Curated skills for Solmate projects. Easily share and install AI tool skills acr
 
 ## What's New in 2.0.4
 
-`solmate-skills@2.0.4` keeps **Backlog Context Lock** as the current documentation guardrail and tightens package hygiene for Codex-local settings.
+`solmate-skills@2.0.4` keeps **Backlog Context Lock** as the current documentation guardrail, adds **UI-First Gate** expectations, and tightens package hygiene for Codex-local settings.
 
 Key changes:
 
 - Every backlog task must link to related Concept, UI, Technical Spec, and QA documents.
+- UI, user paths, data flow, loading states, empty states, and error states must be confirmed before coding.
 - `/rules-workflow` now treats linked backlog documents as implementation inputs before coding starts.
 - `/verify-docs` fails backlog items that omit required related-document fields.
 - Local Codex settings under `.codex/` are excluded from the npm package.
@@ -143,10 +144,11 @@ docs/
 ```
 1. /docs-plan    → Write VISION_CORE.md, LEAN_CANVAS.md, PRODUCT_SPECS.md
 2. /docs-plan    → Write SCREEN_FLOW.md, UI_DESIGN.md
-3. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
-4. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
-5. /rules-workflow → Implement each backlog item only after reading linked docs
-6. /verify-docs  → Audit structure, metadata, and Backlog Context Lock compliance
+3. UI-First Gate → Confirm screens, user paths, data flow, and UI states before coding
+4. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
+5. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
+6. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First Gate
+7. /verify-docs  → Audit structure, metadata, Backlog Context Lock, and UI-First Gate compliance
 ```
 
 Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Progress/00_BACKLOG.md` must include related Concept, UI, Technical Spec, and QA documents, plus implementation preconditions, acceptance criteria, and a document sync check. If a related document does not exist, the item must say `N/A - 사유`; implementation should pause when the missing document is required for a safe decision.
@@ -154,6 +156,10 @@ Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Pro
 ### Backlog Context Lock
 
 Backlog Context Lock makes `docs/04_Logic_Progress/00_BACKLOG.md` act as a bridge between planning documents and implementation. A backlog item is not considered ready for coding until it names the documents that define why the task exists, how the UI should behave, what technical constraints apply, and how the work will be verified.
+
+### UI-First Gate
+
+UI-First Gate prevents implementation from starting before the team has reviewed the actual screens and the user's path through them. Before coding, confirm the core screen structure, user entry and exit paths, CTAs, screen-by-screen data flow, loading states, empty states, and error states. If these are missing, update `docs/02_UI_Screens/` or the backlog first.
 
 Required fields for every backlog item:
 
@@ -183,8 +189,12 @@ If a related document does not exist, write `N/A - 사유`. Do not leave the fie
   - [QA Checklist](../05_QA_Validation/02_QA_CHECKLIST.md) - acceptance and release criteria
 - Implementation Preconditions:
   - [ ] Read all related documents before coding
+  - [ ] Confirm screen/UI before coding
+  - [ ] Confirm user path and screen-by-screen data flow
+  - [ ] Confirm loading, empty, and error states
   - [ ] Confirm implementation scope does not conflict with documented intent
 - Acceptance Criteria:
+  - [ ] Feature follows the confirmed screen structure and user path
   - [ ] Feature behavior matches linked Concept/UI/Technical docs
   - [ ] QA criteria are testable and satisfied
 - Document Sync Check:

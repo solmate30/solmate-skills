@@ -12,6 +12,7 @@ You are a **workflow lead** who guides the user through the full product develop
 ```
 Phase 1: 기획문서       → docs-plan (Concept_Design)
 Phase 2: UI 설계 문서   → docs-plan (UI_Screens)
+UI-First Gate: 화면·동선·데이터 흐름 확인
 Phase 3: React 변환     → rules-react
 Phase 4: 개발문서       → docs-dev
 Phase 5: 품질 검증      → verify-implementation (verify-docs / verify-code / verify-security / verify-performance)
@@ -30,6 +31,7 @@ Run these checks in order:
 |-------|--------|---------|
 | `docs/01_Concept_Design/` 존재 여부 | 없으면 Phase 1 미완 | 기획문서 필요 |
 | `docs/02_UI_Screens/` 존재 여부 | 없으면 Phase 2 미완 | UI 설계 필요 |
+| UI-First Gate 확인 여부 | 없으면 Phase 3 진입 보류 | 화면·동선·데이터 흐름 확인 필요 |
 | `src/components/` 또는 React 코드 존재 여부 | 없으면 Phase 3 미완 | React 개발 필요 |
 | `docs/03_Technical_Specs/` 존재 여부 | 없으면 Phase 4 미완 | 개발문서 필요 |
 | verify-* 스킬 실행 이력 또는 사용자 확인 여부 | 없으면 Phase 5 미완 | 품질 검증 필요 |
@@ -112,6 +114,11 @@ Phase 1이 완료된 후 언제든 작성 가능하다. Phase 2 진입과 독립
 **Gate Out** (다음 단계 진입 조건):
 - [ ] `docs/02_UI_Screens/00_SCREEN_FLOW.md` 존재
 - [ ] `docs/02_UI_Screens/01_UI_DESIGN.md` 존재
+- [ ] 주요 화면 목록과 화면별 목적이 정의됨
+- [ ] 사용자 진입·이탈·전환 동선이 정의됨
+- [ ] 화면별 입력 데이터, 출력 데이터, 상태 변화가 정의됨
+- [ ] 로딩·빈 상태·오류 상태가 정의됨
+- [ ] 사용자가 화면/UI를 먼저 확인했거나, 확인할 수 있는 프로토타입/스크린샷/리뷰 문서가 있음
 
 **위임 지시**:
 
@@ -121,8 +128,28 @@ Phase 1이 완료된 후 언제든 작성 가능하다. Phase 2 진입과 독립
 참조 문서: docs/01_Concept_Design/ 전체 읽기 후 시작
 ```
 
-Phase 2 완료 확인 후 다음을 묻는다:
-> "Phase 2 문서가 완성되었습니다. Phase 3(React 변환 및 개발)으로 넘어갈까요?"
+Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확인하고 다음을 묻는다:
+> "화면 구조, 사용자 동선, 데이터 흐름, 로딩/빈/오류 상태를 먼저 확인했습니다. 현재 단계에서 더 구체화하거나 보완할 점이 있을까요?"
+
+---
+
+## UI-First Gate: 화면·동선·데이터 흐름 확인
+
+**목표**: 구동 코드 작성 전에 실제 화면 기준으로 사용 흐름과 데이터 흐름을 합의한다. 이 게이트를 통과하기 전에는 Phase 3 구현을 시작하지 않는다.
+
+**필수 확인 항목**:
+- [ ] 주요 화면과 화면별 목적
+- [ ] 사용자 진입 경로, 다음 행동, 이탈 경로
+- [ ] 화면별 CTA와 인터랙션
+- [ ] 화면별 입력 데이터, 출력 데이터, 상태 변화
+- [ ] 로딩, 빈 상태, 오류 상태, 권한 없음 상태
+- [ ] 모바일·데스크톱에서 구조 차이가 큰 구간
+- [ ] 사용자 또는 의사결정권자가 화면/UI를 먼저 확인한 기록
+
+**Gate Out**:
+- [ ] `00_SCREEN_FLOW.md`에 사용자 여정과 전환 흐름이 기록됨
+- [ ] `01_UI_DESIGN.md` 또는 `XX_PROTOTYPE_REVIEW.md`에 화면 상태와 피드백이 기록됨
+- [ ] 필요한 경우 `docs/04_Logic_Progress/00_BACKLOG.md`의 작업 항목에 UI 확인 결과가 반영됨
 
 ---
 
@@ -132,6 +159,8 @@ Phase 2 완료 확인 후 다음을 묻는다:
 
 **Gate In**:
 - Phase 2 문서 (`02_UI_Screens/`) 존재
+- UI-First Gate 통과
+- 화면·동선·데이터 흐름 확인 결과가 백로그 또는 UI 문서에 반영됨
 
 **Gate Out** (다음 단계 진입 조건):
 - [ ] `src/components/` 에 주요 컴포넌트 존재

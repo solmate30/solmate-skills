@@ -37,9 +37,9 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 - `04_USER_RESEARCH.md` — 사용자 인터뷰, 페르소나, 행동 패턴 (선택, 권장)
 
 **Layer 2 — UI_Screens**
-- `00_SCREEN_FLOW.md` — 전체 사용자 여정
-- `01_UI_DESIGN.md` — 디자인 시스템 (색상, 타이포그래피, 레이아웃)
-- `XX_PROTOTYPE_REVIEW.md` — 페이지별 피드백
+- `00_SCREEN_FLOW.md` — 전체 사용자 여정, 진입·전환·이탈 흐름, 화면별 데이터 입출력
+- `01_UI_DESIGN.md` — 디자인 시스템, 화면 구조, 상태별 UI, 핵심 CTA
+- `XX_PROTOTYPE_REVIEW.md` — 페이지별 화면 확인 결과와 구현 전 피드백
 
 ## 3. Interactive Process (Ask Before Write)
 
@@ -68,6 +68,16 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 14. **Pitch Readiness**: 3분 안에 팀/문제/타겟/비전/검증을 전달할 수 있는가? 6개 루브릭 중 4개 이상이 승리 전략으로 포함되었는가?
 15. **The 3 Investor Lenses**: Leverage / Realistic Money Flow / Defensibility — 세 가지를 증명했는가?
 16. **The Future Weapon**: 6~18개월 뒤 시장에서 싸울 강력한 무기는 무엇인가?
+
+### Phase 4 — UI-First Gate (코딩 시작 전 필수)
+
+구현 코드를 작성하기 전 반드시 화면 기준으로 아래 질문에 답한다.
+
+17. **Screen Inventory**: 구현할 주요 화면은 무엇이며, 각 화면의 목적은 무엇인가?
+18. **User Path**: 사용자는 어디서 진입하고, 어떤 CTA를 누르며, 어디로 이동하거나 이탈하는가?
+19. **Data Flow**: 각 화면에서 필요한 입력 데이터, 표시 데이터, 저장/전송 데이터는 무엇인가?
+20. **State Coverage**: 로딩, 빈 상태, 오류 상태, 권한 없음 상태는 화면에서 어떻게 보이는가?
+21. **Prototype Review**: 사용자가 실제 화면, 스크린샷, 와이어프레임, 또는 프로토타입 리뷰를 먼저 확인했는가?
 
 ## 4. Templates
 
@@ -139,10 +149,29 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 ## 2. Key User Flows
 (이 프로토타입에서 시연된 흐름 설명)
 
-## 3. Feedback & Improvements
+## 3. Screen States
+- Default:
+- Loading:
+- Empty:
+- Error:
+- Permission denied / unavailable:
+
+## 4. Data Flow
+- Inputs:
+- Displayed data:
+- Mutations / saved data:
+- External dependencies:
+
+## 5. User Confirmation
+- 화면/UI 선확인 여부:
+- 확인자:
+- 확인 일시:
+- 보완 필요 사항:
+
+## 6. Feedback & Improvements
 (구현 전 변경이 필요한 사항)
 
-## 4. Related Documents
+## 7. Related Documents
 - **Concept_Design**: [Product Specs](../01_Concept_Design/03_PRODUCT_SPECS.md) - 사이트맵 및 사용자 플로우
 - **UI_Screens**: [UI Design](./01_UI_DESIGN.md) - 디자인 시스템 및 컴포넌트 가이드라인
 - **Technical_Specs**: [Related Spec](../03_Technical_Specs/XX_SPEC.md) - 구현 명세 요구사항
