@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skills Package Verification"
+  short_description: "Validate skill package metadata and release readiness"
+  default_prompt: "Use $verify-skills to validate skill metadata, CLI output, docs lists, and package dry-run."

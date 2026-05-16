@@ -57,7 +57,17 @@ fi
 
 # React / UI component → rules-react
 if echo "$PROMPT" | grep -qiE 'React|컴포넌트|component|페이지|page|UI|화면|shadcn|tailwind'; then
-  SUGGESTIONS="$SUGGESTIONS\n- React/UI 작업입니다. \`/rules-react\`로 컴포넌트 설계 기준을 확인하고, shadcn/ui 활용은 \`/tools-shadcn\`을 사용하세요."
+  SUGGESTIONS="$SUGGESTIONS\n- React/UI 작업입니다. \`/rules-react\`로 컴포넌트 설계 기준을 확인하고, 구현 후 \`/verify-ui\`로 화면 문서와 사용자 동선 정합성을 검증하세요."
+fi
+
+# UI verification explicit request → verify-ui
+if echo "$PROMPT" | grep -qiE 'UI ?검증|UX ?검증|화면 ?검증|화면.*맞|동선.*검증|상태별 UI|empty state|loading state|error state'; then
+  SUGGESTIONS="$SUGGESTIONS\n- UI 검증 요청입니다. \`/verify-ui\`로 화면 구조, 사용자 동선, 데이터 흐름, 상태별 UI를 점검하세요."
+fi
+
+# Skill package changes → verify-skills
+if echo "$PROMPT" | grep -qiE '스킬.*검증|skill.*verify|SKILL\.md|openai\.yaml|solmate-skills|npm pack|패키지.*검증'; then
+  SUGGESTIONS="$SUGGESTIONS\n- 스킬 패키지 작업입니다. \`/verify-skills\`로 SKILL.md, agents/openai.yaml, CLI 목록, README/AGENTS, npm pack을 검증하세요."
 fi
 
 # Drizzle / DB schema → verify-drizzle-schema

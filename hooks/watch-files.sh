@@ -41,7 +41,17 @@ fi
 
 # SKILL.md files → manage-skills
 if echo "$FILE_PATH" | grep -qiE 'SKILL\.md'; then
-  SUGGESTIONS="$SUGGESTIONS\n- 스킬 파일을 수정 중입니다. \`/manage-skills\`로 verify 스킬과의 정합성 드리프트를 점검하세요."
+  SUGGESTIONS="$SUGGESTIONS\n- 스킬 파일을 수정 중입니다. \`/manage-skills\`로 verify 스킬과의 정합성 드리프트를 점검하고, 작업 후 \`/verify-skills\`로 패키지 메타데이터를 검증하세요."
+fi
+
+# Skill metadata / package files → verify-skills
+if echo "$FILE_PATH" | grep -qiE 'agents/openai\.yaml|bin/cli\.js|package\.json|README\.md|AGENTS\.md'; then
+  SUGGESTIONS="$SUGGESTIONS\n- 스킬 패키지 메타데이터 또는 배포 파일을 수정 중입니다. 작업 후 \`/verify-skills\`를 실행하세요."
+fi
+
+# UI implementation files → verify-ui
+if echo "$FILE_PATH" | grep -qiE '\.(tsx|jsx)$|docs/02_UI_Screens/.*\.md'; then
+  SUGGESTIONS="$SUGGESTIONS\n- UI 구현 또는 화면 문서를 수정 중입니다. 작업 후 \`/verify-ui\`로 화면 구조·동선·상태별 UI 정합성을 검증하세요."
 fi
 
 # Page/route files → verify-performance

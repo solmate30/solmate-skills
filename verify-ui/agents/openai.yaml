@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Verification"
+  short_description: "Check UI implementation against screen docs"
+  default_prompt: "Use $verify-ui to compare implemented screens with UI docs, user flows, and state coverage."

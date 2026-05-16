@@ -15,6 +15,9 @@ s = []
 if any('schema' in f and (f.endswith('.ts') or f.endswith('.sql')) for f in files):
     s.append('  DB 스키마 변경 감지    →  /verify-drizzle-schema')
 
+if any(f.endswith(('.tsx', '.jsx')) or f.startswith('docs/02_UI_Screens/') for f in files):
+    s.append('  UI/화면 변경 감지      →  /verify-ui')
+
 if any(any(k in f.lower() for k in ('auth', 'middleware', 'api', 'route', 'token', 'session'))
        and (f.endswith('.ts') or f.endswith('.tsx')) for f in files):
     s.append('  인증/API 파일 변경 감지 →  /verify-security')
@@ -24,6 +27,14 @@ if any(f.endswith('.ts') or f.endswith('.tsx') for f in files):
 
 if any(f.endswith('.md') for f in files):
     s.append('  문서 파일 변경 감지    →  /verify-docs')
+
+if any(
+    f.endswith('/SKILL.md')
+    or f.endswith('/agents/openai.yaml')
+    or f in ('bin/cli.js', 'package.json', 'README.md', 'AGENTS.md')
+    for f in files
+):
+    s.append('  스킬 패키지 변경 감지  →  /verify-skills')
 
 if s:
     msg = '[ 검증 시점 알림 ]\n' + '\n'.join(s)

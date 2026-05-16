@@ -176,6 +176,20 @@ npx lighthouse http://localhost:3000 --view --output=html
 
 ---
 
+## Check 7: 상태별 UI 성능
+
+UI-First Gate에서 정의한 로딩, 빈 상태, 오류 상태가 성능과 레이아웃 안정성을 해치지 않는지 확인한다.
+
+- 로딩 스켈레톤 또는 placeholder가 최종 콘텐츠와 유사한 크기를 가져 CLS를 줄이는지 점검한다.
+- 빈 상태와 오류 상태가 이미지·아이콘·폰트를 과도하게 로드하지 않는지 확인한다.
+- 모바일 첫 화면에서 핵심 CTA가 로딩 상태 또는 오류 배너에 밀려 사라지지 않는지 확인한다.
+- 체크:
+  - [ ] 로딩 상태가 최종 레이아웃과 유사한 공간을 예약하는가?
+  - [ ] 빈/오류 상태가 불필요한 대형 에셋을 초기 로드하지 않는가?
+  - [ ] 상태 전환이 CLS 또는 긴 INP를 유발하지 않는가?
+
+---
+
 ## 보고 형식
 
 ```
@@ -196,6 +210,7 @@ npx lighthouse http://localhost:3000 --view --output=html
 |------|-----------|------|:---------:|
 | src/pages/Home.tsx | 이미지 최적화 | <img> 직접 사용, LCP 지연 가능성 | LCP |
 | src/app/layout.tsx | 폰트 최적화 | Google Fonts <link> 직접 로드 | CLS·FCP |
+| src/components/List.tsx | 상태별 UI 성능 | Empty state 전환 시 레이아웃 시프트 가능 | CLS |
 
 ### 수정 권장 우선순위
 1. [높음] ...
@@ -216,6 +231,7 @@ npx lighthouse http://localhost:3000 --view --output=html
 ## 관련 스킬
 
 - `verify-code`: 코드 품질 전반 리뷰
+- `verify-ui`: 화면 상태와 사용자 동선 검증
 - `verify-security`: 보안 취약점 점검
 - `rules-dev`: 렌더링 전략·코드 스플리팅 컨벤션 기준
 - `verify-implementation`: 전체 verify-* 통합 실행 시 포함 대상

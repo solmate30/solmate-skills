@@ -111,6 +111,8 @@ Skills are organized into five categories.
 | `verify-security` | Check for security vulnerabilities based on OWASP Top 10. |
 | `verify-performance` | Lighthouse & Core Web Vitals check. |
 | `verify-code` | Comprehensive pre-PR code quality review. |
+| `verify-ui` | Verify implemented UI against screen docs and user flows. |
+| `verify-skills` | Verify skill package metadata, CLI output, and release readiness. |
 
 ---
 
