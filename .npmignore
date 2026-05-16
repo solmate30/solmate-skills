@@ -3,5 +3,5 @@
 .github/
 .gemini/
 .agent/
-*.sh
+init-skills.sh
 old_AGENTS.md

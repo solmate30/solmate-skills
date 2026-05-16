@@ -2,17 +2,19 @@
 
 Curated skills for Solmate projects. Easily share and install AI tool skills across your team.
 
-## What's New in 2.0.4
+## What's New in 2.0.6
 
-`solmate-skills@2.0.4` keeps **Backlog Context Lock** as the current documentation guardrail, adds **UI-First Gate** expectations, and tightens package hygiene for Codex-local settings.
+`solmate-skills@2.0.6` keeps **Backlog Context Lock** as the current documentation guardrail, adds **UI-First Gate** expectations, formalizes SVG diagram outputs, and fixes package hygiene so installable skill scripts are included in the npm tarball.
 
 Key changes:
 
 - Every backlog task must link to related Concept, UI, Technical Spec, and QA documents.
 - UI, user paths, data flow, loading states, empty states, and error states must be confirmed before coding.
+- User journey SVG files belong in `docs/02_UI_Screens/assets/`.
+- Data flow SVG files belong in `docs/03_Technical_Specs/assets/`.
 - `/rules-workflow` now treats linked backlog documents as implementation inputs before coding starts.
 - `/verify-docs` fails backlog items that omit required related-document fields.
-- Local Codex settings under `.codex/` are excluded from the npm package.
+- Local Codex settings under `.codex/` are excluded from the npm package, while skill-owned shell scripts remain publishable.
 
 ## Installation
 
