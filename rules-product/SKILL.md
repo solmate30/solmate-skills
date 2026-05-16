@@ -13,6 +13,7 @@ You are a **workflow lead** who guides the user through the full product develop
 Phase 1: 기획문서       → docs-plan (Concept_Design)
 Phase 2: UI 설계 문서   → docs-plan (UI_Screens)
 UI-First Gate: 화면·동선·데이터 흐름 확인
+Pre-Code Technical Brief: 데이터·API·상태 최소 합의
 Phase 3: React 변환     → rules-react
 Phase 4: 개발문서       → docs-dev
 Phase 5: 품질 검증      → verify-implementation (verify-docs / verify-code / verify-security / verify-performance)
@@ -32,6 +33,7 @@ Run these checks in order:
 | `docs/01_Concept_Design/` 존재 여부 | 없으면 Phase 1 미완 | 기획문서 필요 |
 | `docs/02_UI_Screens/` 존재 여부 | 없으면 Phase 2 미완 | UI 설계 필요 |
 | UI-First Gate 확인 여부 | 없으면 Phase 3 진입 보류 | 화면·동선·데이터 흐름 확인 필요 |
+| Pre-Code Technical Brief 여부 | 없으면 Phase 3 진입 보류 | 최소 기술 합의 필요 |
 | `src/components/` 또는 React 코드 존재 여부 | 없으면 Phase 3 미완 | React 개발 필요 |
 | `docs/03_Technical_Specs/` 존재 여부 | 없으면 Phase 4 미완 | 개발문서 필요 |
 | verify-* 스킬 실행 이력 또는 사용자 확인 여부 | 없으면 Phase 5 미완 | 품질 검증 필요 |
@@ -153,6 +155,25 @@ Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확
 
 ---
 
+## Pre-Code Technical Brief: 데이터·API·상태 최소 합의
+
+**목표**: UI 확인 후 바로 코딩하지 않고, 구현에 필요한 최소 기술 계약을 먼저 정한다. 완전한 기술 명세가 아니어도 되지만, React 구현이 임의의 데이터 구조와 상태 흐름을 만들지 않도록 한다.
+
+**필수 확인 항목**:
+- [ ] 화면별 데이터 소스: mock data, API, DB, 외부 서비스 중 무엇인가?
+- [ ] 화면별 입력·출력 데이터의 최소 필드
+- [ ] 주요 mutation: 생성, 수정, 삭제, 제출, 업로드 등
+- [ ] 상태 관리 방식: local state, URL state, server state, global store 중 무엇인가?
+- [ ] API/DB가 필요한 경우 임시 계약 또는 문서 위치
+- [ ] Acceptance Criteria: 구현 완료를 판단할 사용자 시나리오
+
+**Gate Out**:
+- [ ] `docs/03_Technical_Specs/` 문서가 있으면 관련 계약이 반영됨
+- [ ] 기술 문서가 아직 없으면 백로그의 `Implementation Preconditions` 또는 `Acceptance Criteria`에 최소 계약이 기록됨
+- [ ] 구현자가 mock data 구조와 실제 데이터 전환 방식을 설명할 수 있음
+
+---
+
 ## Phase 3: React + Tailwind 개발
 
 **목표**: UI 설계 문서를 기반으로 실제 React 컴포넌트와 페이지를 구현한다.
@@ -161,6 +182,7 @@ Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확
 - Phase 2 문서 (`02_UI_Screens/`) 존재
 - UI-First Gate 통과
 - 화면·동선·데이터 흐름 확인 결과가 백로그 또는 UI 문서에 반영됨
+- Pre-Code Technical Brief 통과
 
 **Gate Out** (다음 단계 진입 조건):
 - [ ] `src/components/` 에 주요 컴포넌트 존재
@@ -217,10 +239,12 @@ Phase 4 완료 확인 후 다음을 묻는다:
 
 **Gate Out** (다음 단계 진입 조건):
 - [ ] `verify-docs` PASS — 문서 구조·메타데이터 정합성
+- [ ] `verify-ui` PASS — 구현 UI와 화면 문서·사용자 동선·상태별 UI 정합성
 - [ ] `verify-code` PASS — 코드 품질 (로직, 타입, 중복, 사이드 이펙트)
 - [ ] `verify-security` PASS — OWASP Top 10 기준 보안 이슈 없음
 - [ ] `verify-performance` PASS — Lighthouse Performance 90+, Core Web Vitals 기준 충족
 - [ ] `verify-drizzle-schema` PASS — DB 스키마 정합성 (DB 사용 시)
+- [ ] `verify-skills` PASS — 스킬 패키지 변경 시 메타데이터·CLI·패키징 정합성
 
 **위임 지시**:
 
@@ -268,6 +292,18 @@ FAIL 항목이 있으면 해당 Phase로 되돌아가 수정 후 재실행한다
 - Phase 6: docs-pitch / docs-business    최종 전달물 (선택)
 ```
 
+## Final Handoff Checklist
+
+Phase 6이 선택 사항이어도, 작업을 마무리할 때는 아래 항목을 최종 보고에 포함한다.
+
+- [ ] 현재 Phase와 완료된 Phase 목록
+- [ ] 구현 또는 문서 산출물 경로
+- [ ] UI-First Gate와 Pre-Code Technical Brief 충족 여부
+- [ ] 실행한 verify 스킬과 결과
+- [ ] 배포 URL 또는 로컬 실행 방법 (해당 시)
+- [ ] 남은 TODO, Known Issue, 문서-구현 불일치 여부
+- [ ] 다음 작업자가 바로 이어갈 수 있는 다음 액션
+
 ---
 
 ## Anti-Rush Rules (AGENTS.md 준수)
@@ -290,8 +326,10 @@ FAIL 항목이 있으면 해당 Phase로 되돌아가 수정 후 재실행한다
 - **rules-react**: Phase 3 React 개발
 - **docs-dev**: Phase 4 기술 문서 작성
 - **verify-implementation**: Phase 5 품질 검증 통합 실행
+- **verify-ui**: Phase 5 UI 정합성 검증
 - **verify-code**: Phase 5 코드 품질 리뷰
 - **verify-security**: Phase 5 보안 점검
 - **verify-performance**: Phase 5 성능 점검
+- **verify-skills**: 스킬 패키지 변경 검증
 - **docs-pitch**: Phase 6 피치덱 작성
 - **docs-business**: Phase 6 사업계획서 작성

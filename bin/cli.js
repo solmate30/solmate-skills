@@ -47,7 +47,33 @@ function listSkills() {
     const skills = getAvailableSkills();
     console.log('\nAvailable skills to install:');
     skills.forEach(skill => console.log(` - ${skill}`));
-    console.log('\nUsage: npx solmate-skills install <skill-name> | all\n');
+    console.log('\nUtilities:');
+    console.log(' - hooks (install with: npx solmate-skills install hooks)');
+    console.log('\nUsage: npx solmate-skills install <skill-name> | all | hooks\n');
+}
+
+function installHooks() {
+    const sourcePath = path.join(packageRoot, 'hooks');
+    const destPath = path.join(targetSkillsDir, 'hooks');
+
+    if (!fs.existsSync(sourcePath)) {
+        console.error('Error: hooks directory not found.');
+        process.exit(1);
+    }
+
+    console.log('Installing hooks utility...');
+    copyFolderSync(sourcePath, destPath);
+    console.log('Successfully installed hooks utility to .agent/skills/hooks');
+
+    const scriptPath = path.join(destPath, 'install.sh');
+    if (fs.existsSync(scriptPath)) {
+        console.log('Running hook installer...');
+        try {
+            execSync(`bash "${scriptPath}"`, { stdio: 'inherit', cwd: targetProjectRoot });
+        } catch (err) {
+            console.error('Warning: hook installer exited with an error.');
+        }
+    }
 }
 
 function installSkill(skillName) {
@@ -56,6 +82,11 @@ function installSkill(skillName) {
     if (skillName === 'install-all') {
         console.log('Installing all skills...');
         skills.forEach(s => installSkill(s));
+        return;
+    }
+
+    if (skillName === 'hooks') {
+        installHooks();
         return;
     }
 
@@ -99,11 +130,15 @@ if (!command || command === 'list') {
     }
     if (subCommand === 'all' || subCommand === 'install-all') {
         installSkill('install-all');
+    } else if (subCommand === 'hooks' || subCommand === 'install-hooks') {
+        installHooks();
     } else {
         installSkill(subCommand);
     }
 } else if (command === 'install-all' || command === 'all') {
     installSkill('install-all');
+} else if (command === 'install-hooks' || command === 'hooks') {
+    installHooks();
 } else {
     console.log(`Unknown command: ${command}`);
     listSkills();

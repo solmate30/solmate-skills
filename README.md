@@ -25,11 +25,16 @@ npx solmate-skills list
 # Install all available skills (use @latest to bypass npx cache)
 npx solmate-skills@latest install all
 
+# Install proactive hook suggestions for Claude Code projects
+npx solmate-skills@latest install hooks
+
 # Install a specific skill
 npx solmate-skills install rules-docs
 ```
 
 When you run the `install` command, the script copies the skill folder to `.agent/skills/<skill-name>` in your current project.
+
+`install all` installs only skill folders that contain `SKILL.md`. Use `install hooks` separately when you want prompt/file-change suggestions that nudge the agent toward `/rules-product`, `/rules-workflow`, and the relevant `verify-*` skills.
 
 ---
 
@@ -41,7 +46,7 @@ When you run the `install` command, the script copies the skill folder to `.agen
 |:---|:---|:---|
 | 신규 프로젝트 — 아무것도 없을 때 | `/rules-product` | 현재 단계를 자동 진단하고 Phase 1부터 순서대로 안내 |
 | 기획은 있고 코드를 작성하려 할 때 | `/rules-dev` | 커밋 형식, 환경변수, TypeScript 기준 등 컨벤션 먼저 정립 |
-| 기능 하나를 구현하려 할 때 | `/rules-workflow` | 계획 수립부터 PR까지 18단계 워크플로우로 진행 |
+| 기능 하나를 구현하려 할 때 | `/rules-product` → `/rules-workflow` | 현재 Phase를 먼저 진단한 뒤 계획 수립부터 PR까지 진행 |
 | PR 전 최종 점검 | `/verify-implementation` | 모든 `verify-*` 스킬을 순차 실행하여 통합 보고 |
 
 **가장 권장하는 시작 한 줄:**
@@ -147,10 +152,11 @@ docs/
 1. /docs-plan    → Write VISION_CORE.md, LEAN_CANVAS.md, PRODUCT_SPECS.md
 2. /docs-plan    → Write SCREEN_FLOW.md, UI_DESIGN.md
 3. UI-First Gate → Confirm screens, user paths, data flow, and UI states before coding
-4. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
-5. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
-6. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First Gate
-7. /verify-docs  → Audit structure, metadata, Backlog Context Lock, and UI-First Gate compliance
+4. Pre-Code Technical Brief → Confirm data sources, API shape, state strategy, and acceptance criteria
+5. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
+6. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
+7. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First Gate
+8. /verify-implementation  → Audit docs, UI, code, security, performance, DB, and skill package changes
 ```
 
 Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Progress/00_BACKLOG.md` must include related Concept, UI, Technical Spec, and QA documents, plus implementation preconditions, acceptance criteria, and a document sync check. If a related document does not exist, the item must say `N/A - 사유`; implementation should pause when the missing document is required for a safe decision.

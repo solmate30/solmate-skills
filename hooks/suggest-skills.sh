@@ -52,7 +52,7 @@ fi
 
 # Feature implementation / workflow → rules-workflow
 if echo "$PROMPT" | grep -qiE '기능 ?구현|구현|implement|feature|작업 ?시작|어디서 ?시작|어떻게 ?시작|개발 ?시작|시작할게'; then
-  SUGGESTIONS="$SUGGESTIONS\n- 기능 구현을 시작하려 합니다. \`/rules-workflow\`로 18단계 워크플로우를 따라 계획부터 PR까지 진행하세요."
+  SUGGESTIONS="$SUGGESTIONS\n- 기능 구현을 시작하려 합니다. 먼저 \`/rules-product\`로 현재 Phase를 진단한 뒤, \`/rules-workflow\`로 18단계 구현 워크플로우를 진행하세요."
 fi
 
 # React / UI component → rules-react

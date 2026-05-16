@@ -9,14 +9,23 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ---
 
+## Step 0: Product Phase Preflight
+
+기능 구현을 시작하기 전, 먼저 `rules-product` 기준으로 현재 프로젝트 Phase를 진단한다. Concept, UI, UI-First Gate, Pre-Code Technical Brief 중 하나라도 누락되어 구현 판단이 불안정하면 코딩을 시작하지 않고 해당 문서 또는 백로그 보완을 제안한다.
+
+- 체크: [ ] 현재 Phase를 진단했는가? [ ] UI-First Gate가 충족되었는가? [ ] 최소 기술 계약이 확인되었는가?
+
+---
+
 ## Phase 1: Plan (Steps 1–4)
 
 ### Step 1. 계획 수립
 - 요구사항·목적을 문서 또는 이슈 기준으로 정리한다.
 - 백로그 항목이 있으면 `Related Concept Docs`, `Related UI Docs`, `Related Technical Docs`, `Related QA Docs`를 먼저 읽고 구현 입력값으로 요약한다.
 - 코드 작성보다 먼저 UI-First Gate를 확인한다. 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태가 문서화되지 않았으면 구현 계획을 보류하고 `docs-plan` 또는 `docs-dev` 문서 보완을 제안한다.
+- Pre-Code Technical Brief를 확인한다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 불명확하면 구현 전에 사용자와 합의한다.
 - 변경할 파일·추가할 컴포넌트·API·DB 영향 범위를 나열한다.
-- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] UI-First Gate가 확인되었는가? [ ] 영향 범위가 정리되었는가?
+- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] UI-First Gate가 확인되었는가? [ ] 최소 기술 계약이 확인되었는가? [ ] 영향 범위가 정리되었는가?
 
 ### Step 2. 계획 검토
 - 계획이 요구사항과 일치하는지, 누락된 시나리오는 없는지 검토한다.

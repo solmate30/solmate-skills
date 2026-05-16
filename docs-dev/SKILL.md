@@ -62,6 +62,8 @@ This skill manages **Layer 3 (Technical_Specs)**, **Layer 4 (Logic_Progress)**, 
 
 **UI-First Gate 강제 규칙**: 구현 코드는 화면 확인 이후에만 작성한다. 백로그 항목은 관련 UI 문서에서 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태를 확인했음을 `Implementation Preconditions`에 포함해야 한다. 해당 정보가 없으면 `docs/02_UI_Screens/` 문서부터 보완한다.
 
+**Pre-Code Technical Brief 강제 규칙**: UI 확인 후에도 바로 구현하지 않는다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 백로그나 기술 문서에 기록되어야 한다. 불명확하면 `docs/03_Technical_Specs/` 문서 또는 백로그 항목을 먼저 보완한다.
+
 Backlog 항목 작성 전 필수 확인 대상:
 - `docs/01_Concept_Design/`: 기능 목적, 사용자 가치, 제품 방향
 - `docs/02_UI_Screens/`: 화면 흐름, UI 상태, 인터랙션
@@ -85,6 +87,8 @@ Backlog 항목 작성 전 필수 확인 대상:
 - 화면 구조와 사용자 동선을 먼저 확인했는가?
 - 화면별 입력·출력 데이터와 상태 변화를 확인했는가?
 - 로딩·빈 상태·오류 상태가 UI 문서나 백로그에 반영되어 있는가?
+- 데이터 소스, 최소 필드, mutation, 상태 관리 방식이 정리되었는가?
+- acceptance criteria가 사용자 시나리오 기준으로 검증 가능한가?
 - 구현 범위가 관련 문서의 의도와 충돌하지 않는가?
 - 관련 QA 기준이 `Acceptance Criteria`에 반영되어 있는가?
 - 누락된 문서가 있다면 `N/A - 사유`가 타당한가?
@@ -194,9 +198,12 @@ Backlog 항목 작성 전 필수 확인 대상:
   - [ ] 사용자 진입·전환·이탈 동선 확인 완료
   - [ ] 화면별 입력·출력 데이터 및 상태 변화 확인 완료
   - [ ] 로딩·빈 상태·오류 상태 확인 완료
+  - [ ] 데이터 소스와 최소 필드 확인 완료
+  - [ ] mutation 및 상태 관리 방식 확인 완료
   - [ ] 구현 범위와 문서 요구사항 충돌 없음
 - Acceptance Criteria:
   - [ ] 구현 결과가 확인된 화면 구조와 사용자 동선을 따른다
+  - [ ] 데이터 흐름과 상태 변화가 Pre-Code Technical Brief와 일치한다
   - [ ] QA 기준이 구현 완료 판단에 반영됨
   - [ ] 핵심 사용자 흐름이 검증됨
 - Document Sync Check:
