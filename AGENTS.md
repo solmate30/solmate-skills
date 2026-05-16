@@ -56,6 +56,15 @@
 - **파일 네이밍**: 모든 파일명 앞에는 `01_`과 같은 **순번(Numbering)**을 반드시 붙여 생성 순서와 계층을 명확히 한다. (예: `01_VISION.md`, `02_UI_DESIGN.md`)
 - **Interactive Process**: 문서를 작성할 때 AI가 독단적으로 내용을 채우지 않는다. 초안 작성 전, **반드시 사용자에게 핵심 질문을 던지고 답변을 바탕으로 문서를 작성(Ask before Write)**한다.
 
+### 2.7. SVG 다이어그램 산출물 표준 (User Journey & Data Flow)
+- **사용자 동선 SVG 필수화**: 주요 기능·화면 흐름 문서에는 사용자 동선(User Journey / Screen Flow)을 설명하는 SVG 다이어그램을 포함한다.
+- **저장 위치**: 사용자 동선 SVG는 `docs/02_UI_Screens/assets/`에 저장하고, 관련 UI 스크린 문서에서 상대 경로로 참조한다.
+- **데이터 흐름 SVG 필수화**: 주요 기능의 기술 명세에는 데이터 흐름(Data Flow / API-DB-External Service Flow)을 설명하는 SVG 다이어그램을 포함한다.
+- **저장 위치**: 데이터 흐름 SVG는 `docs/03_Technical_Specs/assets/`에 저장하고, 관련 기술 명세 문서에서 상대 경로로 참조한다.
+- **작업 관리 위치**: SVG 작성·수정 작업은 `docs/04_Logic_Progress/00_BACKLOG.md` 또는 `docs/04_Logic_Progress/02_EXECUTION_PLAN.md`에 태스크로 관리한다.
+- **검증 위치**: SVG가 최신 UI·API·DB 구조와 일치하는지 여부는 `docs/05_QA_Validation/`의 QA 체크리스트 또는 검증 문서에서 확인한다.
+- **파일 네이밍**: SVG 파일명에도 순번과 목적을 포함한다. (예: `01_user_journey.svg`, `02_auth_data_flow.svg`)
+
 ## 3. 개발 표준 및 품질
 - **UI 중심 개발 전략 (UI-First)**: Concept_Design -> UI_Screens -> Technical_Specs -> Logic_Progress 순서를 따른다.
 - **git commit 필수**: 중요 작업 전 반드시 git commit을 수행한다.
