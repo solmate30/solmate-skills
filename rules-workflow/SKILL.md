@@ -15,6 +15,8 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 - 체크: [ ] 현재 Phase를 진단했는가? [ ] UI-First Gate가 충족되었는가? [ ] 최소 기술 계약이 확인되었는가?
 
+진단 결과는 `rules-product`의 `Flow Status Block` 형식으로 먼저 보고한다. 구현 단계 중 사용자가 "지금 어디야?", "다음 뭐야?", "현재 단계가 뭐야?"라고 묻거나 Phase 1-6 경계에 도달하면 같은 형식을 다시 출력한다.
+
 ---
 
 ## Phase 1: Plan (Steps 1–4)
@@ -47,6 +49,7 @@ Follow this workflow for feature implementation and significant code changes. Co
 - 승인된 계획대로 구현한다. AGENTS.md·프로젝트 컨벤션(커밋, Zod, Luxon 등)을 따른다.
 - 코드 작성 전 백로그 항목의 `Implementation Preconditions`와 `Acceptance Criteria`를 확인한다. 관련 문서 링크가 비어 있거나 `N/A - 사유`가 부실하면 구현을 보류하고 문서 보완 필요 여부를 사용자에게 확인한다.
 - UI-First Gate가 통과되지 않았거나 사용자가 화면/UI를 먼저 확인하지 않았다면 구현을 시작하지 않는다.
+- 구현을 시작하기 직전에 `Flow Status Block`을 출력하고, 현재 위치가 `Phase 3 — React 변환` 또는 해당 기능 구현 단계인지 명시한다.
 - 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가? [ ] 화면·동선·데이터 흐름 확인 후 구현했는가?
 
 ---
@@ -108,6 +111,7 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 17. 배포 가능 퀄리티 최종 검토
 - "이대로 배포해도 될 수준인가?"를 한 번 더 검토한다. 1–16단계에서 누락된 항목이 없는지 확인한다.
+- 최종 검토 시 `Flow Status Block`을 출력하고, 다음 위치가 `Phase 6 — Ship/Handoff`인지 명시한다.
 - 체크: [ ] 배포 전 필수 조건 충족 [ ] 롤백·모니터링 고려 여부
 
 ---

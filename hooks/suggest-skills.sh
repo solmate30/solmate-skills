@@ -52,7 +52,12 @@ fi
 
 # Feature implementation / workflow → rules-workflow
 if echo "$PROMPT" | grep -qiE '기능 ?구현|구현|implement|feature|작업 ?시작|어디서 ?시작|어떻게 ?시작|개발 ?시작|시작할게'; then
-  SUGGESTIONS="$SUGGESTIONS\n- 기능 구현을 시작하려 합니다. 먼저 \`/rules-product\`로 현재 Phase를 진단한 뒤, \`/rules-workflow\`로 18단계 구현 워크플로우를 진행하세요."
+  SUGGESTIONS="$SUGGESTIONS\n- 기능 구현을 시작하려 합니다. 먼저 \`/rules-product\`로 현재 Phase를 진단하고 Flow Status Block을 확인한 뒤, \`/rules-workflow\`로 18단계 구현 워크플로우를 진행하세요."
+fi
+
+# Flow position question → rules-product
+if echo "$PROMPT" | grep -qiE '지금.*어디|현재.*단계|현재.*위치|다음.*뭐|어느.*Phase|flow status|플로우.*상태|단계.*확인'; then
+  SUGGESTIONS="$SUGGESTIONS\n- 현재 위치 확인 요청입니다. \`/rules-product\` 기준 Flow Status Block으로 현재 Phase, Gate, 다음 액션을 먼저 보고하세요."
 fi
 
 # React / UI component → rules-react

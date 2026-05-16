@@ -57,6 +57,18 @@ When you run the `install` command, the script copies the skill folder to `.agen
 
 `rules-product`는 프로젝트 상태를 스스로 진단해 현재 어느 단계인지 파악하고, 해당 단계의 올바른 스킬로 위임하는 오케스트레이터입니다. 새 프로젝트든 재개 중인 프로젝트든 동일하게 사용할 수 있습니다.
 
+`rules-product` and `rules-workflow` should show a short Flow Status Block at the start of work, before implementation, before verification, and at handoff:
+
+```text
+[Flow]
+현재: Phase 2 — UI 설계
+Gate: UI-First Gate 진행 중
+완료: Phase 1 — Concept
+다음: Pre-Code Technical Brief
+필요 확인: 화면별 오류 상태
+권장 스킬: /docs-plan
+```
+
 ---
 
 ## Available Skills

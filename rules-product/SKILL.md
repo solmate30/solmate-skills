@@ -38,12 +38,22 @@ Run these checks in order:
 | `docs/03_Technical_Specs/` 존재 여부 | 없으면 Phase 4 미완 | 개발문서 필요 |
 | verify-* 스킬 실행 이력 또는 사용자 확인 여부 | 없으면 Phase 5 미완 | 품질 검증 필요 |
 
-진단 결과를 다음 형식으로 보고한다:
+진단 결과는 항상 아래 `Flow Status Block` 형식으로 보고한다. 새 작업 시작, Phase 전환, 구현 시작 전, 검증 시작 전, 최종 보고 시에도 같은 형식을 짧게 반복한다.
 
 ```
-현재 단계: Phase N — [단계명]
-완료된 단계: Phase 1, 2, ...
-다음 액션: [구체적 지시]
+[Flow]
+현재: Phase N — [단계명]
+Gate: [진행 중 / 통과 / 미통과 / N/A]
+완료: [완료된 Phase 또는 없음]
+다음: [다음 Phase 또는 Gate]
+필요 확인: [막힌 조건 또는 확인할 항목]
+권장 스킬: /skill-name
+```
+
+일상적인 중간 답변에서는 한 줄 축약형을 쓸 수 있다:
+
+```
+현재 위치: Phase N — [단계명] / Gate: [상태] / 다음: [다음 액션]
 ```
 
 사용자가 특정 단계를 명시한 경우 그 단계로 바로 이동한다.
@@ -71,6 +81,8 @@ Run these checks in order:
 
 Phase 1 완료 확인 후 다음을 묻는다:
 > "Phase 1 문서가 완성되었습니다. Phase 2(UI 설계 문서)로 넘어갈까요? 또는 기획문서를 바탕으로 파생 문서(피치덱, 사업계획서)를 먼저 작성할 수도 있습니다."
+
+Phase 1 완료 보고에는 `Flow Status Block`을 포함한다.
 
 ---
 
@@ -133,6 +145,8 @@ Phase 1이 완료된 후 언제든 작성 가능하다. Phase 2 진입과 독립
 Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확인하고 다음을 묻는다:
 > "화면 구조, 사용자 동선, 데이터 흐름, 로딩/빈/오류 상태를 먼저 확인했습니다. 현재 단계에서 더 구체화하거나 보완할 점이 있을까요?"
 
+Phase 2 완료 보고에는 `Flow Status Block`을 포함하고, 다음 위치가 `UI-First Gate`임을 명시한다.
+
 ---
 
 ## UI-First Gate: 화면·동선·데이터 흐름 확인
@@ -153,6 +167,8 @@ Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확
 - [ ] `01_UI_DESIGN.md` 또는 `XX_PROTOTYPE_REVIEW.md`에 화면 상태와 피드백이 기록됨
 - [ ] 필요한 경우 `docs/04_Logic_Progress/00_BACKLOG.md`의 작업 항목에 UI 확인 결과가 반영됨
 
+UI-First Gate 보고에는 `Flow Status Block`을 포함하고, 다음 위치가 `Pre-Code Technical Brief`임을 명시한다.
+
 ---
 
 ## Pre-Code Technical Brief: 데이터·API·상태 최소 합의
@@ -171,6 +187,8 @@ Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확
 - [ ] `docs/03_Technical_Specs/` 문서가 있으면 관련 계약이 반영됨
 - [ ] 기술 문서가 아직 없으면 백로그의 `Implementation Preconditions` 또는 `Acceptance Criteria`에 최소 계약이 기록됨
 - [ ] 구현자가 mock data 구조와 실제 데이터 전환 방식을 설명할 수 있음
+
+Pre-Code Technical Brief 보고에는 `Flow Status Block`을 포함하고, 다음 위치가 `Phase 3 — React 변환`임을 명시한다.
 
 ---
 
@@ -200,6 +218,8 @@ Phase 2 완료 후 곧바로 코딩하지 않는다. 먼저 UI-First Gate를 확
 Phase 3 완료 확인 후 다음을 묻는다:
 > "Phase 3이 완료되었습니다. Phase 4(개발문서)로 넘어갈까요?"
 
+Phase 3 완료 보고에는 `Flow Status Block`을 포함한다.
+
 ---
 
 ## Phase 4: 개발문서 (Technical_Specs / Logic_Progress / QA_Validation)
@@ -226,6 +246,8 @@ Phase 3 완료 확인 후 다음을 묻는다:
 
 Phase 4 완료 확인 후 다음을 묻는다:
 > "Phase 4 문서가 완성되었습니다. Phase 5(품질 검증)로 넘어갈까요?"
+
+Phase 4 완료 보고에는 `Flow Status Block`을 포함한다.
 
 ---
 
@@ -257,6 +279,8 @@ FAIL 항목 발견 시: 해당 스킬로 돌아가 수정 후 재검증
 FAIL 항목이 있으면 해당 Phase로 되돌아가 수정 후 재실행한다. 모든 항목 PASS 확인 후 다음을 묻는다:
 > "모든 검증을 통과했습니다. Phase 6(최종 전달물)으로 넘어갈까요?"
 
+Phase 5 검증 보고에는 `Flow Status Block`을 포함하고, Fail이 있으면 `필요 확인`에 차단 항목을 적는다.
+
 ---
 
 ## Phase 6: 최종 전달물 (선택)
@@ -283,6 +307,14 @@ FAIL 항목이 있으면 해당 Phase로 되돌아가 수정 후 재실행한다
 전체 파이프라인 완료 후 최종 보고:
 
 ```
+[Flow]
+현재: Phase 6 — 최종 전달물 또는 Handoff
+Gate: 완료
+완료: Phase 1, Phase 2, UI-First Gate, Pre-Code Technical Brief, Phase 3, Phase 4, Phase 5
+다음: 사용자 선택 후속 작업
+필요 확인: 남은 TODO 또는 없음
+권장 스킬: /docs-pitch 또는 /docs-business (선택)
+
 전체 워크플로우 완료
 - Phase 1: docs/01_Concept_Design/        기획문서
 - Phase 2: docs/02_UI_Screens/            UI 설계 문서

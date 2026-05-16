@@ -25,6 +25,19 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 
 ## 워크플로우
 
+### Step 0: Flow 위치 확인
+검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`입니다.
+
+```
+[Flow]
+현재: Phase 5 — 품질 검증
+Gate: Quality Gate 진행 중
+완료: Phase 1, Phase 2, UI-First Gate, Pre-Code Technical Brief, Phase 3, Phase 4
+다음: Phase 6 — 최종 전달물 또는 Handoff
+필요 확인: Fail 항목 또는 N/A 처리 사유
+권장 스킬: /verify-implementation
+```
+
 ### Step 1: 동적 스킬 탐색
 `.agent/skills/`, `.claude/commands/`, 또는 현재 저장소 하위의 `verify-*` 패턴을 탐색합니다.
 
@@ -44,6 +57,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 
 ### Step 4: 통합 보고서 생성
 PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
+보고서 상단에는 `Flow Status Block`을 다시 포함하고, Gate 상태를 `통과`, `미통과`, `Blocked`, `N/A` 중 하나로 표시합니다.
 
 ### Step 5: 수정 옵션 제공
 자동 수정 또는 개별 수정을 사용자에게 제안합니다.
