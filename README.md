@@ -1,41 +1,55 @@
 # solmate-skills
 
-Curated skills for Solmate projects. Easily share and install AI tool skills across your team.
+Reusable AI-agent skills for disciplined product work.
 
-## What's New in 2.0.6
+`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, implement with approval gates, and verify the result before release.
 
-`solmate-skills@2.0.6` keeps **Backlog Context Lock** as the current documentation guardrail, adds **UI-First Gate** expectations, requires browser-viewable **HTML UI Previews**, formalizes SVG diagram outputs, and fixes package hygiene so installable skill scripts are included in the npm tarball.
+Use it when you want an AI coding agent to follow a shared workflow instead of improvising project structure, documentation, implementation order, and QA.
 
-Key changes:
+## Install
 
-- Every backlog task must link to related Concept, UI, Technical Spec, and QA documents.
-- UI, user paths, data flow, loading states, empty states, and error states must be confirmed before coding.
-- UI planning must include HTML preview files under `docs/02_UI_Screens/previews/` and link them from the related UI documents.
-- User journey SVG files belong in `docs/02_UI_Screens/assets/`.
-- Data flow SVG files belong in `docs/03_Technical_Specs/assets/`.
-- `/rules-workflow` now treats linked backlog documents as implementation inputs before coding starts.
-- `/verify-docs` fails backlog items that omit required related-document fields.
-- Local Codex settings under `.codex/` are excluded from the npm package, while skill-owned shell scripts remain publishable.
-
-## Installation
-
-You don't need to install this package globally. Simply use `npx`:
+You do not need a global install. Run it with `npx` from the root of the project where you want the skills installed:
 
 ```bash
 # List available skills
-npx solmate-skills list
+npx solmate-skills@latest list
 
-# Install all available skills (use @latest to bypass npx cache)
+# Install every skill
 npx solmate-skills@latest install all
+
+# Install one skill
+npx solmate-skills@latest install rules-product
 
 # Install proactive hook suggestions for Claude Code projects
 npx solmate-skills@latest install hooks
-
-# Install a specific skill
-npx solmate-skills install rules-docs
 ```
 
-When you run the `install` command, the script copies the skill folder to `.agent/skills/<skill-name>` in your current project.
+The installer copies each selected skill folder into `.agent/skills/<skill-name>` in your current project.
+
+## What You Get
+
+- **Product workflow orchestration**: `/rules-product` diagnoses the current phase and routes the agent to the right next skill.
+- **UI-first planning**: `/docs-plan` creates concept and screen documents before implementation starts.
+- **HTML UI Preview Gate**: major screens and flows must have browser-viewable HTML previews under `docs/02_UI_Screens/previews/`.
+- **Backlog Context Lock**: every backlog item must link the Concept, UI, HTML Preview, Technical Spec, and QA documents needed for implementation.
+- **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
+- **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
+
+## What's New in 2.0.8
+
+`solmate-skills@2.0.8` refreshes the npm README and package metadata so the package purpose, install path, and core workflow gates are clearer on the npm package page.
+
+Recent workflow guardrails:
+
+- Every backlog task must link to related Concept, UI, HTML Preview, Technical Spec, and QA documents.
+- UI planning must include HTML preview files under `docs/02_UI_Screens/previews/` and link them from the related UI documents.
+- UI, user paths, data flow, loading states, empty states, and error states must be confirmed before coding.
+- User journey SVG files belong in `docs/02_UI_Screens/assets/`.
+- Data flow SVG files belong in `docs/03_Technical_Specs/assets/`.
+- `/rules-workflow` treats linked backlog documents as implementation inputs before coding starts.
+- `/verify-docs` fails backlog items that omit required related-document fields.
+
+## Install Details
 
 `install all` installs only skill folders that contain `SKILL.md`. Use `install hooks` separately when you want prompt/file-change suggestions that nudge the agent toward `/rules-product`, `/rules-workflow`, and the relevant `verify-*` skills.
 

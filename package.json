@@ -1,7 +1,7 @@
 {
   "name": "solmate-skills",
-  "version": "2.0.7",
-  "description": "Curated skills for Solmate projects",
+  "version": "2.0.8",
+  "description": "AI workflow skills for UI-first planning, backlog-linked docs, QA, and Solmate projects",
   "main": "bin/cli.js",
   "bin": {
     "solmate-skills": "bin/cli.js"
@@ -10,9 +10,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "skills",
+    "ai-skills",
+    "codex",
+    "claude",
+    "workflow",
+    "documentation",
+    "ui-first",
+    "qa",
     "solmate",
-    "antigravity",
+    "skills",
     "automation"
   ],
   "author": "",
