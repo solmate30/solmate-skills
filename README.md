@@ -4,12 +4,13 @@ Curated skills for Solmate projects. Easily share and install AI tool skills acr
 
 ## What's New in 2.0.6
 
-`solmate-skills@2.0.6` keeps **Backlog Context Lock** as the current documentation guardrail, adds **UI-First Gate** expectations, formalizes SVG diagram outputs, and fixes package hygiene so installable skill scripts are included in the npm tarball.
+`solmate-skills@2.0.6` keeps **Backlog Context Lock** as the current documentation guardrail, adds **UI-First Gate** expectations, requires browser-viewable **HTML UI Previews**, formalizes SVG diagram outputs, and fixes package hygiene so installable skill scripts are included in the npm tarball.
 
 Key changes:
 
 - Every backlog task must link to related Concept, UI, Technical Spec, and QA documents.
 - UI, user paths, data flow, loading states, empty states, and error states must be confirmed before coding.
+- UI planning must include HTML preview files under `docs/02_UI_Screens/previews/` and link them from the related UI documents.
 - User journey SVG files belong in `docs/02_UI_Screens/assets/`.
 - Data flow SVG files belong in `docs/03_Technical_Specs/assets/`.
 - `/rules-workflow` now treats linked backlog documents as implementation inputs before coding starts.
@@ -161,7 +162,7 @@ Skills are organized into five categories.
 | `verify-security` | Check for security vulnerabilities based on OWASP Top 10. |
 | `verify-performance` | Lighthouse & Core Web Vitals check. |
 | `verify-code` | Comprehensive pre-PR code quality review. |
-| `verify-ui` | Verify implemented UI against screen docs and user flows. |
+| `verify-ui` | Verify implemented UI against screen docs, HTML previews, and user flows. |
 | `verify-skills` | Verify skill package metadata, CLI output, and release readiness. |
 
 ---
@@ -195,13 +196,14 @@ docs/
 
 ```
 1. /docs-plan    → Write VISION_CORE.md, LEAN_CANVAS.md, PRODUCT_SPECS.md
-2. /docs-plan    → Write SCREEN_FLOW.md, UI_DESIGN.md
-3. UI-First Gate → Confirm screens, user paths, data flow, and UI states before coding
-4. Pre-Code Technical Brief → Confirm data sources, API shape, state strategy, and acceptance criteria
-5. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
-6. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
-7. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First Gate
-8. /verify-implementation  → Audit docs, UI, code, security, performance, DB, and skill package changes
+2. /docs-plan    → Write SCREEN_FLOW.md, UI_DESIGN.md, and HTML UI previews
+3. HTML UI Preview Gate → Show browser-viewable HTML screens and capture user feedback
+4. UI-First Gate → Confirm screens, user paths, data flow, and UI states before coding
+5. Pre-Code Technical Brief → Confirm data sources, API shape, state strategy, and acceptance criteria
+6. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
+7. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
+8. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First Gate
+9. /verify-implementation  → Audit docs, UI, code, security, performance, DB, and skill package changes
 ```
 
 Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Progress/00_BACKLOG.md` must include related Concept, UI, Technical Spec, and QA documents, plus implementation preconditions, acceptance criteria, and a document sync check. If a related document does not exist, the item must say `N/A - 사유`; implementation should pause when the missing document is required for a safe decision.
@@ -212,12 +214,30 @@ Backlog Context Lock makes `docs/04_Logic_Progress/00_BACKLOG.md` act as a bridg
 
 ### UI-First Gate
 
-UI-First Gate prevents implementation from starting before the team has reviewed the actual screens and the user's path through them. Before coding, confirm the core screen structure, user entry and exit paths, CTAs, screen-by-screen data flow, loading states, empty states, and error states. If these are missing, update `docs/02_UI_Screens/` or the backlog first.
+UI-First Gate prevents implementation from starting before the team has reviewed the actual screens and the user's path through them. Before coding, confirm the core screen structure, user entry and exit paths, CTAs, screen-by-screen data flow, loading states, empty states, and error states. If these are missing, update `docs/02_UI_Screens/`, its HTML previews, or the backlog first.
+
+### HTML UI Preview Gate
+
+UI planning documents are not complete with Markdown alone. For every major screen or user flow, create a browser-viewable HTML preview and store it under:
+
+```text
+docs/02_UI_Screens/previews/
+```
+
+Recommended naming:
+
+```text
+docs/02_UI_Screens/previews/01_main_flow_preview.html
+docs/02_UI_Screens/previews/02_dashboard_preview.html
+```
+
+Each related UI document must link to the HTML file with a relative path. The preview must be shown to the user before implementation, and feedback must be captured in `XX_PROTOTYPE_REVIEW.md`, `00_SCREEN_FLOW.md`, `01_UI_DESIGN.md`, or the related backlog item.
 
 Required fields for every backlog item:
 
 - `Related Concept Docs`
 - `Related UI Docs`
+- `Related HTML Preview`
 - `Related Technical Docs`
 - `Related QA Docs`
 - `Implementation Preconditions`
@@ -236,6 +256,8 @@ If a related document does not exist, write `N/A - 사유`. Do not leave the fie
   - [Product Specs](../01_Concept_Design/03_PRODUCT_SPECS.md) - feature purpose and user value
 - Related UI Docs:
   - [Screen Flow](../02_UI_Screens/00_SCREEN_FLOW.md) - target screen and interaction flow
+- Related HTML Preview:
+  - [Main Flow Preview](../02_UI_Screens/previews/01_main_flow_preview.html) - browser-viewable UI for user review
 - Related Technical Docs:
   - [API Specs](../03_Technical_Specs/02_API_SPECS.md) - endpoint and data contract
 - Related QA Docs:
@@ -243,6 +265,7 @@ If a related document does not exist, write `N/A - 사유`. Do not leave the fie
 - Implementation Preconditions:
   - [ ] Read all related documents before coding
   - [ ] Confirm screen/UI before coding
+  - [ ] Show the HTML UI preview to the user and capture feedback
   - [ ] Confirm user path and screen-by-screen data flow
   - [ ] Confirm loading, empty, and error states
   - [ ] Confirm implementation scope does not conflict with documented intent

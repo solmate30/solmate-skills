@@ -1,4 +1,4 @@
 interface:
   display_name: "Development Docs"
-  short_description: "Write technical specs, backlogs, and QA docs"
-  default_prompt: "Use $docs-dev to create technical specs, implementation plans, and QA validation docs."
+  short_description: "Write specs, backlogs, QA, and preview links"
+  default_prompt: "Use $docs-dev to create technical specs, implementation plans, preview-linked backlogs, and QA validation docs."

@@ -1,6 +1,6 @@
 ---
 name: rules-workflow
-description: Guides the full implementation lifecycle from planning through PR. Use when implementing a new feature, planning implementation, before committing or creating a PR, or when the user asks for plan review, implementation review, deployment readiness check, or to follow the 18-step workflow (18단계). Ensures plan validation, implementation quality, side-effect checks, and deployment-ready quality.
+description: Guides the full implementation lifecycle from planning through PR. Use when implementing a new feature, planning implementation, before committing or creating a PR, or following the 18-step workflow. Requires product phase preflight, HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, implementation quality checks, and deployment readiness.
 ---
 
 # Implementation & Execution Workflow (18 Steps)
@@ -11,9 +11,9 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ## Step 0: Product Phase Preflight
 
-기능 구현을 시작하기 전, 먼저 `rules-product` 기준으로 현재 프로젝트 Phase를 진단한다. Concept, UI, UI-First Gate, Pre-Code Technical Brief 중 하나라도 누락되어 구현 판단이 불안정하면 코딩을 시작하지 않고 해당 문서 또는 백로그 보완을 제안한다.
+기능 구현을 시작하기 전, 먼저 `rules-product` 기준으로 현재 프로젝트 Phase를 진단한다. Concept, UI, HTML UI Preview Gate, UI-First Gate, Pre-Code Technical Brief 중 하나라도 누락되어 구현 판단이 불안정하면 코딩을 시작하지 않고 해당 문서 또는 백로그 보완을 제안한다.
 
-- 체크: [ ] 현재 Phase를 진단했는가? [ ] UI-First Gate가 충족되었는가? [ ] 최소 기술 계약이 확인되었는가?
+- 체크: [ ] 현재 Phase를 진단했는가? [ ] HTML UI Preview Gate가 충족되었는가? [ ] UI-First Gate가 충족되었는가? [ ] 최소 기술 계약이 확인되었는가?
 
 진단 결과는 `rules-product`의 `Flow Status Block` 형식으로 먼저 보고한다. 구현 단계 중 사용자가 "지금 어디야?", "다음 뭐야?", "현재 단계가 뭐야?"라고 묻거나 Phase 1-6 경계에 도달하면 같은 형식을 다시 출력한다.
 
@@ -24,10 +24,11 @@ Follow this workflow for feature implementation and significant code changes. Co
 ### Step 1. 계획 수립
 - 요구사항·목적을 문서 또는 이슈 기준으로 정리한다.
 - 백로그 항목이 있으면 `Related Concept Docs`, `Related UI Docs`, `Related Technical Docs`, `Related QA Docs`를 먼저 읽고 구현 입력값으로 요약한다.
-- 코드 작성보다 먼저 UI-First Gate를 확인한다. 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태가 문서화되지 않았으면 구현 계획을 보류하고 `docs-plan` 또는 `docs-dev` 문서 보완을 제안한다.
+- 코드 작성보다 먼저 HTML UI Preview Gate를 확인한다. `docs/02_UI_Screens/previews/`의 HTML Preview가 없거나 UI 문서에 링크되지 않았거나 사용자 확인 기록이 없으면 구현 계획을 보류하고 `docs-plan` 문서/HTML 보완을 제안한다.
+- 그 다음 UI-First Gate를 확인한다. 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태가 문서화되지 않았으면 구현 계획을 보류하고 `docs-plan` 또는 `docs-dev` 문서 보완을 제안한다.
 - Pre-Code Technical Brief를 확인한다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 불명확하면 구현 전에 사용자와 합의한다.
 - 변경할 파일·추가할 컴포넌트·API·DB 영향 범위를 나열한다.
-- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] UI-First Gate가 확인되었는가? [ ] 최소 기술 계약이 확인되었는가? [ ] 영향 범위가 정리되었는가?
+- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] HTML UI Preview를 확인했는가? [ ] UI-First Gate가 확인되었는가? [ ] 최소 기술 계약이 확인되었는가? [ ] 영향 범위가 정리되었는가?
 
 ### Step 2. 계획 검토
 - 계획이 요구사항과 일치하는지, 누락된 시나리오는 없는지 검토한다.
@@ -48,9 +49,10 @@ Follow this workflow for feature implementation and significant code changes. Co
 ### Step 5. 구현
 - 승인된 계획대로 구현한다. AGENTS.md·프로젝트 컨벤션(커밋, Zod, Luxon 등)을 따른다.
 - 코드 작성 전 백로그 항목의 `Implementation Preconditions`와 `Acceptance Criteria`를 확인한다. 관련 문서 링크가 비어 있거나 `N/A - 사유`가 부실하면 구현을 보류하고 문서 보완 필요 여부를 사용자에게 확인한다.
+- HTML UI Preview Gate가 통과되지 않았거나 사용자가 HTML Preview를 확인하지 않았다면 구현을 시작하지 않는다.
 - UI-First Gate가 통과되지 않았거나 사용자가 화면/UI를 먼저 확인하지 않았다면 구현을 시작하지 않는다.
 - 구현을 시작하기 직전에 `Flow Status Block`을 출력하고, 현재 위치가 `Phase 3 — React 변환` 또는 해당 기능 구현 단계인지 명시한다.
-- 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가? [ ] 화면·동선·데이터 흐름 확인 후 구현했는가?
+- 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가? [ ] HTML Preview 확인 후 구현했는가? [ ] 화면·동선·데이터 흐름 확인 후 구현했는가?
 
 ---
 

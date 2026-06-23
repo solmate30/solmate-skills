@@ -1,4 +1,4 @@
 interface:
   display_name: "Documentation Rules"
-  short_description: "Apply the five-layer documentation standard"
-  default_prompt: "Use $rules-docs to decide where a document belongs and how it should link context."
+  short_description: "Apply docs, links, and HTML preview rules"
+  default_prompt: "Use $rules-docs to decide where docs, HTML previews, and related links belong."

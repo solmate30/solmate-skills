@@ -1,4 +1,4 @@
 interface:
   display_name: "Planning Docs"
-  short_description: "Write product vision, concept, and UI docs"
-  default_prompt: "Use $docs-plan to build the product vision, screen flow, and UI planning documents."
+  short_description: "Write product docs and HTML UI previews"
+  default_prompt: "Use $docs-plan to build product vision, screen flow, UI docs, and HTML UI previews."

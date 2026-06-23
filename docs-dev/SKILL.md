@@ -1,6 +1,6 @@
 ---
 name: docs-dev
-description: Create and manage development documents for Layer 3 (Technical_Specs), Layer 4 (Logic_Progress), and Layer 5 (QA_Validation). Use when writing DB schema docs, API specs, development principles, roadmaps, backlogs, business logic designs, or test scenarios. Always read existing files before editing. Include Related Documents sections.
+description: Create and manage development documents for Layer 3 (Technical_Specs), Layer 4 (Logic_Progress), and Layer 5 (QA_Validation). Use when writing DB schema docs, API specs, development principles, roadmaps, backlogs, business logic designs, or test scenarios. Enforces backlog links to Concept/UI/HTML Preview/Technical/QA docs before implementation. Always read existing files before editing.
 ---
 
 # Development Documentation Skill
@@ -60,19 +60,21 @@ This skill manages **Layer 3 (Technical_Specs)**, **Layer 4 (Logic_Progress)**, 
 
 **Backlog 문서 참조 강제 규칙**: `00_BACKLOG.md`의 모든 작업 항목은 관련 문서를 읽은 뒤 작성해야 하며, 구현자는 코드 작성 전에 해당 문서를 다시 확인해야 한다. 백로그는 단순 ToDo 목록이 아니라 Concept, UI, Technical Spec, QA 기준을 구현으로 연결하는 실행 티켓이어야 한다.
 
-**UI-First Gate 강제 규칙**: 구현 코드는 화면 확인 이후에만 작성한다. 백로그 항목은 관련 UI 문서에서 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태를 확인했음을 `Implementation Preconditions`에 포함해야 한다. 해당 정보가 없으면 `docs/02_UI_Screens/` 문서부터 보완한다.
+**UI-First Gate 강제 규칙**: 구현 코드는 화면 확인 이후에만 작성한다. 백로그 항목은 관련 UI 문서와 HTML Preview에서 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태를 확인했음을 `Implementation Preconditions`에 포함해야 한다. 해당 정보가 없으면 `docs/02_UI_Screens/` 문서와 `docs/02_UI_Screens/previews/` HTML 파일부터 보완한다.
 
 **Pre-Code Technical Brief 강제 규칙**: UI 확인 후에도 바로 구현하지 않는다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 백로그나 기술 문서에 기록되어야 한다. 불명확하면 `docs/03_Technical_Specs/` 문서 또는 백로그 항목을 먼저 보완한다.
 
 Backlog 항목 작성 전 필수 확인 대상:
 - `docs/01_Concept_Design/`: 기능 목적, 사용자 가치, 제품 방향
 - `docs/02_UI_Screens/`: 화면 흐름, UI 상태, 인터랙션
+- `docs/02_UI_Screens/previews/`: 사용자에게 보여줄 HTML UI Preview
 - `docs/03_Technical_Specs/`: API, DB, 데이터 구조, 기술 제약
 - `docs/05_QA_Validation/`: 테스트 기준, 수용 조건, 검증 시나리오
 
 각 Backlog 항목은 다음 필드를 반드시 포함한다:
 - `Related Concept Docs`: 관련 기획/디자인 문서
 - `Related UI Docs`: 관련 화면/플로우 문서
+- `Related HTML Preview`: 관련 HTML 화면 프로토타입
 - `Related Technical Docs`: 관련 기술 명세 문서
 - `Related QA Docs`: 관련 검증 문서
 - `Implementation Preconditions`: 구현 전 반드시 확인할 조건
@@ -85,6 +87,7 @@ Backlog 항목 작성 전 필수 확인 대상:
 - 관련 문서를 실제로 읽었는가?
 - 문서의 요구사항이 Backlog 항목에 반영되어 있는가?
 - 화면 구조와 사용자 동선을 먼저 확인했는가?
+- HTML UI Preview를 사용자에게 보여주고 피드백을 기록했는가?
 - 화면별 입력·출력 데이터와 상태 변화를 확인했는가?
 - 로딩·빈 상태·오류 상태가 UI 문서나 백로그에 반영되어 있는가?
 - 데이터 소스, 최소 필드, mutation, 상태 관리 방식이 정리되었는가?
@@ -188,6 +191,8 @@ Backlog 항목 작성 전 필수 확인 대상:
   - [문서명](../01_Concept_Design/XX_DOCUMENT.md) - 기능 목적/사용자 가치 근거
 - Related UI Docs:
   - [문서명](../02_UI_Screens/XX_DOCUMENT.md) - 화면 흐름/상태/인터랙션 근거
+- Related HTML Preview:
+  - [HTML Preview](../02_UI_Screens/previews/XX_SCREEN_PREVIEW.html) - 사용자 확인용 브라우저 화면
 - Related Technical Docs:
   - [문서명](../03_Technical_Specs/XX_DOCUMENT.md) - API/DB/데이터 구조 근거
 - Related QA Docs:
@@ -195,6 +200,7 @@ Backlog 항목 작성 전 필수 확인 대상:
 - Implementation Preconditions:
   - [ ] 관련 문서 전체 확인 완료
   - [ ] 화면/UI 선확인 완료
+  - [ ] HTML UI Preview 사용자 확인 및 피드백 기록 완료
   - [ ] 사용자 진입·전환·이탈 동선 확인 완료
   - [ ] 화면별 입력·출력 데이터 및 상태 변화 확인 완료
   - [ ] 로딩·빈 상태·오류 상태 확인 완료
@@ -203,6 +209,7 @@ Backlog 항목 작성 전 필수 확인 대상:
   - [ ] 구현 범위와 문서 요구사항 충돌 없음
 - Acceptance Criteria:
   - [ ] 구현 결과가 확인된 화면 구조와 사용자 동선을 따른다
+  - [ ] 구현 결과가 HTML UI Preview와 의도 없이 불일치하지 않는다
   - [ ] 데이터 흐름과 상태 변화가 Pre-Code Technical Brief와 일치한다
   - [ ] QA 기준이 구현 완료 판단에 반영됨
   - [ ] 핵심 사용자 흐름이 검증됨

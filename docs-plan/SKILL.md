@@ -1,6 +1,6 @@
 ---
 name: docs-plan
-description: Create and manage planning documents for Layer 1 (Concept_Design) and Layer 2 (UI_Screens). Use when documenting product vision, lean canvas, product specs, UI design systems, screen flows, or prototype reviews. Ask before writing. Always include Related Documents sections.
+description: Create and manage planning documents for Layer 1 (Concept_Design) and Layer 2 (UI_Screens), including required HTML UI previews under docs/02_UI_Screens/previews/. Use when documenting product vision, lean canvas, product specs, UI design systems, screen flows, HTML prototypes, or prototype reviews. Ask before writing. Always include Related Documents sections.
 ---
 
 # Planning Documentation Skill
@@ -39,6 +39,7 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 **Layer 2 — UI_Screens**
 - `00_SCREEN_FLOW.md` — 전체 사용자 여정, 진입·전환·이탈 흐름, 화면별 데이터 입출력
 - `01_UI_DESIGN.md` — 디자인 시스템, 화면 구조, 상태별 UI, 핵심 CTA
+- `previews/XX_SCREEN_PREVIEW.html` — 브라우저에서 열어볼 수 있는 화면/사용자 흐름 HTML Preview
 - `XX_PROTOTYPE_REVIEW.md` — 페이지별 화면 확인 결과와 구현 전 피드백
 
 ## 3. Interactive Process (Ask Before Write)
@@ -77,7 +78,9 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 18. **User Path**: 사용자는 어디서 진입하고, 어떤 CTA를 누르며, 어디로 이동하거나 이탈하는가?
 19. **Data Flow**: 각 화면에서 필요한 입력 데이터, 표시 데이터, 저장/전송 데이터는 무엇인가?
 20. **State Coverage**: 로딩, 빈 상태, 오류 상태, 권한 없음 상태는 화면에서 어떻게 보이는가?
-21. **Prototype Review**: 사용자가 실제 화면, 스크린샷, 와이어프레임, 또는 프로토타입 리뷰를 먼저 확인했는가?
+21. **HTML UI Preview**: 주요 화면과 사용자 흐름을 `docs/02_UI_Screens/previews/`의 HTML 파일로 제작했는가?
+22. **Preview Links**: `00_SCREEN_FLOW.md`, `01_UI_DESIGN.md`, 관련 `XX_PROTOTYPE_REVIEW.md`에서 HTML Preview를 상대 경로로 링크했는가?
+23. **Prototype Review**: 사용자가 HTML Preview, 실제 화면, 스크린샷, 와이어프레임, 또는 프로토타입 리뷰를 먼저 확인했는가?
 
 ## 4. Templates
 
@@ -143,37 +146,44 @@ This skill manages **Layer 1 (Concept_Design)** and **Layer 2 (UI_Screens)** —
 > Created: YYYY-MM-DD HH:mm
 > Last Updated: YYYY-MM-DD HH:mm
 
-## 1. Prototype Link/Screenshot
-(이미지 또는 작동 프로토타입 링크 첨부)
+## 1. HTML UI Preview
+- Preview: [HTML Preview](./previews/XX_SCREEN_PREVIEW.html)
+- 확인 방식: 브라우저에서 HTML 파일 열람 / 로컬 서버 / 배포 URL
+- 확인 목적: 화면 구조, 사용자 동선, 상태별 UI 커뮤니케이션
 
-## 2. Key User Flows
+## 2. Prototype Link/Screenshot
+(스크린샷, 배포 URL, 또는 추가 작동 프로토타입 링크 첨부)
+
+## 3. Key User Flows
 (이 프로토타입에서 시연된 흐름 설명)
 
-## 3. Screen States
+## 4. Screen States
 - Default:
 - Loading:
 - Empty:
 - Error:
 - Permission denied / unavailable:
 
-## 4. Data Flow
+## 5. Data Flow
 - Inputs:
 - Displayed data:
 - Mutations / saved data:
 - External dependencies:
 
-## 5. User Confirmation
+## 6. User Confirmation
 - 화면/UI 선확인 여부:
+- HTML Preview 확인 여부:
 - 확인자:
 - 확인 일시:
 - 보완 필요 사항:
 
-## 6. Feedback & Improvements
+## 7. Feedback & Improvements
 (구현 전 변경이 필요한 사항)
 
-## 7. Related Documents
+## 8. Related Documents
 - **Concept_Design**: [Product Specs](../01_Concept_Design/03_PRODUCT_SPECS.md) - 사이트맵 및 사용자 플로우
 - **UI_Screens**: [UI Design](./01_UI_DESIGN.md) - 디자인 시스템 및 컴포넌트 가이드라인
+- **UI_Screens**: [HTML Preview](./previews/XX_SCREEN_PREVIEW.html) - 브라우저 확인용 화면 프로토타입
 - **Technical_Specs**: [Related Spec](../03_Technical_Specs/XX_SPEC.md) - 구현 명세 요구사항
 ```
 
