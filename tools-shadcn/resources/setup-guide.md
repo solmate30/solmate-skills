@@ -35,8 +35,8 @@ This interactive command will guide you through:
 npx create-next-app@latest my-app
 cd my-app
 
-# Initialize shadcn/ui
-npx shadcn@latest init
+# Initialize shadcn/ui with the Solmate default preset
+npx shadcn@latest init --preset b1Z5aAfsu --template next --monorepo --rtl --pointer
 
 # Add your first component
 npx shadcn@latest add button
@@ -90,13 +90,21 @@ export default {
 
 ### Step 2: Initialize shadcn/ui
 
-Run the initialization command:
+For Next.js monorepo projects, use the Solmate default initialization command:
+
+```bash
+npx shadcn@latest init --preset b1Z5aAfsu --template next --monorepo --rtl --pointer
+```
+
+Before running it in an existing project, check for `components.json`. If the file already exists, do not rerun init blindly; inspect the current aliases, Tailwind paths, style, RTL setting, and pointer behavior first.
+
+For non-Next projects, projects that are not monorepos, or projects that explicitly opt out of RTL or pointer behavior, use the standard interactive command instead:
 
 ```bash
 npx shadcn@latest init
 ```
 
-You'll be asked to configure:
+When using the standard interactive init, you'll be asked to configure:
 
 1. **Style**: Choose between `default`, `new-york`, or one of the new styles (Vega, Nova, etc.)
    - `default`: Clean and minimal design
