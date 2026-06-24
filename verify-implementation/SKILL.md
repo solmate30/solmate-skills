@@ -26,7 +26,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 ## 워크플로우
 
 ### Step 0: Flow 위치 확인
-검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`이며, 코드 변경이 있으면 Gate에 `YAGNI/KISS/DRY Gate`를 포함합니다.
+검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`이며, 코드 변경이 있으면 Gate에 `YAGNI/KISS/DRY Gate`를 포함합니다. 상세 기준은 `rules-dev`의 Minimal Implementation Gate 정본을 참조합니다.
 
 ```
 [Flow]
@@ -60,10 +60,10 @@ PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
 보고서 상단에는 `Flow Status Block`을 다시 포함하고, Gate 상태를 `통과`, `미통과`, `Blocked`, `N/A` 중 하나로 표시합니다.
 코드 변경이 있으면 다음 최소 구현 항목을 별도 행 또는 별도 섹션으로 보고합니다:
 
-- YAGNI: 현재 요구사항에 없는 미래용 기능·설정·추상화가 없는가?
-- KISS: 기존 코드, 표준/네이티브 기능, 기존 의존성, 최소 새 코드 순서로 구현했는가?
-- DRY: 같은 지식·같은 변경 이유를 가진 중복만 제거했는가?
-- Safety Exception: 검증·보안·에러 처리·접근성·데이터 보존을 단순화 명목으로 제거하지 않았는가?
+- Minimal Implementation Gate: `rules-dev` 정본 기준 통과 여부
+- verify-code Area 3 결과: `delete`, `stdlib`, `native`, `yagni`, `shrink` 태그 발생 여부
+- Prototype/Spike Exception: 정보성 체크로 처리했는지 여부
+- Safety Exception: 단순화 명목으로 검증·보안·에러 처리·접근성·데이터 보존을 제거하지 않았는지 여부
 
 ### Step 5: 수정 옵션 제공
 자동 수정 또는 개별 수정을 사용자에게 제안합니다.
@@ -90,9 +90,9 @@ PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
 - [높음] ...
 
 ### YAGNI/KISS/DRY Gate
-- YAGNI: Pass / Fail / N/A
-- KISS: Pass / Fail / N/A
-- DRY: Pass / Fail / N/A
+- Minimal Implementation Gate (rules-dev 정본): Pass / Fail / N/A
+- verify-code Area 3: Pass / Fail / N/A
+- Prototype/Spike Exception: Applied / Not Applied / N/A
 - Safety Exception: Pass / Fail / N/A
 
 ### 재검증 필요 항목

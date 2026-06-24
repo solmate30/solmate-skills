@@ -64,6 +64,8 @@ This skill defines **development setup**, **conventions to follow**, and **prohi
 
 ### 3.5. Minimal Implementation Gate (YAGNI / KISS / DRY)
 
+이 섹션이 YAGNI/KISS/DRY Gate의 정본이다. `rules-workflow`, `verify-code`, `verify-implementation`, AGENTS 문서는 이 기준을 참조하고, 같은 사다리 정의를 복제하지 않는다.
+
 구현 전 다음 순서로 과잉 구현을 차단한다.
 
 1. **YAGNI**: 현재 요구사항·문서·백로그에 없는 미래용 기능, 설정, 확장 포인트, provider/factory/interface를 만들지 않는다.
@@ -81,7 +83,7 @@ This skill defines **development setup**, **conventions to follow**, and **prohi
 - 표준 API로 충분한데 추가하는 포맷터, 파서, 날짜/문자열 유틸.
 - 문서와 백로그에 없는 "나중에 필요할 수 있는" 기능.
 
-단, 검증, 인증·인가, 에러 처리, 접근성, 보안, 데이터 보존, 테스트 가능성은 단순화를 이유로 제거하지 않는다.
+프로토타입·스파이크·탐색 단계에서는 이 Gate를 차단 조건이 아니라 기록성 체크로 적용한다. 단, 검증, 인증·인가, 에러 처리, 접근성, 보안, 데이터 보존, 테스트 가능성은 단순화를 이유로 제거하지 않는다.
 
 ---
 
