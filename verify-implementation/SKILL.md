@@ -1,6 +1,6 @@
 ---
 name: verify-implementation
-description: 프로젝트의 모든 verify 스킬을 동적으로 탐색하여 순차 실행하고 통합 검증 보고서를 생성합니다.
+description: 프로젝트의 모든 verify 스킬을 동적으로 탐색하여 순차 실행하고, YAGNI/KISS/DRY Gate를 포함한 통합 검증 보고서를 생성합니다.
 disable-model-invocation: true
 argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 ---
@@ -9,7 +9,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 
 ## 목적
 
-프로젝트에 존재하는 모든 `verify-*` 스킬을 동적으로 탐색하여 순차적으로 실행하고 통합 검증을 수행합니다. 기본 순서를 따르되, 변경 파일과 프로젝트 특성에 따라 해당 없는 스킬은 `N/A - 사유`로 기록합니다.
+프로젝트에 존재하는 모든 `verify-*` 스킬을 동적으로 탐색하여 순차적으로 실행하고 통합 검증을 수행합니다. 기본 순서를 따르되, 변경 파일과 프로젝트 특성에 따라 해당 없는 스킬은 `N/A - 사유`로 기록합니다. 코드 변경이 있으면 YAGNI/KISS/DRY Gate 통과 여부를 통합 보고서에 반드시 포함합니다.
 
 ## 기본 실행 순서
 
@@ -17,7 +17,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 |---:|---|---|
 | 1 | `verify-docs` | 문서 구조, Backlog Context Lock, UI-First Gate 검증 |
 | 2 | `verify-ui` | 구현 UI와 화면 문서, 사용자 동선, 상태별 UI 일치 검증 |
-| 3 | `verify-code` | 코드 품질, 타입, 로직, 사이드 이펙트 검증 |
+| 3 | `verify-code` | 코드 품질, 타입, 로직, YAGNI/KISS/DRY, 사이드 이펙트 검증 |
 | 4 | `verify-security` | 인증·인가·입력·시크릿·OWASP 보안 검증 |
 | 5 | `verify-performance` | Lighthouse, Core Web Vitals, 렌더링·번들 검증 |
 | 6 | `verify-drizzle-schema` | DB 스키마 변경 시 명세·관계·인덱스 검증 |
@@ -26,12 +26,12 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 ## 워크플로우
 
 ### Step 0: Flow 위치 확인
-검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`입니다.
+검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`이며, 코드 변경이 있으면 Gate에 `YAGNI/KISS/DRY Gate`를 포함합니다.
 
 ```
 [Flow]
 현재: Phase 5 — 품질 검증
-Gate: Quality Gate 진행 중
+Gate: Quality Gate + YAGNI/KISS/DRY Gate 진행 중
 완료: Phase 1, Phase 2, UI-First Gate, Pre-Code Technical Brief, Phase 3, Phase 4
 다음: Phase 6 — 최종 전달물 또는 Handoff
 필요 확인: Fail 항목 또는 N/A 처리 사유
@@ -58,6 +58,12 @@ Gate: Quality Gate 진행 중
 ### Step 4: 통합 보고서 생성
 PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
 보고서 상단에는 `Flow Status Block`을 다시 포함하고, Gate 상태를 `통과`, `미통과`, `Blocked`, `N/A` 중 하나로 표시합니다.
+코드 변경이 있으면 다음 최소 구현 항목을 별도 행 또는 별도 섹션으로 보고합니다:
+
+- YAGNI: 현재 요구사항에 없는 미래용 기능·설정·추상화가 없는가?
+- KISS: 기존 코드, 표준/네이티브 기능, 기존 의존성, 최소 새 코드 순서로 구현했는가?
+- DRY: 같은 지식·같은 변경 이유를 가진 중복만 제거했는가?
+- Safety Exception: 검증·보안·에러 처리·접근성·데이터 보존을 단순화 명목으로 제거하지 않았는가?
 
 ### Step 5: 수정 옵션 제공
 자동 수정 또는 개별 수정을 사용자에게 제안합니다.
@@ -74,7 +80,7 @@ PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
 |---:|---|:---:|---|
 | 1 | verify-docs | Pass / Fail / N/A | |
 | 2 | verify-ui | Pass / Fail / N/A | |
-| 3 | verify-code | Pass / Fail / N/A | |
+| 3 | verify-code | Pass / Fail / N/A | YAGNI/KISS/DRY Gate 포함 |
 | 4 | verify-security | Pass / Fail / N/A | |
 | 5 | verify-performance | Pass / Fail / N/A | |
 | 6 | verify-drizzle-schema | Pass / Fail / N/A | |
@@ -82,6 +88,12 @@ PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
 
 ### 배포/PR 차단 항목
 - [높음] ...
+
+### YAGNI/KISS/DRY Gate
+- YAGNI: Pass / Fail / N/A
+- KISS: Pass / Fail / N/A
+- DRY: Pass / Fail / N/A
+- Safety Exception: Pass / Fail / N/A
 
 ### 재검증 필요 항목
 - ...

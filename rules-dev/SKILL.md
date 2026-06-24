@@ -1,6 +1,6 @@
 ---
 name: rules-dev
-description: Apply development setup, coding conventions, and quality rules when writing code, configuring environment, or reviewing implementation. Use when the user asks about dev setup, coding standards, commit rules, env vars, DB safety, or "what to follow when developing." Includes framework-specific patterns for Next.js, React Router v7, and React (SPA/Vite). Always align with project AGENTS.md and any DEVELOPMENT_PRINCIPLES document.
+description: Apply development setup, coding conventions, YAGNI/KISS/DRY minimal implementation rules, and quality standards when writing code, configuring environment, or reviewing implementation. Use when the user asks about dev setup, coding standards, commit rules, env vars, DB safety, avoiding overengineering, or "what to follow when developing." Includes framework-specific patterns for Next.js, React Router v7, and React (SPA/Vite). Always align with project AGENTS.md and any DEVELOPMENT_PRINCIPLES document.
 ---
 
 # Rules Development Skill (Coding Conventions)
@@ -62,6 +62,27 @@ This skill defines **development setup**, **conventions to follow**, and **prohi
 - **모노레포 원칙**: 한 저장소에서 **관리(문서·Git·설정)** 와 **구현(소스·빌드)** 을 함께 둘 때 다음을 지킨다. (1) **루트 디렉터리** = 관리 영역. `docs/`, `AGENTS.md`, 설정 파일 등. (2) **앱 디렉터리** = 구현 영역. 소스 코드, `package.json`, 빌드 산출물. (3) **Git 작업**은 루트에서 수행해 문서와 코드를 통합 관리. (4) **배포** 시 빌드·서빙 루트는 앱 디렉터리로 지정(예: Vercel root = `web`).
 - **앱 디렉터리 이름**: 구현용 폴더 이름은 **`web`** 으로 통일한다. 루트 바로 아래 `web/` 에 프론트엔드(또는 풀스택) 앱을 두고, 배포 루트도 `web` 으로 설정한다. 프로젝트 사정으로 다른 이름(예: `app`, `frontend`)을 쓸 경우에는 `00_DEVELOPMENT_PRINCIPLES.md` 에 "앱 디렉터리: app" 처럼 명시한다.
 
+### 3.5. Minimal Implementation Gate (YAGNI / KISS / DRY)
+
+구현 전 다음 순서로 과잉 구현을 차단한다.
+
+1. **YAGNI**: 현재 요구사항·문서·백로그에 없는 미래용 기능, 설정, 확장 포인트, provider/factory/interface를 만들지 않는다.
+2. **기존 코드 우선**: 이미 있는 유틸, 훅, 컴포넌트, API, 스키마로 해결되는지 먼저 확인한다.
+3. **표준/네이티브 우선**: 표준 라이브러리, 브라우저/런타임 내장 API, 프레임워크 기본 기능으로 해결되는지 확인한다.
+4. **기존 의존성 우선**: 새 패키지 설치 전에 이미 설치된 의존성으로 충분한지 확인한다.
+5. **최소 코드**: 새 구현이 필요하면 승인된 acceptance criteria를 만족하는 가장 작은 변경으로 끝낸다.
+6. **DRY는 의미 기준**: 같은 지식과 같은 변경 이유를 가진 중복만 추출한다. 모양만 비슷한 코드를 premature abstraction으로 묶지 않는다.
+
+다음은 기본적으로 금지한다:
+
+- 구현체가 하나뿐인 interface, strategy, provider, factory.
+- 현재 쓰이지 않는 옵션, 플래그, 환경변수, 설정 파일.
+- 미래 확장을 위한 디렉터리·레이어·adapter.
+- 표준 API로 충분한데 추가하는 포맷터, 파서, 날짜/문자열 유틸.
+- 문서와 백로그에 없는 "나중에 필요할 수 있는" 기능.
+
+단, 검증, 인증·인가, 에러 처리, 접근성, 보안, 데이터 보존, 테스트 가능성은 단순화를 이유로 제거하지 않는다.
+
 ---
 
 ## 4. Prohibitions & Safety
@@ -74,6 +95,7 @@ This skill defines **development setup**, **conventions to follow**, and **prohi
 | 임시 패치(Quick-fix) | 기술 부채·재발. 공식·표준 방식으로 해결. |
 | 추측 기반 답변 | "아마 그럴 것이다" 금지. 도구로 상태 검증 후 답변. |
 | 승인 없이 코드 수정 | 수정 계획 보고 후 명시적 승인을 받은 뒤 진행. |
+| 미래용 추상화 | 현재 요구사항 없이 복잡도만 증가. YAGNI/KISS 위반. |
 
 ### 4.2. Database
 
@@ -85,6 +107,7 @@ This skill defines **development setup**, **conventions to follow**, and **prohi
 - **console.log**: 배포/머지 전 디버깅용 로그 제거. 필요 시 로거/환경 분기 사용.
 - **불필요한 주석**: 과도한 주석·죽은 코드 제거. 복잡한 로직만 의도·동작을 주석 또는 문서로 남긴다.
 - **API/인증 수정 시**: 권한 검사(Guard Clause) 존재 여부를 다시 확인한다.
+- **과잉 구현**: 새 추상화·새 의존성·새 설정을 추가하기 전에 Minimal Implementation Gate 통과 근거를 남긴다.
 
 ---
 
@@ -129,6 +152,7 @@ This skill defines **development setup**, **conventions to follow**, and **prohi
 ## 8. Execution Summary
 
 - 코드/설정을 건드리기 전: **AGENTS.md** 및 **00_DEVELOPMENT_PRINCIPLES.md**(있으면) 확인.
+- 구현 전: **YAGNI/KISS/DRY Gate**로 기존 코드·표준/네이티브 기능·기존 의존성·최소 코드 순서를 확인.
 - env 추가/변경 시: `.gitignore` 확인, 로컬/운영 분리 유지.
 - DB 작업 전: 백업 후 진행, 파괴적 명령 금지.
 - 커밋 시: `type(scope): subject` + 한글, 3줄 이상 상세.

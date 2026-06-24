@@ -1,4 +1,4 @@
 interface:
   display_name: "Implementation Verification"
-  short_description: "Run all verification skills as one review"
-  default_prompt: "Use $verify-implementation to discover and run the relevant verify skills before PR."
+  short_description: "Run all verification skills and gates"
+  default_prompt: "Use $verify-implementation to discover and run the relevant verify skills, including YAGNI/KISS/DRY gates, before PR."

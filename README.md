@@ -2,7 +2,7 @@
 
 Reusable AI-agent skills for disciplined product work.
 
-`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, implement with approval gates, and verify the result before release.
+`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, implement with YAGNI/KISS/DRY approval gates, and verify the result before release.
 
 Use it when you want an AI coding agent to follow a shared workflow instead of improvising project structure, documentation, implementation order, and QA.
 
@@ -32,17 +32,20 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **UI-first planning**: `/docs-plan` creates concept and screen documents before implementation starts.
 - **HTML UI Preview Gate**: major screens and flows must have browser-viewable HTML previews under `docs/02_UI_Screens/previews/`.
 - **Backlog Context Lock**: every backlog item must link the Concept, UI, HTML Preview, Technical Spec, and QA documents needed for implementation.
+- **YAGNI/KISS/DRY Gate**: implementation must avoid future-only features, prefer the simplest existing/native path, and remove only true duplicate knowledge.
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
-## What's New in 2.0.8
+## What's New in 2.0.9
 
-`solmate-skills@2.0.8` refreshes the npm README and package metadata so the package purpose, install path, and core workflow gates are clearer on the npm package page.
+`solmate-skills@2.0.9` adds a YAGNI/KISS/DRY Gate across development, workflow, and verification skills so agents avoid overengineering before and after implementation.
 
 Recent workflow guardrails:
 
 - Every backlog task must link to related Concept, UI, HTML Preview, Technical Spec, and QA documents.
 - UI planning must include HTML preview files under `docs/02_UI_Screens/previews/` and link them from the related UI documents.
+- Implementation must check whether work can be avoided, reused from existing code, handled by standard/native APIs, or solved with existing dependencies before adding new code.
+- `verify-code` now reports future-only abstractions, unnecessary providers/factories/interfaces, avoidable dependencies, and premature DRY abstractions.
 - UI, user paths, data flow, loading states, empty states, and error states must be confirmed before coding.
 - User journey SVG files belong in `docs/02_UI_Screens/assets/`.
 - Data flow SVG files belong in `docs/03_Technical_Specs/assets/`.

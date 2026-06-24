@@ -1,4 +1,4 @@
 interface:
   display_name: "Development Rules"
-  short_description: "Apply coding, environment, and commit rules"
-  default_prompt: "Use $rules-dev to check development conventions before editing application code."
+  short_description: "Apply coding rules and minimal gates"
+  default_prompt: "Use $rules-dev to check development conventions and YAGNI/KISS/DRY gates before editing code."

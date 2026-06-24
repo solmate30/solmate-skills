@@ -1,4 +1,4 @@
 interface:
   display_name: "Code Verification"
-  short_description: "Review code quality before commit or PR"
-  default_prompt: "Use $verify-code to review changed code for logic, typing, reuse, and side effects."
+  short_description: "Review code quality and overengineering"
+  default_prompt: "Use $verify-code to review changed code for logic, typing, YAGNI/KISS/DRY, reuse, and side effects."
