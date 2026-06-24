@@ -101,7 +101,7 @@ Your project should have:
 # Create Next.js project with shadcn/ui
 npx create-next-app@latest my-app
 cd my-app
-npx shadcn@latest init
+npx shadcn@latest init --preset b1Z5aAfsu --template next --monorepo --rtl --pointer
 
 # Add components
 npx shadcn@latest add button
@@ -111,10 +111,13 @@ npx shadcn@latest add card
 ### For Existing Projects
 
 ```bash
-# Initialize shadcn/ui
-npx shadcn@latest init
+# Initialize shadcn/ui for a Next.js monorepo
+npx shadcn@latest init --preset b1Z5aAfsu --template next --monorepo --rtl --pointer
 
-# Configure when prompted:
+# If components.json already exists, inspect the existing config before rerunning init.
+# For non-Next or non-monorepo projects, use: npx shadcn@latest init
+
+# If using the standard interactive init, configure when prompted:
 # - Choose style (default/new-york)
 # - Select base color
 # - Configure CSS variables

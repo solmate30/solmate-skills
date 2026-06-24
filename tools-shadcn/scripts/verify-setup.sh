@@ -17,7 +17,8 @@ if [ -f "components.json" ]; then
     echo -e "${GREEN}✓${NC} components.json found"
 else
     echo -e "${RED}✗${NC} components.json not found"
-    echo -e "  ${YELLOW}Run:${NC} npx shadcn@latest init"
+    echo -e "  ${YELLOW}Run for Next.js monorepos:${NC} npx shadcn@latest init --preset b1Z5aAfsu --template next --monorepo --rtl --pointer"
+    echo -e "  ${YELLOW}Run for other projects:${NC} npx shadcn@latest init"
     exit 1
 fi
 

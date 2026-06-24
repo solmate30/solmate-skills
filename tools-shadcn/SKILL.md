@@ -70,7 +70,19 @@ For **new projects**, use the `create` command to customize everything (style, f
 npx shadcn@latest create
 ```
 
-For **existing projects**, initialize configuration:
+### Solmate Default Init Command
+
+For Next.js monorepo projects, use this command by default when shadcn/ui has not been initialized yet:
+
+```bash
+npx shadcn@latest init --preset b1Z5aAfsu --template next --monorepo --rtl --pointer
+```
+
+Before running it in an existing project, check whether `components.json` already exists. If it exists, do not rerun init blindly; inspect the existing aliases, style, Tailwind paths, RTL setting, and pointer behavior first.
+
+Use a framework-specific init only when the project is not Next.js, is not a monorepo, or the user explicitly opts out of RTL or pointer behavior.
+
+For **existing non-Next projects**, initialize configuration with the standard interactive command:
 
 ```bash
 npx shadcn@latest init
