@@ -36,6 +36,15 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
+## What's New in 2.0.10
+
+`solmate-skills@2.0.10` fixes Claude Code hook false positives so read-only tool use no longer triggers edit-oriented skill suggestions.
+
+- `install hooks` now registers the PreToolUse file watcher only for `Write|Edit`.
+- `hooks/watch-files.sh` exits early for `Read`, `Bash`, and other non-edit tools, even when an older broad matcher is still installed.
+- File-pattern suggestions now use `tool_input.file_path` only, avoiding false matches from shell command text such as `find . -name SKILL.md`.
+- Existing projects can apply the fix by rerunning `npx solmate-skills@latest install hooks`.
+
 ## What's New in 2.0.9
 
 `solmate-skills@2.0.9` adds a YAGNI/KISS/DRY Gate across development, workflow, and verification skills so agents avoid overengineering before and after implementation.
