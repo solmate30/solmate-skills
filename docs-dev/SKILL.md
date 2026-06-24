@@ -1,6 +1,6 @@
 ---
 name: docs-dev
-description: Create and manage development documents for Layer 3 (Technical_Specs), Layer 4 (Logic_Progress), and Layer 5 (QA_Validation). Use when writing DB schema docs, API specs, development principles, roadmaps, backlogs, business logic designs, or test scenarios. Enforces backlog links to Concept/UI/HTML Preview/Technical/QA docs before implementation. Always read existing files before editing.
+description: Create and manage development documents for Layer 3 (Technical_Specs), Layer 4 (Logic_Progress), and Layer 5 (QA_Validation). Use when writing DB schema docs, API specs, development principles, component/library plans, roadmaps, backlogs, business logic designs, or test scenarios. Enforces backlog links to Concept/UI/HTML Preview/Technical/QA docs before implementation. Always read existing files before editing.
 ---
 
 # Development Documentation Skill
@@ -64,11 +64,13 @@ This skill manages **Layer 3 (Technical_Specs)**, **Layer 4 (Logic_Progress)**, 
 
 **Pre-Code Technical Brief 강제 규칙**: UI 확인 후에도 바로 구현하지 않는다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 백로그나 기술 문서에 기록되어야 한다. 불명확하면 `docs/03_Technical_Specs/` 문서 또는 백로그 항목을 먼저 보완한다.
 
+**Component & Library Planning Gate 강제 규칙**: React 구현 전에 사용할 컴포넌트와 라이브러리를 정리한다. shadcn/ui 컴포넌트, 직접 만들 커스텀 컴포넌트, 재사용할 기존 컴포넌트, 새로 설치할 라이브러리, 설치하지 않을 라이브러리, shadcn `init`/`apply` 적용 여부가 백로그나 기술 문서에 기록되어야 한다. 불명확하면 `tools-shadcn`, `rules-react`, `docs/03_Technical_Specs/` 문서 또는 백로그 항목을 먼저 보완한다.
+
 Backlog 항목 작성 전 필수 확인 대상:
 - `docs/01_Concept_Design/`: 기능 목적, 사용자 가치, 제품 방향
 - `docs/02_UI_Screens/`: 화면 흐름, UI 상태, 인터랙션
 - `docs/02_UI_Screens/previews/`: 사용자에게 보여줄 HTML UI Preview
-- `docs/03_Technical_Specs/`: API, DB, 데이터 구조, 기술 제약
+- `docs/03_Technical_Specs/`: API, DB, 데이터 구조, 기술 제약, Component & Library Plan, shadcn 설정, UI 라이브러리 선택
 - `docs/05_QA_Validation/`: 테스트 기준, 수용 조건, 검증 시나리오
 
 각 Backlog 항목은 다음 필드를 반드시 포함한다:
@@ -78,6 +80,7 @@ Backlog 항목 작성 전 필수 확인 대상:
 - `Related Technical Docs`: 관련 기술 명세 문서
 - `Related QA Docs`: 관련 검증 문서
 - `Implementation Preconditions`: 구현 전 반드시 확인할 조건
+- `Component & Library Plan`: 사용할 컴포넌트·라이브러리·shadcn preset 적용 계획
 - `Acceptance Criteria`: 완료 판단 기준
 - `Document Sync Check`: 구현 후 문서와 코드의 일치 여부
 
@@ -91,14 +94,19 @@ Backlog 항목 작성 전 필수 확인 대상:
 - 화면별 입력·출력 데이터와 상태 변화를 확인했는가?
 - 로딩·빈 상태·오류 상태가 UI 문서나 백로그에 반영되어 있는가?
 - 데이터 소스, 최소 필드, mutation, 상태 관리 방식이 정리되었는가?
+- 사용할 shadcn/ui 컴포넌트, 커스텀 컴포넌트, 기존 재사용 컴포넌트가 정리되었는가?
+- 새 라이브러리와 설치하지 않을 라이브러리의 이유가 정리되었는가?
+- shadcn `init --preset`, `apply --preset`, 또는 `apply --only theme` 적용 여부가 정리되었는가?
 - acceptance criteria가 사용자 시나리오 기준으로 검증 가능한가?
 - 구현 범위가 관련 문서의 의도와 충돌하지 않는가?
 - 관련 QA 기준이 `Acceptance Criteria`에 반영되어 있는가?
 - 누락된 문서가 있다면 `N/A - 사유`가 타당한가?
 
-1. **Project Initialization**: CLI 프리셋 vs 수동 설정?
-2. **UI Theme Strategy**: 사전 정의된 테마 vs 커스텀 브랜드 색상? 폰트 선택?
-3. **Folder Structure**: Feature 기반 vs Type 기반?
+1. **Project Initialization**: CLI 프리셋 vs 수동 설정? 신규 프로젝트는 `init --preset`, 기존 프로젝트는 `apply --preset`인가?
+2. **UI Theme Strategy**: 사전 정의된 테마 vs 커스텀 브랜드 색상? 폰트 선택? 기존 프로젝트는 `--only theme`로 충분한가?
+3. **Component Plan**: shadcn/ui로 가져올 컴포넌트는? 직접 만들 커스텀 컴포넌트는? 기존 재사용 컴포넌트는?
+4. **Library Plan**: 새로 설치할 라이브러리와 설치하지 않을 라이브러리는? 상태/폼/검증/toast/table/date 선택은?
+5. **Folder Structure**: Feature 기반 vs Type 기반?
 
 ### Dev Phase (DEVELOPMENT_PRINCIPLES 작성/갱신 시 필수)
 
@@ -206,11 +214,20 @@ Backlog 항목 작성 전 필수 확인 대상:
   - [ ] 로딩·빈 상태·오류 상태 확인 완료
   - [ ] 데이터 소스와 최소 필드 확인 완료
   - [ ] mutation 및 상태 관리 방식 확인 완료
+  - [ ] Component & Library Planning Gate 확인 완료
   - [ ] 구현 범위와 문서 요구사항 충돌 없음
+- Component & Library Plan:
+  - shadcn/ui components: [button, card 등 / N/A - 사유]
+  - Custom components: [FeatureCard 등 / N/A - 사유]
+  - Reused components: [기존 경로 / N/A - 사유]
+  - New libraries: [패키지명 및 이유 / N/A - 사유]
+  - Libraries intentionally not added: [제외한 후보와 이유 / N/A - 사유]
+  - shadcn preset action: init --preset / apply --preset / apply --only theme / N/A - 사유
 - Acceptance Criteria:
   - [ ] 구현 결과가 확인된 화면 구조와 사용자 동선을 따른다
   - [ ] 구현 결과가 HTML UI Preview와 의도 없이 불일치하지 않는다
   - [ ] 데이터 흐름과 상태 변화가 Pre-Code Technical Brief와 일치한다
+  - [ ] 컴포넌트와 라이브러리 선택이 Component & Library Plan과 일치한다
   - [ ] QA 기준이 구현 완료 판단에 반영됨
   - [ ] 핵심 사용자 흐름이 검증됨
 - Document Sync Check:

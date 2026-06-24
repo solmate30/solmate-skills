@@ -28,7 +28,7 @@ argument-hint: "[선택사항: 특정 스킬 이름 또는 집중할 영역]"
 
 | 스킬 | 설명 | 커버 파일 패턴 |
 |------|------|---------------|
-| `verify-docs` | 문서 구조, Backlog Context Lock, UI-First Gate | `docs/**/*.md`, `README.md`, `AGENTS.md` |
+| `verify-docs` | 문서 구조, Backlog Context Lock, UI-First Gate, Component & Library Planning Gate | `docs/**/*.md`, `README.md`, `AGENTS.md` |
 | `verify-ui` | 화면 구현과 UI 문서, 사용자 동선, 상태별 UI 정합성 | `src/**/*.tsx`, `src/**/*.jsx`, `docs/02_UI_Screens/**/*.md` |
 | `verify-code` | 코드 품질, 타입, 로직, 사이드 이펙트 | `src/**/*.{ts,tsx,js,jsx}` |
 | `verify-security` | 인증·인가·입력·시크릿·OWASP 보안 | `auth`, `api`, `route`, `middleware`, `.env`, `db` 관련 파일 |
