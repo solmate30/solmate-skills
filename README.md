@@ -37,6 +37,16 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
+## What's New in 2.0.11
+
+`solmate-skills@2.0.11` adds a Component & Library Planning Gate so React implementation starts from approved UI context and an explicit component/library plan.
+
+- `/rules-product` and `/rules-workflow` now connect concept docs, HTML UI preview, component planning, and implementation in a clearer sequence.
+- `/rules-react` requires agents to name shadcn/ui components, custom components, reused components, libraries to add, libraries to avoid, and preset action before coding.
+- `/tools-shadcn` documents the default new-project preset command and existing-project apply command.
+- `/verify-docs` and `/verify-implementation` now check that UI docs, backlog references, and implementation plans preserve the UI-first flow.
+- `README.md` and `AGENTS.md` surface the planning gate as part of the recommended Solmate workflow.
+
 ## What's New in 2.0.10
 
 `solmate-skills@2.0.10` fixes Claude Code hook false positives so read-only tool use no longer triggers edit-oriented skill suggestions.
