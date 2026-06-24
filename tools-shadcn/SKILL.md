@@ -82,6 +82,20 @@ Before running it in an existing project, check whether `components.json` alread
 
 Use a framework-specific init only when the project is not Next.js, is not a monorepo, or the user explicitly opts out of RTL or pointer behavior.
 
+For existing projects that already have shadcn/ui initialized, prefer applying the preset instead of rerunning init:
+
+```bash
+npx shadcn@latest apply --preset b1Z5aAfsu
+```
+
+For mature projects where broad visual changes are risky, apply only the theme first:
+
+```bash
+npx shadcn@latest apply --preset b1Z5aAfsu --only theme
+```
+
+Before applying a preset, inspect `git status`, `components.json`, and the current component/theme setup. Record the selected command in the Component & Library Plan.
+
 For **existing non-Next projects**, initialize configuration with the standard interactive command:
 
 ```bash

@@ -2,7 +2,7 @@
 
 Reusable AI-agent skills for disciplined product work.
 
-`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, implement with YAGNI/KISS/DRY approval gates, and verify the result before release.
+`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, plan components and libraries before coding, implement with YAGNI/KISS/DRY approval gates, and verify the result before release.
 
 Use it when you want an AI coding agent to follow a shared workflow instead of improvising project structure, documentation, implementation order, and QA.
 
@@ -32,6 +32,7 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **UI-first planning**: `/docs-plan` creates concept and screen documents before implementation starts.
 - **HTML UI Preview Gate**: major screens and flows must have browser-viewable HTML previews under `docs/02_UI_Screens/previews/`.
 - **Backlog Context Lock**: every backlog item must link the Concept, UI, HTML Preview, Technical Spec, and QA documents needed for implementation.
+- **Component & Library Planning Gate**: React work must name the shadcn/ui components, custom components, reused components, libraries to add, libraries to avoid, and preset action before coding.
 - **YAGNI/KISS/DRY Gate**: `rules-dev` is the canonical source for avoiding future-only features, preferring the simplest existing/native path, and removing only true duplicate knowledge.
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
@@ -227,10 +228,11 @@ docs/
 3. HTML UI Preview Gate → Show browser-viewable HTML screens and capture user feedback
 4. UI-First Gate → Confirm screens, user paths, data flow, and UI states before coding
 5. Pre-Code Technical Brief → Confirm data sources, API shape, state strategy, and acceptance criteria
-6. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
-7. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
-8. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First Gate
-9. /verify-implementation  → Audit docs, UI, code, security, performance, DB, and skill package changes
+6. Component & Library Planning Gate → Confirm shadcn components, custom components, reused components, and libraries
+7. /docs-dev     → Write DEVELOPMENT_PRINCIPLES.md, DB_SCHEMA.md, API_SPECS.md
+8. /docs-dev     → Write ROADMAP.md, BACKLOG.md with mandatory related document links
+9. /rules-workflow → Implement each backlog item only after reading linked docs and passing UI-First and Component & Library gates
+10. /verify-implementation  → Audit docs, UI, code, security, performance, DB, and skill package changes
 ```
 
 Backlog items are intentionally document-linked. Each task in `docs/04_Logic_Progress/00_BACKLOG.md` must include related Concept, UI, Technical Spec, and QA documents, plus implementation preconditions, acceptance criteria, and a document sync check. If a related document does not exist, the item must say `N/A - 사유`; implementation should pause when the missing document is required for a safe decision.
@@ -260,6 +262,10 @@ docs/02_UI_Screens/previews/02_dashboard_preview.html
 
 Each related UI document must link to the HTML file with a relative path. The preview must be shown to the user before implementation, and feedback must be captured in `XX_PROTOTYPE_REVIEW.md`, `00_SCREEN_FLOW.md`, `01_UI_DESIGN.md`, or the related backlog item.
 
+### Component & Library Planning Gate
+
+React implementation should not begin until the team has listed the UI building blocks and library choices. Record the shadcn/ui components to add, custom components to create, existing components to reuse, libraries to install, libraries intentionally not added, and whether the project needs `init --preset`, `apply --preset`, `apply --only theme`, or `N/A - reason`.
+
 Required fields for every backlog item:
 
 - `Related Concept Docs`
@@ -268,6 +274,7 @@ Required fields for every backlog item:
 - `Related Technical Docs`
 - `Related QA Docs`
 - `Implementation Preconditions`
+- `Component & Library Plan`
 - `Acceptance Criteria`
 - `Document Sync Check`
 
@@ -296,6 +303,13 @@ If a related document does not exist, write `N/A - 사유`. Do not leave the fie
   - [ ] Confirm user path and screen-by-screen data flow
   - [ ] Confirm loading, empty, and error states
   - [ ] Confirm implementation scope does not conflict with documented intent
+- Component & Library Plan:
+  - shadcn/ui components: button, card, form, or `N/A - reason`
+  - Custom components: feature-specific components or `N/A - reason`
+  - Reused components: existing paths or `N/A - reason`
+  - New libraries: package names and reasons or `N/A - reason`
+  - Libraries intentionally not added: rejected options and reasons or `N/A - reason`
+  - shadcn preset action: init --preset / apply --preset / apply --only theme / N/A - reason
 - Acceptance Criteria:
   - [ ] Feature follows the confirmed screen structure and user path
   - [ ] Feature behavior matches linked Concept/UI/Technical docs

@@ -15,7 +15,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 
 | 순서 | 스킬 | 목적 |
 |---:|---|---|
-| 1 | `verify-docs` | 문서 구조, Backlog Context Lock, UI-First Gate 검증 |
+| 1 | `verify-docs` | 문서 구조, Backlog Context Lock, HTML UI Preview Gate, UI-First Gate, Component & Library Planning Gate 검증 |
 | 2 | `verify-ui` | 구현 UI와 화면 문서, 사용자 동선, 상태별 UI 일치 검증 |
 | 3 | `verify-code` | 코드 품질, 타입, 로직, YAGNI/KISS/DRY, 사이드 이펙트 검증 |
 | 4 | `verify-security` | 인증·인가·입력·시크릿·OWASP 보안 검증 |
@@ -32,7 +32,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 [Flow]
 현재: Phase 5 — 품질 검증
 Gate: Quality Gate + YAGNI/KISS/DRY Gate 진행 중
-완료: Phase 1, Phase 2, UI-First Gate, Pre-Code Technical Brief, Phase 3, Phase 4
+완료: Phase 1, Phase 2, HTML UI Preview Gate, UI-First Gate, Pre-Code Technical Brief, Component & Library Planning Gate, Phase 3, Phase 4
 다음: Phase 6 — 최종 전달물 또는 Handoff
 필요 확인: Fail 항목 또는 N/A 처리 사유
 권장 스킬: /verify-implementation
