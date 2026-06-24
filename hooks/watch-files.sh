@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # solmate-skills: watch-files.sh
-# Event: PreToolUse (matcher: Read|Write|Edit|Bash)
+# Event: PreToolUse (matcher: Write|Edit)
 # Purpose: Detect file patterns being modified and inject relevant skill suggestions.
 # Output: JSON with hookSpecificOutput.additionalContext (non-blocking)
 
@@ -8,18 +8,24 @@ set -euo pipefail
 
 INPUT=$(cat)
 
-# Extract file path and tool name
-FILE_PATH=$(echo "$INPUT" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-inp = data.get('tool_input', {})
-# Write/Edit use file_path; Bash use command
-print(inp.get('file_path', inp.get('command', '')))" 2>/dev/null || echo "")
-
 TOOL_NAME=$(echo "$INPUT" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 print(data.get('tool_name', ''))" 2>/dev/null || echo "")
+
+# Only react to actual file edits. Bash/Read can carry file-like strings (e.g.
+# 'find ... SKILL.md') that would otherwise trigger false-positive suggestions,
+# so guard here in case an older/broad matcher is still configured.
+case "$TOOL_NAME" in
+  Write|Edit) ;;
+  *) exit 0 ;;
+esac
+
+# Write/Edit carry the target path in tool_input.file_path.
+FILE_PATH=$(echo "$INPUT" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+print(data.get('tool_input', {}).get('file_path', ''))" 2>/dev/null || echo "")
 
 if [ -z "$FILE_PATH" ]; then
   exit 0

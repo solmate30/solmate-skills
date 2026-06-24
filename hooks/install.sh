@@ -88,14 +88,14 @@ already_has_watch = any(
 )
 if not already_has_watch:
     pre_hooks.append({
-        "matcher": "Read|Write|Edit|Bash",
+        "matcher": "Write|Edit",
         "hooks": [{
             "type": "command",
             "command": watch_cmd,
             "timeout": 5
         }]
     })
-    print("  Added: PreToolUse (Read|Write|Edit|Bash) → solmate-watch.sh")
+    print("  Added: PreToolUse (Write|Edit) → solmate-watch.sh")
 else:
     print("  Skipped (already exists): PreToolUse → solmate-watch.sh")
 
