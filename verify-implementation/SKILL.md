@@ -7,6 +7,13 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 
 # 구현 검증 (Master)
 
+> **Human Quick Reference**
+> - **When**: Pre-PR or pre-release full check (default verify entry point)
+> - **Invoke**: `/verify-implementation`
+> - **Prerequisites**: Changes to verify; runs verify-* skills based on `git diff`
+> - **Next**: Fix failures, then re-run; use individual verify-* skills for scoped checks
+> - **Guide**: project root `USAGE.md` (English default, Korean below; copied on install)
+
 ## 목적
 
 프로젝트에 존재하는 모든 `verify-*` 스킬을 동적으로 탐색하여 순차적으로 실행하고 통합 검증을 수행합니다. 기본 순서를 따르되, 변경 파일과 프로젝트 특성에 따라 해당 없는 스킬은 `N/A - 사유`로 기록합니다. 코드 변경이 있으면 YAGNI/KISS/DRY Gate 통과 여부를 통합 보고서에 반드시 포함합니다.

@@ -5,6 +5,13 @@ description: Guides the full implementation lifecycle from planning through PR. 
 
 # Implementation & Execution Workflow (18 Steps)
 
+> **Human Quick Reference**
+> - **When**: Feature implementation, commit/PR prep, 18-step workflow
+> - **Invoke**: `/rules-workflow` after gates and backlog links are ready
+> - **Prerequisites**: HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, Component & Library Plan
+> - **Next**: `verify-implementation` before PR
+> - **Guide**: project root `USAGE.md` (English default, Korean below; copied on install)
+
 Follow this workflow for feature implementation and significant code changes. Complete each phase before advancing; use the checklists to avoid skipping steps.
 
 ---

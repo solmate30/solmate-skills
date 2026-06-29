@@ -7,6 +7,9 @@ const { execSync } = require('child_process');
 const IGNORED_FOLDERS = ['bin', 'node_modules', '.git', '.github', '.gemini', '.agent'];
 const IGNORED_FILES = ['package.json', 'package-lock.json', 'AGENTS.md', 'SKILL.md', 'init-skills.sh', 'README.md', '.DS_Store', 'old_AGENTS.md'];
 
+// Root-level docs copied to the target project on every install.
+const PACKAGE_DOC_FILES = ['USAGE.md'];
+
 // Skills that require a post-install script to be executed after copying.
 // Key: skill name, Value: path relative to the skill folder.
 const POST_INSTALL_SCRIPTS = {
@@ -26,6 +29,21 @@ function getAvailableSkills() {
             return fs.existsSync(path.join(packageRoot, dirent.name, 'SKILL.md'));
         })
         .map(dirent => dirent.name);
+}
+
+function installPackageDocs() {
+    for (const fileName of PACKAGE_DOC_FILES) {
+        const sourcePath = path.join(packageRoot, fileName);
+        const destPath = path.join(targetProjectRoot, fileName);
+
+        if (!fs.existsSync(sourcePath)) {
+            console.warn(`Warning: ${fileName} not found in package; skipping.`);
+            continue;
+        }
+
+        fs.copyFileSync(sourcePath, destPath);
+        console.log(`Installed ${fileName} to project root`);
+    }
 }
 
 function copyFolderSync(from, to) {
@@ -64,6 +82,7 @@ function installHooks() {
     console.log('Installing hooks utility...');
     copyFolderSync(sourcePath, destPath);
     console.log('Successfully installed hooks utility to .agent/skills/hooks');
+    installPackageDocs();
 
     const scriptPath = path.join(destPath, 'install.sh');
     if (fs.existsSync(scriptPath)) {
@@ -76,12 +95,14 @@ function installHooks() {
     }
 }
 
-function installSkill(skillName) {
+function installSkill(skillName, options = {}) {
+    const { deferPackageDocs = false } = options;
     const skills = getAvailableSkills();
 
     if (skillName === 'install-all') {
         console.log('Installing all skills...');
-        skills.forEach(s => installSkill(s));
+        skills.forEach(s => installSkill(s, { deferPackageDocs: true }));
+        installPackageDocs();
         return;
     }
 
@@ -113,6 +134,10 @@ function installSkill(skillName) {
                 console.error(`Warning: post-install script for ${skillName} exited with an error.`);
             }
         }
+    }
+
+    if (!deferPackageDocs) {
+        installPackageDocs();
     }
 }
 

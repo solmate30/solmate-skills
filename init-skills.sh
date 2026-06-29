@@ -26,16 +26,18 @@ for skill in "${SKILLS[@]}"; do
     fi
 done
 
-# Link AGENTS.md to Root
-echo "🚀 Linking Global AGENTS.md..."
-if [ -f "$GLOBAL_BASE/AGENTS.md" ]; then
-    if [ -L "AGENTS.md" ] || [ -f "AGENTS.md" ]; then
-        rm -f "AGENTS.md"
+# Link AGENTS.md and USAGE.md to Root
+for doc in AGENTS.md USAGE.md; do
+    echo "🚀 Linking Global ${doc}..."
+    if [ -f "$GLOBAL_BASE/$doc" ]; then
+        if [ -L "$doc" ] || [ -f "$doc" ]; then
+            rm -f "$doc"
+        fi
+        ln -s "$GLOBAL_BASE/$doc" "$doc"
+        echo "✅ Linked: $doc"
+    else
+        echo "⚠️ Warning: Global $doc not found in $GLOBAL_BASE"
     fi
-    ln -s "$GLOBAL_BASE/AGENTS.md" "AGENTS.md"
-    echo "✅ Linked: AGENTS.md"
-else
-    echo "⚠️ Warning: Global AGENTS.md not found in $GLOBAL_BASE"
-fi
+done
 
 echo "✨ All set! Your project is now powered by Antigravity's global skills."

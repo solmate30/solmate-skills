@@ -109,20 +109,26 @@ print("metadata ok" if not bad else "\n".join(bad))'
 
 ---
 
-## Check 4: README, AGENTS, package 버전 동기화
+## Check 4: README, AGENTS, USAGE, package 버전 동기화
 
 - `package.json` 버전과 README의 최신 버전 문구가 일치하는지 확인한다.
+- README가 `USAGE.md`를 링크하는지 확인한다.
+- `bin/cli.js`가 `USAGE.md`를 프로젝트 루트로 복사하는지 확인한다.
 - README와 AGENTS의 verify 목록이 실제 `verify-*` 디렉터리와 맞는지 확인한다.
 
 ```bash
 node -p "require('./package.json').version"
 grep -n "What's New in" README.md
+grep -n "USAGE.md" README.md AGENTS.md
+grep -n "PACKAGE_DOC_FILES\\|installPackageDocs" bin/cli.js
 find . -maxdepth 1 -type d -name 'verify-*' -exec basename {} \; | sort
 grep -n "verify-" README.md AGENTS.md
 ```
 
 - 체크:
   - [ ] README 최신 버전 문구가 `package.json`과 일치하는가?
+  - [ ] README·AGENTS가 `USAGE.md`를 참조하는가?
+  - [ ] CLI `install`이 `USAGE.md`를 프로젝트 루트로 복사하는가?
   - [ ] README Available Skills에 새 스킬이 반영되었는가?
   - [ ] AGENTS.md 품질 검증 목록에 새 verify 스킬이 반영되었는가?
 

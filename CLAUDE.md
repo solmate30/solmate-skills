@@ -23,7 +23,7 @@ There are no build, test, or lint scripts in this repo (`"test": "echo \"Error: 
 
 ## Installing Skills via Symlink (Dev)
 
-`init-skills.sh` creates symlinks from a target project's `.agent/skills/` to this repo, and links `AGENTS.md` to the project root. Run it from inside the target project:
+`init-skills.sh` creates symlinks from a target project's `.agent/skills/` to this repo, and links `AGENTS.md` and `USAGE.md` to the project root. Run it from inside the target project:
 
 ```bash
 bash /Users/namhyeongseog/Documents/solmate-skills/init-skills.sh
