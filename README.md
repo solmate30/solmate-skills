@@ -57,7 +57,6 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - `/tools-shadcn` documents the default new-project preset command and existing-project apply command.
 - `/verify-docs` and `/verify-implementation` now check that UI docs, backlog references, and implementation plans preserve the UI-first flow.
 - `README.md` and `AGENTS.md` surface the planning gate as part of the recommended Solmate workflow.
-- [USAGE.md](./USAGE.md) adds a bilingual usage guide: English (default) and Korean below, with cheat sheet, orchestrator map, and full skill catalog.
 
 ## What's New in 2.0.10
 

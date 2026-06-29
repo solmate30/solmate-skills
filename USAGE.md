@@ -3,7 +3,7 @@
 <a id="solmate-skills-usage-guide"></a>
 
 Created Date: 2026-06-25 03:00  
-Last Updated Date: 2026-06-25 03:00
+Last Updated Date: 2026-06-29 15:20
 
 **Language:** English (default) · [Korean version below](#solmate-skills-usage-guide-korean)
 
