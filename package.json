@@ -1,6 +1,6 @@
 {
   "name": "solmate-skills",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "AI workflow skills for UI-first planning, YAGNI/KISS/DRY gates, docs, QA, and Solmate projects",
   "main": "bin/cli.js",
   "bin": {

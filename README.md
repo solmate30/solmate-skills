@@ -39,6 +39,15 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
+## What's New in 2.0.12
+
+`solmate-skills@2.0.12` adds a bilingual usage guide and copies it into every target project on install.
+
+- [USAGE.md](./USAGE.md) documents all 26 skills in English (default) with Korean below: cheat sheet, orchestrator map, gates, and prompts.
+- `npx solmate-skills install` (single skill, `all`, or `hooks`) now copies `USAGE.md` to the project root.
+- [README.md](./README.md) is trimmed to a 5-minute start; detailed usage lives in `USAGE.md`.
+- `init-skills.sh` symlinks `USAGE.md` alongside `AGENTS.md` for local development.
+
 ## What's New in 2.0.11
 
 `solmate-skills@2.0.11` adds a Component & Library Planning Gate so React implementation starts from approved UI context and an explicit component/library plan.
