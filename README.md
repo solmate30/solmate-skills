@@ -45,9 +45,9 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Versioned harness artifacts**: `validate-harness` checks v1 task manifests, structured messages, ordered state events, role activation, evidence gates, and exclusive write ownership.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
-## Unreleased: Agent Harness Contracts
+## What's New in 2.0.13: Agent Harness Contracts
 
-The next release strengthens the existing Solmate workflow with a shared Claude/Codex agent harness. It addresses two recurring failure modes in long AI-assisted projects:
+`solmate-skills@2.0.13` strengthens the existing Solmate workflow with a shared Claude/Codex agent harness. It addresses two recurring failure modes in long AI-assisted projects:
 
 1. An implementation starts from a backlog item without reading the linked concept, UI, technical, and QA documents.
 2. An agent marks work complete based only on its own summary, without independent verification evidence.
@@ -115,7 +115,7 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
 - The implementation uses the Node standard library and adds no runtime dependency.
 - Claude Code can install the current namespaced `solmate-*` project agents with `install agents`; Codex follows the same canonical contract through its available delegation mechanism.
 - Specialist personas, runtime orchestration, persistent recovery, pilot automation, and blocking rollout remain separate follow-up work.
-- This section documents unreleased work. The package version remains `2.0.12` until a release version is approved.
+- This release ships the contract and validation foundation; specialist personas and runtime orchestration remain separately gated follow-up work.
 
 ## What's New in 2.0.12
 
