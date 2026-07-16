@@ -3,12 +3,12 @@
 <a id="solmate-skills-usage-guide"></a>
 
 Created Date: 2026-06-25 03:00  
-Last Updated Date: 2026-06-29 15:20
+Last Updated Date: 2026-07-17 00:33
 
 **Language:** English (default) · [Korean version below](#solmate-skills-usage-guide-korean)
 
 This is a **human-readable** guide for choosing and invoking skills.  
-Agent execution rules live in each `SKILL.md` and the installed `AGENTS.md`.
+Agent execution rules live in each `SKILL.md` and the project `AGENTS.md` when it is linked or installed.
 
 ---
 
@@ -29,9 +29,10 @@ Run /verify-implementation on the current changes
 ```bash
 npx solmate-skills@latest install all      # .agent/skills/<skill-name>/ + ./USAGE.md
 npx solmate-skills@latest install hooks    # Claude Code suggestions (optional) + ./USAGE.md
+npx solmate-skills@latest install agents   # Refresh rules-workflow + native Claude project agents
 ```
 
-Every `install` command (single skill, `all`, or `hooks`) copies `USAGE.md` to the **project root**.
+Every `install` command (single skill, `all`, `hooks`, or `agents`) copies `USAGE.md` to the **project root**. Installing `rules-workflow` or `all` also installs the namespaced Claude agents automatically.
 
 ### Local development (symlink)
 
@@ -42,7 +43,7 @@ When hacking on the `solmate-skills` repo itself:
 bash /path/to/solmate-skills/init-skills.sh
 ```
 
-This symlinks `.agent/skills/` to the repo and links `AGENTS.md` and `USAGE.md` at the project root.
+This symlinks `.agent/skills/` to the repo, links `AGENTS.md` and `USAGE.md` at the project root, and links the namespaced Claude agents under `.claude/agents/`.
 
 ---
 
@@ -107,6 +108,29 @@ This symlinks `.agent/skills/` to the repo and links `AGENTS.md` and `USAGE.md` 
 | `rules-workflow` | Plan → implement → cleanup → PR (18 steps) | Feature work, commit/PR prep |
 | `verify-implementation` | Run verify-* by changed files, unified report | Pre-PR / pre-release |
 
+### Agent harness sequence
+
+For backlog tasks with `Work Type: code` or `Work Type: deploy`:
+
+```text
+Coordinator
+  -> read-only Context Agent -> Context Receipt
+  -> Implementation Agent    -> Change Receipt
+  -> read-only Verifier       -> Verification Receipt
+  -> Coordinator completion decision
+```
+
+- Claude Code uses `.claude/agents/solmate-context-reader.md`, `solmate-implementer.md`, and `solmate-verifier.md`.
+- Codex uses available subagents or separate tasks with the same canonical contract from `rules-workflow/resources/agent-harness-contract.md`.
+- The verifier reports findings but does not modify source files.
+- Receipt summaries stay in the backlog; detailed verification links to a QA document or GitHub PR.
+- Use warning mode for the first five real tasks, then switch to blocking checks:
+
+```bash
+npx solmate-skills preflight TASK-000 --strict
+npx solmate-skills verify TASK-000 --strict
+```
+
 ### Individual verify-* vs master
 
 | Situation | Use |
@@ -129,9 +153,10 @@ Phase 2  UI design docs      → docs-plan (02_UI_Screens)
          UI-First Gate        → screens, flows, data, states
          Pre-Code Technical Brief → API, state, acceptance criteria
          Component & Library Planning Gate → shadcn, custom, reuse, libraries
+         Context Receipt Gate  → linked docs read by a read-only agent
 Phase 3  React implementation → rules-react (+ tools-shadcn)
 Phase 4  Dev docs              → docs-dev (03–05)
-Phase 5  Quality verification  → verify-implementation
+Phase 5  Independent verification → Verification Receipt + verify-implementation
 Phase 6  Deliverables (opt.)   → docs-pitch / docs-business
 ```
 
@@ -171,9 +196,9 @@ Each entry: **When** / **Prerequisites** / **Invoke** / **Outputs** / **Next**
 #### `rules-workflow`
 
 - **When:** Feature implementation, planning, commit/PR (18 steps)
-- **Prerequisites:** HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, Component & Library Plan (non-prototype)
+- **Prerequisites:** HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, Component & Library Plan, Context Receipt (code/deploy)
 - **Invoke:** `/rules-workflow` — implement this backlog item
-- **Outputs:** Plan review, implementation, self-check, PR readiness
+- **Outputs:** Context Receipt, plan review, Change Receipt, independent Verification Receipt, PR readiness
 - **Next:** `verify-implementation`
 
 #### `rules-dev`
@@ -428,10 +453,20 @@ Required fields per item in `docs/04_Logic_Progress/00_BACKLOG.md`:
 
 - `Related Concept Docs`, `Related UI Docs`, `Related HTML Preview`
 - `Related Technical Docs`, `Related QA Docs`
-- `Implementation Preconditions`, `Component & Library Plan`
+- `Work Type`, `Implementation Preconditions`, `Component & Library Plan`
+- `Context Receipt`, `Change Receipt`, `Verification Receipt`
 - `Acceptance Criteria`, `Document Sync Check`
 
 Use `N/A - reason` when a doc does not exist. Pause implementation if a missing doc blocks a safe decision.
+
+### Agent Harness Gate
+
+- Canonical contract: `rules-workflow/resources/agent-harness-contract.md`
+- `code` and `deploy`: Context Receipt before implementation; Verification Receipt before Done, PR, merge, publish, or deploy
+- `docs` and `prototype`: advisory receipts
+- Context and Verification agents are read-only
+- Verification details must link to an existing `docs/05_QA_Validation/` document or GitHub PR
+- Default CLI mode is `warning`; `--strict` returns a blocking non-zero exit
 
 ### YAGNI/KISS/DRY Gate
 
@@ -447,6 +482,7 @@ Use `N/A - reason` when a doc does not exist. Pause implementation if a missing 
 ### [ ] TASK-000: Implement feature name
 
 - Status: ToDo
+- Work Type: code
 - Related Concept Docs:
   - [Product Specs](../01_Concept_Design/03_PRODUCT_SPECS.md) - feature purpose and user value
 - Related UI Docs:
@@ -464,6 +500,13 @@ Use `N/A - reason` when a doc does not exist. Pause implementation if a missing 
   - [ ] Confirm user path and screen-by-screen data flow
   - [ ] Confirm loading, empty, and error states
   - [ ] Confirm implementation scope does not conflict with documented intent
+- Context Receipt:
+  - Status: PENDING
+  - Required References Read:
+    - PENDING - repeat every linked Related document after reading it
+  - Constraints:
+    - PENDING - extracted implementation constraints
+  - Conflicts: PENDING - use `None` only after checking
 - Component & Library Plan:
   - shadcn/ui components: button, card, form, or `N/A - reason`
   - Custom components: feature-specific components or `N/A - reason`
@@ -475,6 +518,23 @@ Use `N/A - reason` when a doc does not exist. Pause implementation if a missing 
   - [ ] Feature follows the confirmed screen structure and user path
   - [ ] Feature behavior matches linked Concept/UI/Technical docs
   - [ ] QA criteria are testable and satisfied
+- Change Receipt:
+  - Files Changed:
+    - PENDING
+  - Requirements Covered:
+    - PENDING
+  - Excluded Scope: PENDING
+  - Basic Checks:
+    - PENDING
+  - Remaining Risks: PENDING
+- Verification Receipt:
+  - Status: PENDING
+  - Commands and Results:
+    - PENDING - `command` - PASS/FAIL - exact scope and result
+  - Unrun Checks:
+    - PENDING - skipped checks and reasons
+  - Detailed Evidence:
+    - PENDING - link an existing QA document or GitHub PR
 - Document Sync Check:
   - [ ] No mismatch between implementation and linked documents
   - [ ] Update related documents if implementation changes the agreed behavior
@@ -540,7 +600,7 @@ Run /verify-implementation on current changes. Include a Flow Status Block in th
 **언어:** [English (default)](#solmate-skills-usage-guide) · 한국어 (아래)
 
 사람이 읽기 위한 스킬 사용법 가이드입니다.  
-에이전트 실행 규칙의 정본은 각 `SKILL.md`와 프로젝트에 설치된 `AGENTS.md`입니다.
+에이전트 실행 규칙의 정본은 각 `SKILL.md`와 프로젝트에 링크 또는 설치된 `AGENTS.md`입니다.
 
 ---
 
@@ -561,9 +621,10 @@ Run /verify-implementation on current changes. Include a Flow Status Block in th
 ```bash
 npx solmate-skills@latest install all      # .agent/skills/<skill-name>/ + ./USAGE.md
 npx solmate-skills@latest install hooks    # Claude Code 자동 제안 (별도) + ./USAGE.md
+npx solmate-skills@latest install agents   # rules-workflow + Claude 프로젝트 에이전트 갱신
 ```
 
-모든 `install` 명령(단일 스킬, `all`, `hooks`)은 `USAGE.md`를 **프로젝트 루트**에 복사합니다.
+모든 `install` 명령(단일 스킬, `all`, `hooks`, `agents`)은 `USAGE.md`를 **프로젝트 루트**에 복사합니다. `rules-workflow` 또는 `all` 설치 시 Claude 에이전트도 자동 설치됩니다.
 
 ### 로컬 개발 (symlink)
 
@@ -574,7 +635,7 @@ npx solmate-skills@latest install hooks    # Claude Code 자동 제안 (별도) 
 bash /path/to/solmate-skills/init-skills.sh
 ```
 
-`.agent/skills/`가 저장소로 symlink되고, `AGENTS.md`와 `USAGE.md`가 루트에 링크됩니다.
+`.agent/skills/`가 저장소로 symlink되고, `AGENTS.md`와 `USAGE.md`가 루트에 링크되며, `.claude/agents/`에 Solmate 에이전트가 연결됩니다.
 
 ---
 
@@ -620,6 +681,29 @@ bash /path/to/solmate-skills/init-skills.sh
 | `rules-workflow` | 승인된 문서 기준으로 계획→구현→정리→PR (18단계) | 기능 구현·커밋·PR 직전 |
 | `verify-implementation` | 변경 파일에 맞춰 verify-* 순차 실행·통합 보고 | PR·배포 전 최종 점검 |
 
+### 에이전트 하네스 순서
+
+`Work Type`이 `code` 또는 `deploy`인 백로그 작업은 다음 순서로 진행합니다.
+
+```text
+Coordinator
+  -> 읽기 전용 Context Agent -> Context Receipt
+  -> Implementation Agent    -> Change Receipt
+  -> 읽기 전용 Verifier      -> Verification Receipt
+  -> Coordinator 완료 판단
+```
+
+- Claude Code는 `.claude/agents/solmate-*.md`를 사용합니다.
+- Codex는 `rules-workflow/resources/agent-harness-contract.md`의 같은 계약을 subagent 또는 별도 task에 전달합니다.
+- 검증자는 문제를 직접 수정하지 않고 Implementation Agent로 돌려보냅니다.
+- Receipt 요약은 백로그에, 상세 검증 근거는 QA 문서 또는 GitHub PR에 남깁니다.
+- 처음 5개 실제 작업은 warning으로 확인한 뒤 blocking으로 전환합니다.
+
+```bash
+npx solmate-skills preflight TASK-000 --strict
+npx solmate-skills verify TASK-000 --strict
+```
+
 ### verify-* 개별 vs 통합
 
 | 상황 | 사용 |
@@ -642,9 +726,10 @@ Phase 2  UI 설계 문서     → docs-plan (02_UI_Screens)
          UI-First Gate          → 화면·동선·데이터 흐름·상태 확인
          Pre-Code Technical Brief → API·상태·acceptance criteria 합의
          Component & Library Planning Gate → shadcn·커스텀·재사용·라이브러리 계획
+         Context Receipt Gate → 읽기 전용 에이전트의 관련 문서 확인
 Phase 3  React 구현       → rules-react (+ tools-shadcn)
 Phase 4  개발문서         → docs-dev (03~05)
-Phase 5  품질 검증        → verify-implementation
+Phase 5  독립 품질 검증   → Verification Receipt + verify-implementation
 Phase 6  전달물 (선택)    → docs-pitch / docs-business
 ```
 
@@ -738,6 +823,7 @@ Gate: UI-First Gate 진행 중
 - **UI-First Gate:** 화면·동선·CTA·데이터 흐름·로딩/빈/오류 상태
 - **Component & Library Planning Gate:** shadcn·커스텀·재사용·라이브러리·preset
 - **Backlog Context Lock:** Related Docs, Preconditions, Component Plan, Acceptance, Sync Check
+- **Agent Harness Gate:** code/deploy 작업은 Context Receipt와 독립 Verification Receipt 필수
 - **YAGNI/KISS/DRY Gate:** `rules-dev` 정본; 프로토타입은 기록성 체크
 
 백로그 템플릿: [영문 §7 Backlog item template](#backlog-item-template) (필드명은 영문 유지)

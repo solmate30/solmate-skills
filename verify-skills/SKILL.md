@@ -14,6 +14,7 @@ argument-hint: "[선택사항: 특정 스킬 이름 또는 점검 영역]"
 
 - 새 스킬 추가 또는 기존 스킬 수정 후
 - `bin/cli.js`, `README.md`, `AGENTS.md`, `package.json` 수정 후
+- `rules-workflow/resources/`, `rules-workflow/adapters/claude/`, `bin/harness-check.js` 수정 후
 - npm 배포 또는 태그 생성 전
 - `rules-workflow` Step 17 또는 `verify-implementation` 실행 시
 
@@ -150,6 +151,25 @@ npm_config_cache=/private/tmp/solmate-npm-cache npm pack --dry-run
 
 ---
 
+## Check 6: Agent Harness 검증
+
+```bash
+npm test
+node bin/cli.js list
+node bin/cli.js preflight TASK-TEST --backlog /path/to/fixture.md --strict
+```
+
+- 체크:
+  - [ ] Context Receipt가 모든 Related 링크를 읽지 않으면 strict preflight가 차단되는가?
+  - [ ] Verification Receipt의 명령 결과 또는 QA/PR 근거가 없으면 strict verify가 차단되는가?
+  - [ ] warning 모드는 발견 사항을 출력하되 exit 0인가?
+  - [ ] docs/prototype 작업은 advisory인가?
+  - [ ] `install agents`가 `.claude/agents/solmate-*.md`만 추가하고 기존 에이전트를 보존하는가?
+  - [ ] `install rules-workflow`와 `install all`이 Claude 어댑터를 함께 설치하는가?
+  - [ ] Codex 지침이 지원되지 않는 `.codex/agents/` 형식을 가정하지 않고 공통 계약을 참조하는가?
+
+---
+
 ## 보고 형식
 
 ```
@@ -162,6 +182,7 @@ npm_config_cache=/private/tmp/solmate-npm-cache npm pack --dry-run
 | agents/openai.yaml | Pass / Fail | |
 | README/AGENTS 동기화 | Pass / Fail | |
 | npm pack dry-run | Pass / Fail | |
+| Agent Harness | Pass / Fail | Receipt CLI, Claude adapters, Codex contract |
 
 ### 수정 필요 항목
 - [높음] ...

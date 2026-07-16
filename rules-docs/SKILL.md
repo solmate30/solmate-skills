@@ -89,11 +89,25 @@ docs/02_UI_Screens/previews/
 - `Related HTML Preview`
 - `Related Technical Docs`
 - `Related QA Docs`
+- `Work Type`
 - `Implementation Preconditions`
+- `Context Receipt`
+- `Change Receipt`
+- `Verification Receipt`
 - `Acceptance Criteria`
 - `Document Sync Check`
 
 각 Related 필드는 상대 경로 링크와 관계 설명을 포함해야 한다. 관련 문서나 HTML Preview가 없으면 빈칸으로 두지 않고 `N/A - 사유`를 명시한다. 단, 구현 판단에 필요한 Concept, UI, HTML Preview, Technical Spec, QA 기준이 아직 문서화되지 않은 경우에는 백로그만으로 구현을 시작할 수 없으며, 먼저 문서 작성 또는 보완 여부를 사용자에게 확인한다.
+
+`Work Type`은 `code`, `deploy`, `docs`, `prototype` 중 하나를 사용한다. `code`와 `deploy` 작업은 다음 Agent Harness 조건을 추가로 지킨다.
+
+- Context Agent가 모든 Related 링크를 읽고 `Context Receipt`에 기록한다.
+- warning 기간에는 Context Receipt 발견 사항과 사용자 확인을 기록한다. blocking 전환 후에는 PASS Context Receipt 없이는 구현을 시작하지 않는다.
+- Implementation Agent는 `Change Receipt`를 남기지만 이를 독립 검증으로 간주하지 않는다.
+- 읽기 전용 Verification Agent가 `Verification Receipt`를 작성한다.
+- warning 기간에는 Verification Receipt 발견 사항과 사용자 확인을 기록한다. blocking 전환 후에는 PASS Verification Receipt와 QA 문서 또는 PR 상세 근거 링크 없이는 Done 처리하지 않는다.
+
+Receipt 형식과 런타임별 역할은 `rules-workflow/resources/agent-harness-contract.md`를 정본으로 따른다.
 
 ### 메타데이터 (필수)
 
@@ -133,7 +147,7 @@ docs/02_UI_Screens/previews/
 
 **Logic_Progress**: Concept_Design + UI_Screens + Technical_Specs (DB, API) + QA_Validation
 
-**Backlog Items**: 각 항목 단위로 Concept_Design + UI_Screens + HTML Preview + Technical_Specs + QA_Validation 링크를 포함한다. 구현자는 항목 착수 전 링크된 문서와 HTML Preview를 확인하고 `Implementation Preconditions`를 확인해야 한다.
+**Backlog Items**: 각 항목 단위로 Concept_Design + UI_Screens + HTML Preview + Technical_Specs + QA_Validation 링크를 포함한다. `code`와 `deploy` 작업은 구현자가 아니라 읽기 전용 Context Agent가 먼저 링크된 문서를 확인하고 Context Receipt를 제출해야 한다.
 
 **QA_Validation**: 모든 상위 레이어 참조
 

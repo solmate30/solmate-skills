@@ -33,6 +33,8 @@ The AI MUST check for and follow these documents if they exist in the repository
 Apply the "Subagent Strategy" to keep the main context clean:
 - **Delegation**: Offload research/analysis to Browser/Thinking tools.
 - **Aggregation**: Return only summarized, high-value insights to the main chat.
+- **Canonical Contract**: For code and deploy tasks, use `rules-workflow/resources/agent-harness-contract.md` for Coordinator, Context, Implementation, Verification roles and handoffs.
+- **Independence**: Context and Verification agents are read-only. Verification findings return to the Implementation Agent instead of being fixed by the verifier.
 
 ### 3.2. 자가개선 루프 (Self-Improvement)
 - Maintain `tasks/lessons.md` to capture patterns and avoid repeating mistakes.

@@ -1,13 +1,13 @@
 {
   "name": "solmate-skills",
   "version": "2.0.12",
-  "description": "AI workflow skills for UI-first planning, YAGNI/KISS/DRY gates, docs, QA, and Solmate projects",
+  "description": "AI agent harness and workflow skills for context-aware planning, implementation, verification, docs, and QA",
   "main": "bin/cli.js",
   "bin": {
     "solmate-skills": "bin/cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node bin/harness-check.test.js"
   },
   "keywords": [
     "ai-skills",
@@ -22,7 +22,9 @@
     "qa",
     "solmate",
     "skills",
-    "automation"
+    "automation",
+    "agent-harness",
+    "multi-agent"
   ],
   "author": "",
   "license": "ISC",

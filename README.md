@@ -1,8 +1,8 @@
 # solmate-skills
 
-Reusable AI-agent skills for disciplined product work.
+Reusable AI-agent harness and workflow skills for disciplined product work.
 
-`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, plan components and libraries before coding, implement with YAGNI/KISS/DRY approval gates, and verify the result before release.
+`solmate-skills` packages the Solmate workflow as installable skills: plan the product, create browser-viewable UI previews, lock backlog tasks to their source documents, prove that required context was read, plan components and libraries before coding, implement with YAGNI/KISS/DRY approval gates, and independently verify the result before release.
 
 Use it when you want an AI coding agent to follow a shared workflow instead of improvising project structure, documentation, implementation order, and QA.
 
@@ -22,9 +22,12 @@ npx solmate-skills@latest install rules-product
 
 # Install proactive hook suggestions for Claude Code projects
 npx solmate-skills@latest install hooks
+
+# Refresh native Claude agents for the shared harness
+npx solmate-skills@latest install agents
 ```
 
-The installer copies each selected skill folder into `.agent/skills/<skill-name>` in your current project and copies [USAGE.md](./USAGE.md) to the project root.
+The installer copies each selected skill folder into `.agent/skills/<skill-name>` in your current project and copies [USAGE.md](./USAGE.md) to the project root. Installing `rules-workflow` or `all` also installs the namespaced Claude project agents under `.claude/agents/`; Codex uses the same canonical contract through `rules-workflow`, reinforced by `AGENTS.md` when that file is linked into the project.
 
 **Detailed usage:** see `USAGE.md` at the project root (English default, Korean below) for the situation-to-skill cheat sheet, orchestrator map, full skill catalog (26 skills), gate details, and recommended prompts.
 
@@ -37,7 +40,18 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Component & Library Planning Gate**: React work must name the shadcn/ui components, custom components, reused components, libraries to add, libraries to avoid, and preset action before coding.
 - **YAGNI/KISS/DRY Gate**: `rules-dev` is the canonical source for avoiding future-only features, preferring the simplest existing/native path, and removing only true duplicate knowledge.
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
+- **Agent harness**: a read-only Context Agent proves required documents were read, an Implementation Agent returns a scoped change summary, and a read-only Verification Agent provides independent evidence before completion.
+- **Machine-checkable receipts**: `preflight TASK-ID` checks linked document coverage and `verify TASK-ID` checks command results plus QA/PR evidence; `--strict` turns findings into blocking exit codes.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
+
+## Unreleased
+
+The next release introduces a shared Claude/Codex agent harness without adding another installable skill.
+
+- `rules-workflow/resources/agent-harness-contract.md` is the canonical role and receipt contract.
+- Claude Code gets three native `solmate-*` project agents; Codex delegates the same roles through its available subagent or task mechanism.
+- Code and deploy tasks require Context and Verification Receipts; docs and prototype work remain advisory.
+- The first five real tasks can use warning mode before projects switch to `--strict` blocking mode.
 
 ## What's New in 2.0.12
 
@@ -86,7 +100,7 @@ Recent workflow guardrails:
 
 ## Install Details
 
-`install all` installs only skill folders that contain `SKILL.md`. Use `install hooks` separately when you want prompt/file-change suggestions that nudge the agent toward `/rules-product`, `/rules-workflow`, and the relevant `verify-*` skills.
+`install all` installs only skill folders that contain `SKILL.md` and adds the namespaced Claude agent adapters. Use `install hooks` separately when you want prompt/file-change suggestions. Use `install agents` to refresh `rules-workflow`, its canonical contract, and the native Claude adapters in an existing project.
 
 ---
 
@@ -137,6 +151,14 @@ Reinstall from the project root, then diagnose — do not restart from Phase 1 b
 ```bash
 npx solmate-skills@latest install all
 npx solmate-skills@latest install hooks
+npx solmate-skills@latest install agents
+```
+
+For a `code` or `deploy` backlog item:
+
+```bash
+npx solmate-skills preflight TASK-000 --strict
+npx solmate-skills verify TASK-000 --strict
 ```
 
 Example prompts: [USAGE.md §9 Recommended Prompts](./USAGE.md#9-recommended-prompts) (EN) · [§9 권장 프롬프트](./USAGE.md#9-권장-프롬프트-모음) (KO)
@@ -145,7 +167,7 @@ Example prompts: [USAGE.md §9 Recommended Prompts](./USAGE.md#9-recommended-pro
 
 ## Skills at a Glance
 
-26 installable skills plus `hooks`. Category summary:
+26 installable skills plus `hooks` and `agents` utilities. Category summary:
 
 | Category | Skills |
 |:---|:---|
