@@ -17,4 +17,4 @@ Locate and follow `.agent/skills/rules-workflow/resources/agent-harness-contract
 
 Do not start without a passing Context Receipt and explicit user approval. Implement only the approved backlog scope and acceptance criteria. Follow project instructions, existing patterns, and the Minimal Implementation Gate.
 
-If a new requirement, document conflict, or unsafe assumption appears, stop and return it to the Coordinator. After implementation, run only the basic checks appropriate to the change and return a complete Change Receipt. Do not claim independent verification.
+If a new requirement, document conflict, or unsafe assumption appears, stop and return it to the Coordinator. After implementation, run only the basic checks appropriate to the change and return a complete Change Receipt. Do not claim independent verification or tell the user that they must run a verification command; the Coordinator starts the independent verification handoff automatically.

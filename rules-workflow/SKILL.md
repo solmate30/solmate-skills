@@ -9,7 +9,7 @@ description: Guides the full implementation lifecycle from planning through PR. 
 > - **When**: Feature implementation, commit/PR prep, 18-step workflow
 > - **Invoke**: `/rules-workflow` after gates and backlog links are ready
 > - **Prerequisites**: HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, Component & Library Plan, Context Receipt
-> - **Next**: `verify-implementation` before PR
+> - **Next**: After implementation, the Coordinator automatically invokes `verify-implementation` before any completion report or PR
 > - **Guide**: project root `USAGE.md` (English default, Korean below; copied on install)
 
 Follow this workflow for feature implementation and significant code changes. Complete each phase before advancing; use the checklists to avoid skipping steps.
@@ -25,10 +25,11 @@ Follow this workflow for feature implementation and significant code changes. Co
 - `blocking` 모드에서 Verification Receipt가 없으면 Done, PR, merge, publish, deploy로 이동하지 않는다.
 - 처음 5개 실제 작업은 `warning`, 이후에는 `blocking` 모드를 권장한다.
 - 런타임이 독립 에이전트를 제공하지 않으면 `Degraded`로 보고하고 완료 전 사용자 승인을 받는다.
+- Coordinator는 `preflight`, `verify`, `validate-harness`를 에이전트 내부 검사로 실행한다. 사용자에게 명령어·Task ID·Receipt 파일 작성을 요구하지 않고, 통과 결과 또는 막힌 이유만 설명한다.
 
-기계 검사는 `npx solmate-skills preflight TASK-ID`와 `npx solmate-skills verify TASK-ID`를 사용한다. `--strict`는 누락 시 non-zero로 차단한다.
+기계 검사는 Coordinator가 내부적으로 `npx solmate-skills preflight TASK-ID`와 `npx solmate-skills verify TASK-ID`를 사용한다. `--strict`는 누락 시 non-zero로 차단한다. 이 명령은 CI·런타임 어댑터용이며, 사람용 완료 절차가 아니다.
 
-v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harness manifest|message|events <path>`를 warning 모드로 실행한다. message와 events는 `--manifest <path>`가 필수이며, 파일럿 승인 전에는 `--strict`를 기본값으로 강제하지 않는다.
+v1 구조화 산출물을 선택한 작업은 Coordinator가 `npx solmate-skills validate-harness manifest|message|events <path>`를 warning 모드로 실행한다. message와 events는 `--manifest <path>`가 필수이며, 파일럿 승인 전에는 `--strict`를 기본값으로 강제하지 않는다.
 
 ---
 
@@ -48,7 +49,7 @@ v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harne
 - 요구사항·목적을 문서 또는 이슈 기준으로 정리한다.
 - 백로그 항목에 `Work Type`을 `code`, `deploy`, `docs`, `prototype` 중 하나로 기록한다.
 - `code`와 `deploy` 작업은 Context Agent가 `Related Concept Docs`, `Related UI Docs`, `Related HTML Preview`, `Related Technical Docs`, `Related QA Docs`를 모두 읽고 Context Receipt를 백로그에 기록한다.
-- Coordinator는 Context Receipt의 `Required References Read`가 모든 링크 문서를 포함하는지 확인하고 `preflight TASK-ID`를 실행한다.
+- Coordinator는 Context Receipt의 `Required References Read`가 모든 링크 문서를 포함하는지 확인하고 내부적으로 `preflight TASK-ID`를 실행한다. 누락이 있으면 사용자에게 명령을 요청하지 않고 누락 문서와 보류 사유를 설명한다.
 - 코드 작성보다 먼저 HTML UI Preview Gate를 확인한다. `docs/02_UI_Screens/previews/`의 HTML Preview가 없거나 UI 문서에 링크되지 않았거나 사용자 확인 기록이 없으면 구현 계획을 보류하고 `docs-plan` 문서/HTML 보완을 제안한다.
 - 그 다음 UI-First Gate를 확인한다. 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태가 문서화되지 않았으면 구현 계획을 보류하고 `docs-plan` 또는 `docs-dev` 문서 보완을 제안한다.
 - Pre-Code Technical Brief를 확인한다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 불명확하면 구현 전에 사용자와 합의한다.
@@ -77,7 +78,7 @@ v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harne
 
 ### Step 5. 구현
 - 승인된 계획대로 구현한다. AGENTS.md·프로젝트 컨벤션(커밋, Zod, Luxon 등)을 따른다.
-- `code`와 `deploy` 작업은 Context Receipt를 먼저 확인한다. 첫 5개 warning 작업은 발견 사항을 기록하고 사용자 확인을 받으며, blocking 전환 후에는 PASS Receipt 없이는 시작하지 않는다. `preflight TASK-ID --strict`가 차단되면 문서·Receipt를 보완한 뒤 재실행한다.
+- `code`와 `deploy` 작업은 Context Receipt를 먼저 확인한다. 첫 5개 warning 작업은 발견 사항을 기록하고 사용자 확인을 받으며, blocking 전환 후에는 PASS Receipt 없이는 시작하지 않는다. 내부 preflight가 차단되면 Coordinator가 문서·Receipt를 보완한 뒤 재실행하며, 사용자에게는 보류 사유와 필요한 결정만 설명한다.
 - Implementation Agent는 승인 범위만 수정하고 Change Receipt를 남긴다. Change Receipt는 독립 검증을 대체하지 않는다.
 - 코드 작성 전 백로그 항목의 `Implementation Preconditions`와 `Acceptance Criteria`를 확인한다. 관련 문서 링크가 비어 있거나 `N/A - 사유`가 부실하면 구현을 보류하고 문서 보완 필요 여부를 사용자에게 확인한다.
 - HTML UI Preview Gate가 통과되지 않았거나 사용자가 HTML Preview를 확인하지 않았다면 구현을 시작하지 않는다.
@@ -91,7 +92,7 @@ v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harne
 
 ## Phase 3: Verify Implementation (Steps 6–10)
 
-`code`와 `deploy` 작업은 Implementation Agent와 분리된 Verification Agent가 이 단계를 수행한다. 검증자는 발견 사항을 직접 수정하지 않고 Verification Receipt로 Coordinator에 반환한다. 수정이 필요하면 Implementation Agent가 처리한 뒤 새 검증을 실행한다.
+`code`와 `deploy` 작업은 Implementation Agent와 분리된 Verification Agent가 이 단계를 수행한다. Change Receipt가 반환되면 Coordinator는 사용자에게 검증 명령을 요청하거나 구현 완료를 선언하지 않고 즉시 `verify-implementation`과 필요한 내부 Receipt 검사를 시작한다. 검증자는 발견 사항을 직접 수정하지 않고 Verification Receipt로 Coordinator에 반환한다. 수정이 필요하면 Implementation Agent가 처리한 뒤 새 검증을 실행한다.
 
 ### Step 6. 목적 부합 검토
 - 구현이 원래 목적과 요구사항에 맞게 동작하는지 확인한다.
@@ -150,7 +151,7 @@ v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harne
 ### Step 17. 배포 가능 퀄리티 최종 검토
 - "이대로 배포해도 될 수준인가?"를 한 번 더 검토한다. 1–16단계에서 누락된 항목이 없는지 확인한다.
 - `code`와 `deploy` 작업은 Verification Receipt에 `Status: PASS`, 실행 명령 결과, 미실행 항목의 사유, QA 문서 또는 PR 상세 근거 링크가 있어야 한다.
-- 첫 5개 warning 작업은 검증 발견 사항을 기록하고 사용자 확인을 받는다. blocking 전환 후 `npx solmate-skills verify TASK-ID --strict`가 통과하지 않으면 Done, PR, merge, publish, deploy를 차단한다.
+- 첫 5개 warning 작업은 Coordinator가 검증 발견 사항을 기록하고 사용자 진행 승인을 받는다. blocking 전환 후 내부 `verify TASK-ID --strict`가 통과하지 않으면 Done, PR, merge, publish, deploy를 차단한다. 어느 경우에도 사용자에게 이 명령 실행을 요구하지 않는다.
 - 최종 검토 시 `Flow Status Block`을 출력하고, 다음 위치가 `Phase 6 — Ship/Handoff`인지 명시한다.
 - 체크: [ ] 독립 Verification Receipt PASS [ ] 검증 근거 링크 존재 [ ] strict verify 통과 [ ] 배포 전 필수 조건 충족 [ ] 롤백·모니터링 고려 여부
 

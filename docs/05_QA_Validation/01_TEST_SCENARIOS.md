@@ -1,6 +1,6 @@
 # Agent Harness Test Scenarios
 > Created: 2026-07-17 01:04
-> Last Updated: 2026-07-17 01:53
+> Last Updated: 2026-07-17 03:19
 
 ## 1. Purpose
 
@@ -53,6 +53,7 @@ Implementation-stage status must replace these design-stage statements with exec
 | NFR-008 | QA-QA-001, QA-QA-002 | Covered |
 | NFR-009 | QA-RECOVERY-001, QA-RECOVERY-002 | Covered |
 | NFR-010 | QA-LICENSE-001 | Covered |
+| NFR-011 | QA-UX-001 | Covered |
 
 ## 4. Requirements And Context Scenarios
 
@@ -78,6 +79,14 @@ Implementation-stage status must replace these design-stage statements with exec
 - **When**: Context Reader compares them.
 - **Then**: State becomes `BLOCKED_CONTEXT`; both sources are preserved and Coordinator routes a decision.
 - **Failure**: Context Reader chooses one silently or Implementer starts work.
+
+### QA-UX-001 - Internal Harness Commands Stay Internal
+
+- **Given**: A user asks the Coordinator to implement a code feature or reports that implementation is finished.
+- **When**: Context or Verification gates are required.
+- **Then**: The Coordinator resolves the backlog task and runs the applicable Harness checks internally; the user receives a plain-language PASS/FAIL result or the missing document/decision.
+- **Failure**: The agent asks the user to run `preflight`, `verify`, `validate-harness`, provide a task ID, or manually write a Receipt for normal feature progress.
+- **Evidence**: Workflow and adapter review plus a representative feature-task transcript.
 
 ## 5. Role And Design Scenarios
 

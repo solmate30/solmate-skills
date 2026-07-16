@@ -101,11 +101,9 @@ function listSkills() {
     console.log('\nUtilities:');
     console.log(' - hooks (install with: npx solmate-skills install hooks)');
     console.log(' - agents (install with: npx solmate-skills install agents)');
-    console.log('\nHarness checks:');
-    console.log(' - npx solmate-skills preflight TASK-000 [--strict]');
-    console.log(' - npx solmate-skills verify TASK-000 [--strict]');
-    console.log(' - npx solmate-skills validate-harness <manifest|message|events> <path> [--manifest <path>] [--strict]');
-    console.log('   message and events validation require --manifest <path>');
+    console.log('\nWorkflow verification:');
+    console.log(' - Feature work is verified automatically by rules-workflow and verify-implementation.');
+    console.log(' - Advanced runtime and CI contracts: see USAGE.md and agent-harness-contract.md.');
     console.log('\nUsage: npx solmate-skills install <skill-name> | all | hooks | agents\n');
 }
 

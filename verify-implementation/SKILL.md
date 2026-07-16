@@ -8,15 +8,15 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 # 구현 검증 (Master)
 
 > **Human Quick Reference**
-> - **When**: Pre-PR or pre-release full check (default verify entry point)
-> - **Invoke**: `/verify-implementation`
+> - **When**: Automatically after feature implementation; also available for an explicit pre-PR or pre-release check
+> - **Invoke**: The Coordinator invokes `/verify-implementation` after a Change Receipt; users do not run harness commands
 > - **Prerequisites**: Changes to verify; runs verify-* skills based on `git diff`
 > - **Next**: Fix failures, then re-run; use individual verify-* skills for scoped checks
 > - **Guide**: project root `USAGE.md` (English default, Korean below; copied on install)
 
 ## 목적
 
-프로젝트에 존재하는 모든 `verify-*` 스킬을 동적으로 탐색하여 순차적으로 실행하고 통합 검증을 수행합니다. 기본 순서를 따르되, 변경 파일과 프로젝트 특성에 따라 해당 없는 스킬은 `N/A - 사유`로 기록합니다. 코드 변경이 있으면 YAGNI/KISS/DRY Gate와 Agent Harness Verification Receipt 통과 여부를 통합 보고서에 반드시 포함합니다.
+프로젝트에 존재하는 모든 `verify-*` 스킬을 동적으로 탐색하여 순차적으로 실행하고 통합 검증을 수행합니다. 기본 순서를 따르되, 변경 파일과 프로젝트 특성에 따라 해당 없는 스킬은 `N/A - 사유`로 기록합니다. 코드 변경이 있으면 YAGNI/KISS/DRY Gate와 Agent Harness Verification Receipt 통과 여부를 통합 보고서에 반드시 포함합니다. 구현이 끝나면 Coordinator가 이 스킬을 즉시 시작하며, 사용자에게 검증 명령 실행을 요구하지 않습니다.
 
 ## 기본 실행 순서
 
@@ -33,7 +33,7 @@ argument-hint: "[선택사항: 특정 verify 스킬 이름]"
 ## 워크플로우
 
 ### Step 0: Flow 위치 확인
-검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`이며, 코드 변경이 있으면 Gate에 `YAGNI/KISS/DRY Gate`를 포함합니다. 상세 기준은 `rules-dev`의 Minimal Implementation Gate 정본을 참조합니다.
+검증을 시작하기 전에 `rules-product`의 `Flow Status Block` 형식으로 현재 위치를 보고합니다. 일반적으로 현재 위치는 `Phase 5 — 품질 검증`이며, 코드 변경이 있으면 Gate에 `YAGNI/KISS/DRY Gate`를 포함합니다. 상세 기준은 `rules-dev`의 Minimal Implementation Gate 정본을 참조합니다. Change Receipt가 반환된 `code` 또는 `deploy` 작업에서는 사용자의 별도 요청을 기다리지 않고 이 단계를 시작합니다.
 
 ```
 [Flow]
@@ -62,7 +62,7 @@ Gate: Quality Gate + YAGNI/KISS/DRY Gate 진행 중
 ### Step 3: 순차 실행
 기본 실행 순서대로 각 스킬의 `Workflow`, `Exceptions`, `Related Files`를 파싱하여 개별 검사를 수행합니다. 앞 단계가 Fail이면 뒤 단계는 실행하되, 해당 Fail이 뒤 단계 판단을 왜곡하는 경우 `Blocked - 사유`로 표시합니다.
 
-`code`와 `deploy` 백로그 작업은 `rules-workflow/resources/agent-harness-contract.md`에 따라 Implementation Agent와 분리된 읽기 전용 Verification Agent가 검증한다. 검증자는 발견 사항을 수정하지 않으며, 수정 후에는 새 Verification Agent 실행으로 다시 확인한다.
+`code`와 `deploy` 백로그 작업은 `rules-workflow/resources/agent-harness-contract.md`에 따라 Implementation Agent와 분리된 읽기 전용 Verification Agent가 검증한다. Coordinator는 관련 Task ID를 해석하고 내부 `verify TASK-ID` 검사를 포함해 검증 흐름을 시작한다. 검증자는 발견 사항을 수정하지 않으며, 수정 후에는 새 Verification Agent 실행으로 다시 확인한다. 사람에게 명령어를 제시하는 대신 통과 결과 또는 차단 원인과 필요한 결정을 보고한다.
 
 ### Step 4: 통합 보고서 생성
 PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
@@ -76,7 +76,7 @@ PASS/FAIL 통계와 발견된 이슈 목록을 생성합니다.
 - Context Receipt: 관련 문서 전체 확인 및 PASS 여부
 - Verification Receipt: 독립 검증 상태, 명령 결과, 미실행 사유, QA 문서 또는 PR 상세 근거
 
-warning 기간에는 Verification Receipt 발견 사항과 사용자 진행 승인을 보고합니다. blocking 전환 후 PASS Verification Receipt가 없거나 `npx solmate-skills verify TASK-ID --strict`가 실패하면 PR·merge·publish·deploy 차단 항목으로 보고합니다.
+warning 기간에는 Verification Receipt 발견 사항과 사용자 진행 승인을 보고합니다. blocking 전환 후 PASS Verification Receipt가 없거나 Coordinator의 내부 `verify TASK-ID --strict`가 실패하면 PR·merge·publish·deploy 차단 항목으로 보고합니다. 이 내부 명령을 사용자의 완료 체크리스트로 제시하지 않습니다.
 
 ### Step 5: 수정 옵션 제공
 자동 수정 또는 개별 수정을 사용자에게 제안합니다.

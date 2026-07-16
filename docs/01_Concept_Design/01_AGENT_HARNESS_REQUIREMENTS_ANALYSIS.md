@@ -1,6 +1,6 @@
 # Agent Harness Requirements Analysis
 > Created: 2026-07-17 01:04
-> Last Updated: 2026-07-17 01:31
+> Last Updated: 2026-07-17 03:19
 
 ## 1. Purpose
 
@@ -18,6 +18,7 @@ The user identified the following needs after reviewing `revfactory/harness` and
 - handle agent, tool, contract, and verification failures explicitly;
 - create a user-requirements analysis artifact before design and implementation;
 - retain Solmate's stronger machine-enforced document and verification evidence;
+- keep Harness commands internal so normal feature requesters receive verified results rather than a manual CLI checklist;
 - support both Claude Code and Codex without assuming one runtime's private tool names in the canonical contract.
 
 ## 3. Problem Statement
@@ -85,6 +86,7 @@ It does not yet define:
 | NFR-008 | Independence | Verification evidence must come from a role that did not implement the change |
 | NFR-009 | Recoverability | A stopped agent or interrupted session can resume from persisted artifacts without silently restarting the task |
 | NFR-010 | Open Source | Concepts may be inspired by external projects, but Solmate contracts are independently written and attributable where necessary |
+| NFR-011 | Human Simplicity | The Coordinator owns internal preflight and verification commands; users receive results or required decisions, not Harness CLI instructions |
 
 ## 7. Approved Scope
 
