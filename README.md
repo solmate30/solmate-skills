@@ -45,16 +45,77 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Versioned harness artifacts**: `validate-harness` checks v1 task manifests, structured messages, ordered state events, role activation, evidence gates, and exclusive write ownership.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
-## Unreleased
+## Unreleased: Agent Harness Contracts
 
-The next release introduces a shared Claude/Codex agent harness without adding another installable skill.
+The next release strengthens the existing Solmate workflow with a shared Claude/Codex agent harness. It addresses two recurring failure modes in long AI-assisted projects:
 
-- `rules-workflow/resources/agent-harness-contract.md` is the canonical role and receipt contract.
-- Claude Code gets three native `solmate-*` project agents; Codex delegates the same roles through its available subagent or task mechanism.
-- Code and deploy tasks require Context and Verification Receipts; docs and prototype work remain advisory.
-- The first five real tasks can use warning mode before projects switch to `--strict` blocking mode.
-- `rules-workflow/resources/agent-harness-v1.schema.json` defines opt-in manifest, message, and event contracts without changing existing Receipt fixtures.
-- `validate-harness` reports schema, transition, permission, evidence, and ownership failures with deterministic warning/block/error exit behavior.
+1. An implementation starts from a backlog item without reading the linked concept, UI, technical, and QA documents.
+2. An agent marks work complete based only on its own summary, without independent verification evidence.
+
+The harness makes both boundaries explicit and machine-checkable while preserving the existing skill installation and backlog format.
+
+### How the harness works
+
+```text
+Coordinator
+  -> read-only Context Agent -> Context Receipt
+  -> Implementation Agent    -> Change Receipt
+  -> read-only QA Inspector   -> Verification Receipt
+  -> Done / PR / merge / publish / deploy
+```
+
+- **Context Receipt** records every required backlog reference that was read, the extracted constraints, and any conflict found before implementation.
+- **Change Receipt** records changed files, covered requirements, excluded scope, checks, and remaining risks. It is a handoff, not independent proof.
+- **Verification Receipt** records commands, results, unrun checks, detailed QA evidence, and the independent PASS/FAIL decision.
+- Code and deploy tasks are blocked from implementation without Context evidence and from completion without Verification evidence. Documentation and prototype work remain advisory.
+
+The canonical contract lives at [`rules-workflow/resources/agent-harness-contract.md`](./rules-workflow/resources/agent-harness-contract.md).
+
+### Backlog Receipt checks
+
+Existing projects can keep their current `00_BACKLOG.md` workflow and add the checks incrementally:
+
+```bash
+# Confirm required linked documents were read before coding
+npx solmate-skills preflight TASK-000
+
+# Confirm independent command and QA/PR evidence before completion
+npx solmate-skills verify TASK-000
+
+# Turn findings into blocking exit codes for CI or release gates
+npx solmate-skills preflight TASK-000 --strict
+npx solmate-skills verify TASK-000 --strict
+```
+
+### Versioned manifest, message, and event checks
+
+Projects that need structured multi-agent coordination can opt into the v1 contract without rewriting existing backlog Receipts:
+
+```bash
+npx solmate-skills validate-harness manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness message _workspace/harness/TASK-000/attempt-01/messages/msg-001.json \
+  --manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.jsonl \
+  --manifest _workspace/harness/TASK-000/manifest.json
+```
+
+[`agent-harness-v1.schema.json`](./rules-workflow/resources/agent-harness-v1.schema.json) defines the manifest, message, and state-event shapes. The validator additionally checks task identity, legal state transitions, active roles, message authority, required evidence, canonical file paths, and exclusive write ownership.
+
+| Mode / result | Exit code | Behavior |
+|:---|:---:|:---|
+| Default warning mode, valid | `0` | Reports PASS |
+| Default warning mode, contract finding | `0` | Reports findings without blocking migration |
+| `--strict`, contract finding | `1` | Blocks the workflow or CI step |
+| Invalid command input, unreadable file, malformed JSON/JSONL | `2` | Reports an operational error |
+
+### Compatibility and current scope
+
+- Existing `preflight`, `verify`, and backlog Receipt fixtures continue to work without structured artifact files.
+- The structured v1 contract is opt-in and warning-first; projects can move to `--strict` after a real-task pilot.
+- The implementation uses the Node standard library and adds no runtime dependency.
+- Claude Code can install the current namespaced `solmate-*` project agents with `install agents`; Codex follows the same canonical contract through its available delegation mechanism.
+- Specialist personas, runtime orchestration, persistent recovery, pilot automation, and blocking rollout remain separate follow-up work.
+- This section documents unreleased work. The package version remains `2.0.12` until a release version is approved.
 
 ## What's New in 2.0.12
 
