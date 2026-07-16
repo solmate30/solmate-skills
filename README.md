@@ -45,9 +45,9 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Versioned harness artifacts**: `validate-harness` checks v1 task manifests, structured messages, ordered state events, role activation, evidence gates, and exclusive write ownership.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
-## What's New in 2.0.13: Agent Harness Contracts
+## Agent Harness
 
-`solmate-skills@2.0.13` strengthens the existing Solmate workflow with a shared Claude/Codex agent harness. It addresses two recurring failure modes in long AI-assisted projects:
+The shared Claude/Codex agent harness strengthens the existing Solmate workflow. It addresses two recurring failure modes in long AI-assisted projects:
 
 1. An implementation starts from a backlog item without reading the linked concept, UI, technical, and QA documents.
 2. An agent marks work complete based only on its own summary, without independent verification evidence.
@@ -119,6 +119,19 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
 - Claude Code can install the current namespaced `solmate-*` project agents with `install agents`; Codex follows the same canonical contract through its available delegation mechanism.
 - Specialist personas, runtime orchestration, persistent recovery, pilot automation, and blocking rollout remain separate follow-up work.
 - This release ships the contract and validation foundation; specialist personas and runtime orchestration remain separately gated follow-up work.
+
+## What's New in 2.0.14
+
+`solmate-skills@2.0.14` makes verification an agent responsibility instead of a user checklist.
+
+- After implementation, the Coordinator automatically starts `verify-implementation` and the required Harness Receipt checks before reporting completion.
+- Context and Verification agents run their applicable checks internally and return plain-language results or a blocked decision.
+- `npx solmate-skills list` now describes automatic workflow verification rather than presenting internal Harness commands as the default path.
+- README and `USAGE.md` keep `preflight`, `verify`, and `validate-harness` in advanced runtime/CI guidance.
+
+## What's New in 2.0.13
+
+`solmate-skills@2.0.13` introduced the shared Agent Harness contract, versioned artifacts, Context/Change/Verification Receipts, and the `validate-harness` validator.
 
 ## What's New in 2.0.12
 
