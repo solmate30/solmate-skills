@@ -7,7 +7,7 @@
     "solmate-skills": "bin/cli.js"
   },
   "scripts": {
-    "test": "node bin/harness-check.test.js"
+    "test": "node bin/test.js"
   },
   "keywords": [
     "ai-skills",

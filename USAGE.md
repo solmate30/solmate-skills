@@ -131,6 +131,16 @@ npx solmate-skills preflight TASK-000 --strict
 npx solmate-skills verify TASK-000 --strict
 ```
 
+Optional v1 structured artifacts use the same warning-to-blocking migration:
+
+```bash
+npx solmate-skills validate-harness manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness message _workspace/harness/TASK-000/attempt-01/messages/msg-001.json --manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.jsonl --manifest _workspace/harness/TASK-000/manifest.json
+```
+
+Add `--strict` for blocking validation. Contract failures then exit `1`; malformed JSON, missing files, and invalid command input exit `2`. Existing backlog-only projects do not need to create these files.
+
 ### Individual verify-* vs master
 
 | Situation | Use |
@@ -703,6 +713,16 @@ Coordinator
 npx solmate-skills preflight TASK-000 --strict
 npx solmate-skills verify TASK-000 --strict
 ```
+
+선택형 v1 구조화 산출물도 같은 warning-to-blocking 마이그레이션을 사용합니다.
+
+```bash
+npx solmate-skills validate-harness manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness message _workspace/harness/TASK-000/attempt-01/messages/msg-001.json --manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.jsonl --manifest _workspace/harness/TASK-000/manifest.json
+```
+
+차단 검증에는 `--strict`를 추가합니다. 계약 위반은 종료 코드 `1`, JSON 파싱·파일·명령 입력 오류는 종료 코드 `2`입니다. 기존 백로그 Receipt만 사용하는 프로젝트는 이 파일을 만들 필요가 없습니다.
 
 ### verify-* 개별 vs 통합
 

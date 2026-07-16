@@ -1,6 +1,6 @@
 # Agent Harness Architecture
 > Created: 2026-07-17 01:04
-> Last Updated: 2026-07-17 01:15
+> Last Updated: 2026-07-17 01:53
 
 ## 1. Architecture Goal
 
@@ -165,9 +165,31 @@ Rules:
 - `_workspace/` is execution evidence, not the approved product specification.
 - Attempts are append-only; a retry creates a new attempt directory.
 - `manifest.json` identifies schema version, current state, active attempt, topology, role activation, write ownership, and canonical document links.
-- `events.jsonl` records state transitions and message metadata in order.
+- `events.jsonl` records ordered state-transition events. Structured messages remain under the active attempt's `messages/` directory.
 - Secrets, credentials, raw personal data, and unrestricted production logs are prohibited.
 - The project decides whether `_workspace/` is committed, archived, or ignored; canonical evidence links must remain valid either way.
+
+### 8.3 Version 1 Machine Contract
+
+The canonical machine schema is `rules-workflow/resources/agent-harness-v1.schema.json`. It contains the manifest, message, and event JSON Schemas plus the legal transition, critical evidence, core-role, read-only-role, and required Receipt tables used by the validator.
+
+The v1 manifest fields are:
+
+- `schema_version`, `artifact_type`, `task_id`, `work_type`, `current_state`, and `active_attempt`;
+- `topology` with pattern, reason, active agent count, and fallback;
+- `roles` with `ACTIVE` or `SKIPPED` activation and a required reason;
+- exclusive `write_ownership` scopes;
+- `canonical_documents` and state-relevant `receipts`.
+
+The v1 event fields are `schema_version`, `artifact_type`, `event_id`, `task_id`, `attempt`, `sequence`, `timestamp`, `actor`, `from`, `to`, `reason`, `artifact_refs`, `evidence_refs`, and conditional `resume_state`. Message and event validation is paired with the manifest so inactive roles, task/attempt drift, incomplete Receipt evidence, and final-state drift cannot silently pass.
+
+The first implementation uses Node standard-library JSON/JSONL parsing and no third-party dependency. Existing backlog Receipt parsing remains unchanged and structured artifacts are opt-in during warning migration.
+
+The top-level Draft 2020-12 schema selects exactly one manifest, message, or event with `oneOf`; an `events.jsonl` file validates each non-empty line as an event and then applies ordered-log semantics. Project paths are canonical and relative. Embedded `.` aliases, duplicate separators, parent traversal, URLs, backslashes, and ambiguous wildcards are rejected. Exclusive recursive ownership uses `directory/**` or `**` only.
+
+Timestamps use a deterministic Solmate canonical profile over RFC 3339: uppercase `T` and `Z`, years `0001` through `9999`, seconds `00` through `59`, and a required UTC marker or numeric offset. Lowercase variants and leap-second notation are intentionally excluded from generated execution evidence.
+
+In the v1 state-event contract, `attempt` increments only on `REWORK -> IMPLEMENTING`. Cancellation and ordinary progress retain the current attempt. `TASK-HARNESS-004` must define the persisted event shape for transient operational retries before that recovery path is enabled.
 
 ## 9. Inter-Agent Message Protocol
 
@@ -176,6 +198,7 @@ Rules:
 ```json
 {
   "schema_version": 1,
+  "artifact_type": "agent_message",
   "message_id": "msg-01J...",
   "task_id": "TASK-HARNESS-002",
   "attempt": 1,
@@ -211,6 +234,7 @@ Rules:
 ### 9.3 Routing Rules
 
 - Agents may communicate directly for status, evidence location, or bounded technical clarification.
+- Direct peer `STATUS` and `QUESTION` messages use only `INFO` or `PENDING`; PASS, FAIL, BLOCKED, rework, and completion status route through Coordinator.
 - Scope changes, acceptance changes, architecture decisions, risk acceptance, state transitions, PASS decisions, and releases must route through Coordinator.
 - Direct messages that alter a contract are invalid until recorded as a Coordinator decision and linked artifact update.
 - Large content is never copied into a message; the message contains a summary and artifact reference.
@@ -325,6 +349,8 @@ Rules:
 - New structured manifests begin in warning mode.
 - The first five real code/deploy tasks collect false-positive and missing-capability evidence.
 - Blocking mode activates only after the pilot review and user approval.
+- Structured validation is available through `validate-harness manifest|message|events`; message and event validation requires the matching manifest.
+- Contract failures return exit `1` only in blocking mode, while malformed JSON, missing files, and invalid command input return exit `2` in all modes.
 
 ## 16. YAGNI / KISS / DRY Check
 

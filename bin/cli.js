@@ -8,6 +8,11 @@ const {
     formatHarnessResult,
     getHarnessExitCode,
 } = require('./harness-check');
+const {
+    checkHarnessArtifact,
+    formatHarnessArtifactResult,
+    getHarnessArtifactExitCode,
+} = require('./harness-artifact');
 
 const IGNORED_FOLDERS = ['bin', 'node_modules', '.git', '.github', '.gemini', '.agent'];
 const IGNORED_FILES = ['package.json', 'package-lock.json', 'AGENTS.md', 'SKILL.md', 'init-skills.sh', 'README.md', '.DS_Store', 'old_AGENTS.md'];
@@ -99,6 +104,8 @@ function listSkills() {
     console.log('\nHarness checks:');
     console.log(' - npx solmate-skills preflight TASK-000 [--strict]');
     console.log(' - npx solmate-skills verify TASK-000 [--strict]');
+    console.log(' - npx solmate-skills validate-harness <manifest|message|events> <path> [--manifest <path>] [--strict]');
+    console.log('   message and events validation require --manifest <path>');
     console.log('\nUsage: npx solmate-skills install <skill-name> | all | hooks | agents\n');
 }
 
@@ -236,6 +243,61 @@ function runHarnessCommand(stage, taskId, rawArgs) {
     process.exitCode = getHarnessExitCode(result);
 }
 
+function parseHarnessArtifactOptions(rawArgs) {
+    const options = { mode: 'warning' };
+
+    for (let index = 0; index < rawArgs.length; index += 1) {
+        const arg = rawArgs[index];
+        if (arg === '--strict') {
+            options.mode = 'blocking';
+        } else if (arg === '--mode') {
+            if (!rawArgs[index + 1]) {
+                throw new Error('--mode requires warning or blocking.');
+            }
+            options.mode = rawArgs[index + 1];
+            index += 1;
+        } else if (arg === '--manifest') {
+            if (!rawArgs[index + 1]) {
+                throw new Error('--manifest requires a file path.');
+            }
+            options.manifestPath = rawArgs[index + 1];
+            index += 1;
+        } else if (arg === '--json') {
+            options.json = true;
+        } else {
+            throw new Error(`Unknown option: ${arg}`);
+        }
+    }
+
+    return options;
+}
+
+function runHarnessArtifactCommand(artifactType, filePath, rawArgs) {
+    let options;
+    try {
+        options = parseHarnessArtifactOptions(rawArgs);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exitCode = 2;
+        return;
+    }
+
+    const result = checkHarnessArtifact({
+        artifactType,
+        filePath,
+        mode: options.mode,
+        manifestPath: options.manifestPath,
+        cwd: targetProjectRoot,
+    });
+
+    if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+    } else {
+        console.log(formatHarnessArtifactResult(result));
+    }
+    process.exitCode = getHarnessArtifactExitCode(result);
+}
+
 const args = process.argv.slice(2);
 const command = args[0];
 const subCommand = args[1];
@@ -270,6 +332,8 @@ if (!command || command === 'list') {
     } else {
         runHarnessCommand(command, subCommand, args.slice(2));
     }
+} else if (command === 'validate-harness') {
+    runHarnessArtifactCommand(subCommand, args[2], args.slice(3));
 } else {
     console.log(`Unknown command: ${command}`);
     listSkills();

@@ -42,6 +42,7 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Implementation workflow**: `/rules-workflow` keeps coding work tied to approved documents, preconditions, and acceptance criteria.
 - **Agent harness**: a read-only Context Agent proves required documents were read, an Implementation Agent returns a scoped change summary, and a read-only Verification Agent provides independent evidence before completion.
 - **Machine-checkable receipts**: `preflight TASK-ID` checks linked document coverage and `verify TASK-ID` checks command results plus QA/PR evidence; `--strict` turns findings into blocking exit codes.
+- **Versioned harness artifacts**: `validate-harness` checks v1 task manifests, structured messages, ordered state events, role activation, evidence gates, and exclusive write ownership.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
 ## Unreleased
@@ -52,6 +53,8 @@ The next release introduces a shared Claude/Codex agent harness without adding a
 - Claude Code gets three native `solmate-*` project agents; Codex delegates the same roles through its available subagent or task mechanism.
 - Code and deploy tasks require Context and Verification Receipts; docs and prototype work remain advisory.
 - The first five real tasks can use warning mode before projects switch to `--strict` blocking mode.
+- `rules-workflow/resources/agent-harness-v1.schema.json` defines opt-in manifest, message, and event contracts without changing existing Receipt fixtures.
+- `validate-harness` reports schema, transition, permission, evidence, and ownership failures with deterministic warning/block/error exit behavior.
 
 ## What's New in 2.0.12
 

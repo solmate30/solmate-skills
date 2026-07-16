@@ -1,6 +1,6 @@
 # Agent Harness Contract
 > Created: 2026-07-17 00:33
-> Last Updated: 2026-07-17 00:33
+> Last Updated: 2026-07-17 01:53
 
 This file is the canonical contract for the Solmate implementation harness. Runtime-specific adapters must reference this file instead of copying the full policy.
 
@@ -132,7 +132,40 @@ Rules:
 - `Unrun Checks` must explain skipped checks or explicitly state that all planned checks ran.
 - `Detailed Evidence` must link to a QA document or PR.
 
-## 6. Runtime Adapters
+## 6. Versioned Structured Artifacts
+
+The existing backlog Receipts remain valid. Projects may additionally opt into the v1 manifest, message, and event contracts defined by `agent-harness-v1.schema.json` in this directory.
+
+```bash
+npx solmate-skills validate-harness manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness message _workspace/harness/TASK-000/attempt-01/messages/msg-001.json --manifest _workspace/harness/TASK-000/manifest.json
+npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.jsonl --manifest _workspace/harness/TASK-000/manifest.json
+```
+
+Rules:
+
+- Structured validation defaults to `warning`; add `--strict` or `--mode blocking` for non-zero contract failures.
+- Message and event validation requires `--manifest` so active roles, task identity, attempt, receipts, and current state can be checked together.
+- Exit `0` means pass or warning-mode findings, exit `1` means a blocking contract failure, and exit `2` means an operational error such as a missing file or malformed JSON.
+- Only the Coordinator may record state transitions.
+- `COMPLETE` requires passing Requirements or an approved skip, Context, Design or an approved skip, Change, and Verification Receipt evidence in the manifest.
+- Core code/deploy roles must be active, read-only roles cannot own write paths, and overlapping exclusive ownership across roles is rejected.
+- Write scopes must use canonical project-relative paths; aliases such as `./`, duplicate separators, and embedded `.` segments are rejected. Recursive ownership uses only `directory/**` or `**`.
+- Event logs begin at `INTAKE`, use contiguous sequence numbers, preserve state continuity, and require evidence for gated transitions.
+- In v1, `attempt` increments only when `REWORK` returns to `IMPLEMENTING`; cancellation and ordinary state progress retain the current attempt. Operational retry events belong to the later orchestration/recovery phase.
+- Direct peer `STATUS` and `QUESTION` messages may use only `INFO` or `PENDING`; PASS, FAIL, BLOCKED, decisions, rework, and completion claims route through Coordinator.
+- The top-level schema uses `oneOf` so a standard Draft 2020-12 validator can validate one manifest, message, or event object. Each non-empty JSONL line is an event object.
+- Timestamps use the Solmate canonical RFC 3339 profile: uppercase `T`/`Z`, years `0001` through `9999`, seconds `00` through `59`, and a required UTC marker or numeric offset. Leap-second and lowercase variants are intentionally excluded for deterministic interoperability.
+
+### 6.1 Compatibility Migration
+
+1. Existing projects may continue using backlog Receipts and the current `preflight` / `verify` commands without creating structured artifacts.
+2. An opting-in project creates `manifest.json` and `events.jsonl`, then runs `validate-harness` in the default warning mode.
+3. Message and event artifacts use `schema_version: 1`; unsupported versions are reported without rewriting the files.
+4. Projects record warning findings during the five-task pilot before enabling `--strict` in automation.
+5. Blocking rollout, migration of existing tasks, and removal of compatibility behavior require separate user approval.
+
+## 7. Runtime Adapters
 
 ### Claude Code
 
@@ -148,7 +181,7 @@ The main Claude session remains the Coordinator.
 
 The main Codex task remains the Coordinator. Use available subagents or separate tasks for Context and Verification, passing the relevant role section and receipt contract from this file. `rules-workflow/SKILL.md` is the required Codex adapter, and a linked project `AGENTS.md` reinforces it when present. No unsupported `.codex/agents/` format is assumed.
 
-## 7. Related Documents
+## 8. Related Documents
 
 - [Implementation Workflow](../SKILL.md) - invokes this contract at implementation and verification gates
 - Project root `USAGE.md` - human-facing installation and command reference

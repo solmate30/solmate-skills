@@ -150,6 +150,7 @@ const agentInstall = childProcess.spawnSync(
 );
 assert.strictEqual(agentInstall.status, 0, agentInstall.stderr || agentInstall.stdout);
 assert(fs.existsSync(path.join(installRoot, '.agent', 'skills', 'rules-workflow', 'resources', 'agent-harness-contract.md')));
+assert(fs.existsSync(path.join(installRoot, '.agent', 'skills', 'rules-workflow', 'resources', 'agent-harness-v1.schema.json')));
 assert(fs.existsSync(path.join(customAgentDir, 'custom-reviewer.md')));
 for (const fileName of ['solmate-context-reader.md', 'solmate-implementer.md', 'solmate-verifier.md']) {
     assert(fs.existsSync(path.join(customAgentDir, fileName)), `${fileName} was not installed`);

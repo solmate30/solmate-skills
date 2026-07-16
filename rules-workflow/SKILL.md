@@ -28,6 +28,8 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 기계 검사는 `npx solmate-skills preflight TASK-ID`와 `npx solmate-skills verify TASK-ID`를 사용한다. `--strict`는 누락 시 non-zero로 차단한다.
 
+v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harness manifest|message|events <path>`를 warning 모드로 실행한다. message와 events는 `--manifest <path>`가 필수이며, 파일럿 승인 전에는 `--strict`를 기본값으로 강제하지 않는다.
+
 ---
 
 ## Step 0: Product Phase Preflight

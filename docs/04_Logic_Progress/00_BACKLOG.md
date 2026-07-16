@@ -1,12 +1,12 @@
 # Agent Harness Backlog
 > Created: 2026-07-17 01:04
-> Last Updated: 2026-07-17 01:15
+> Last Updated: 2026-07-17 02:44
 
-## In Progress
+## Done
 
-### [ ] TASK-HARNESS-001: Establish The Enhanced Harness Design Baseline
+### [x] TASK-HARNESS-001: Establish The Enhanced Harness Design Baseline
 
-- Status: In Progress
+- Status: Done
 - Work Type: docs
 - Related Concept Docs:
   - [Agent Harness Requirements Analysis](../01_Concept_Design/01_AGENT_HARNESS_REQUIREMENTS_ANALYSIS.md) - approved user needs, scope, and acceptance criteria
@@ -38,7 +38,7 @@
   - [x] Execution Plan separates design, implementation, QA, pilot, and release phases
   - [x] QA scenarios map P0 requirements and failure paths
   - [x] Documentation structure, metadata, links, and SVG validate successfully
-  - [ ] User reviews the completed design baseline
+  - [x] User reviews the completed design baseline
 - Change Receipt:
   - Files Changed:
     - `docs/01_Concept_Design/01_AGENT_HARNESS_REQUIREMENTS_ANALYSIS.md`
@@ -48,6 +48,7 @@
     - `docs/04_Logic_Progress/01_EXECUTION_PLAN.md`
     - `docs/04_Logic_Progress/03_DECISION_LOG.md`
     - `docs/05_QA_Validation/01_TEST_SCENARIOS.md`
+    - `docs/05_QA_Validation/02_AGENT_HARNESS_DESIGN_REVIEW.md`
   - Requirements Covered:
     - Design coverage for FR-001 through FR-015 and NFR-001 through NFR-010
   - Excluded Scope:
@@ -61,7 +62,7 @@
   - Remaining Risks:
     - Implementation feasibility and runtime capability parity require later code-stage evidence
 - Verification Receipt:
-  - Status: PASS - structural design verification only; user design review remains pending
+  - Status: PASS - structural design verification and user review complete
   - Commands and Results:
     - `git diff --check` - PASS
     - relative-link validation - PASS
@@ -75,13 +76,11 @@
 - Document Sync Check:
   - [x] Requirements, architecture, decisions, plan, backlog, and QA files cross-link each other
   - [x] Structural verification findings are reflected in the design documents
-  - [ ] User design review is recorded before the task moves to Done
+  - [x] User design review is recorded before the task moves to Done
 
-## ToDo
+### [x] TASK-HARNESS-002: Implement Versioned Contracts And Machine Validation
 
-### [ ] TASK-HARNESS-002: Implement Versioned Contracts And Machine Validation
-
-- Status: ToDo
+- Status: Done
 - Work Type: code
 - Related Concept Docs:
   - [Agent Harness Requirements Analysis](../01_Concept_Design/01_AGENT_HARNESS_REQUIREMENTS_ANALYSIS.md) - FR-001, FR-003, FR-006, FR-007, FR-011, FR-012, and compatibility requirements
@@ -92,42 +91,88 @@
 - Related QA Docs:
   - [Agent Harness Test Scenarios](../05_QA_Validation/01_TEST_SCENARIOS.md) - schema, transition, compatibility, and security scenarios
 - Implementation Preconditions:
-  - [ ] User approves code implementation after design review
-  - [ ] Context Reader records every linked document as read
-  - [ ] Existing parser and fixture behavior is baselined
-  - [ ] Schema storage paths and migration boundary are confirmed
-  - [ ] Minimal dependency decision is recorded
+  - [x] User approves code implementation after design review
+  - [x] Context Reader records every linked document as read
+  - [x] Existing parser and fixture behavior is baselined
+  - [x] Schema storage path is `rules-workflow/resources/agent-harness-v1.schema.json`; existing backlog receipts remain the compatibility boundary
+  - [x] Node standard-library parsing and the existing test runner are sufficient; no dependency is added
 - Context Receipt:
-  - Status: PENDING
+  - Status: PASS
   - Required References Read:
-    - Pending
+    - [Agent Harness Requirements Analysis](../01_Concept_Design/01_AGENT_HARNESS_REQUIREMENTS_ANALYSIS.md) - FR-001, FR-003, FR-006, FR-007, FR-011, FR-012, and NFR-006/NFR-007 extracted
+    - [Agent Harness Architecture](../03_Technical_Specs/01_AGENT_HARNESS_ARCHITECTURE.md) - manifest, message, event, state, permission, and compatibility contracts extracted
+    - [Agent Harness Test Scenarios](../05_QA_Validation/01_TEST_SCENARIOS.md) - schema, state, ownership, evidence, and compatibility cases extracted
+    - `rules-workflow/resources/agent-harness-contract.md` - current Receipt and exit-mode contract baselined
+    - `bin/harness-check.js` - current backlog parser and validation behavior baselined
+    - `bin/harness-check.test.js` - existing fixture and CLI exit behavior baselined
   - Constraints:
-    - Preserve existing `preflight` and `verify` compatibility
-  - Conflicts: Pending review
+    - Preserve existing `preflight` and `verify` compatibility and fixture text
+    - Keep structured artifacts opt-in and warning by default during migration
+    - Use one canonical versioned schema and no new third-party dependency
+    - Do not implement personas, runtime orchestration, recovery, blocking rollout, merge, publish, or deploy in this task
+  - Conflicts: None
 - Component & Library Plan:
   - N/A - Node standard-library parsing and existing test infrastructure are preferred; this is not React work
 - Acceptance Criteria:
-  - [ ] Versioned manifest, message, and event schemas validate through structured parsing
-  - [ ] Legal and illegal state transitions have automated tests
-  - [ ] Role activation and exclusive write ownership are validated
-  - [ ] Current receipt tests continue to pass without fixture rewrites
-  - [ ] Invalid schema, unauthorized transition, and missing evidence produce deterministic exit behavior
-  - [ ] No new third-party dependency is added without a documented necessity
+  - [x] Versioned manifest, message, and event schemas validate through structured parsing
+  - [x] Legal and illegal state transitions have automated tests
+  - [x] Role activation and exclusive write ownership are validated
+  - [x] Current receipt tests continue to pass without fixture rewrites
+  - [x] Invalid schema, unauthorized transition, and missing evidence produce deterministic exit behavior
+  - [x] No new third-party dependency is added without a documented necessity
 - Change Receipt:
-  - Files Changed: Pending
-  - Requirements Covered: Pending
-  - Excluded Scope: Persona adapters and orchestration runtime
-  - Basic Checks: Pending
-  - Remaining Risks: Pending
+  - Files Changed:
+    - `README.md`
+    - `USAGE.md`
+    - `bin/cli.js`
+    - `bin/harness-check.test.js`
+    - `bin/harness-artifact.js`
+    - `bin/harness-artifact.test.js`
+    - `bin/test.js`
+    - `package.json`
+    - `rules-workflow/SKILL.md`
+    - `rules-workflow/resources/agent-harness-contract.md`
+    - `rules-workflow/resources/agent-harness-v1.schema.json`
+    - `verify-skills/SKILL.md`
+    - `docs/01_Concept_Design/01_AGENT_HARNESS_REQUIREMENTS_ANALYSIS.md`
+    - `docs/03_Technical_Specs/01_AGENT_HARNESS_ARCHITECTURE.md`
+    - `docs/04_Logic_Progress/00_BACKLOG.md`
+    - `docs/04_Logic_Progress/01_EXECUTION_PLAN.md`
+    - `docs/05_QA_Validation/01_TEST_SCENARIOS.md`
+    - `docs/05_QA_Validation/03_AGENT_HARNESS_CONTRACT_QA.md`
+  - Requirements Covered:
+    - FR-004, FR-006, FR-007, FR-011 foundation, FR-012 evidence fields, NFR-003, NFR-006, and NFR-007
+  - Excluded Scope:
+    - Persona/runtime adapters, orchestration and recovery runtime, pilot, blocking rollout, version bump, PR, merge, publish, and deploy
+  - Basic Checks:
+    - `npm test` - PASS - existing Receipt and new artifact suites
+    - Node 16 `bin/test.js` - PASS - older ARM-compatible runtime
+    - Acorn ECMAScript 2020 parse - PASS - Node 14 syntax range
+    - Ajv Draft 2020 compile and top-level rejection - PASS
+    - `npm pack --dry-run --json` - PASS - 454 packaged files and all expected artifacts included
+    - document and trace validation - PASS - 25 requirements and 36 scenarios
+    - `git diff --check` - PASS
+  - Remaining Risks:
+    - Actual Node 14 ARM runtime was unavailable; Node 16 and ECMAScript 2020 checks passed
+    - Persona parity, runtime permissions, recovery, pilot, and release remain later tasks
 - Verification Receipt:
-  - Status: PENDING
-  - Commands and Results: Pending
-  - Unrun Checks: Pending
+  - Status: PASS - final independent QA found no P0, P1, or P2 issue
+  - Commands and Results:
+    - `npm test` - PASS - `harness checks ok`; `harness artifact checks ok`
+    - `node --check` on changed/new JavaScript - PASS
+    - `node bin/cli.js preflight TASK-HARNESS-002 --strict` - PASS
+    - independent adversarial contract review - PASS - prior findings rechecked after correction
+    - `git diff --check` - PASS
+  - Unrun Checks:
+    - Actual Node 14 execution unavailable because no matching npm macOS ARM binary exists; Node 16 and ECMAScript 2020 checks passed
+    - Persona, orchestration, recovery, warning pilot, blocking rollout, publish, and deploy checks are outside this task
   - Detailed Evidence:
-    - [Agent Harness Test Scenarios](../05_QA_Validation/01_TEST_SCENARIOS.md) - planned evidence target; replace with an execution report or PR before completion
+    - [Agent Harness Contract Implementation QA](../05_QA_Validation/03_AGENT_HARNESS_CONTRACT_QA.md) - commands, independent findings, corrections, final PASS, and residual risks
 - Document Sync Check:
-  - [ ] Implemented schema fields match the architecture specification
-  - [ ] CLI and USAGE documentation reflect actual command behavior
+  - [x] Implemented schema fields match the architecture specification
+  - [x] CLI, workflow contract, README, USAGE, and verification guidance reflect actual command behavior
+
+## ToDo
 
 ### [ ] TASK-HARNESS-003: Add Specialist Personas And Runtime Adapters
 

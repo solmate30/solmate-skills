@@ -1,6 +1,6 @@
 # Agent Harness Test Scenarios
 > Created: 2026-07-17 01:04
-> Last Updated: 2026-07-17 01:15
+> Last Updated: 2026-07-17 01:53
 
 ## 1. Purpose
 
@@ -28,7 +28,7 @@ Implementation-stage status must replace these design-stage statements with exec
 | FR-003 | Persona Contract, Permissions | QA-ROLE-002 | Covered |
 | FR-004 | Receipt Integration, Compatibility | QA-COMPAT-001 | Covered |
 | FR-005 | Optional Specialists, State Machine | QA-DESIGN-001 | Covered |
-| FR-006 | Message Protocol | QA-MSG-001, QA-MSG-002 | Covered |
+| FR-006 | Message Protocol | QA-SCHEMA-001, QA-MSG-001, QA-MSG-002 | Covered |
 | FR-007 | State Machine, Error Handling | QA-STATE-001, QA-STATE-002 | Covered |
 | FR-008 | Permissions, QA Role | QA-QA-001, QA-QA-002 | Covered |
 | FR-009 | Error Handling | QA-ERR-001 through QA-ERR-006 | Covered |
@@ -48,7 +48,7 @@ Implementation-stage status must replace these design-stage statements with exec
 | NFR-003 | QA-ADAPTER-001 | Covered |
 | NFR-004 | QA-ROLE-001, QA-TOPO-001 | Covered |
 | NFR-005 | QA-COST-001, QA-PILOT-001 | Covered |
-| NFR-006 | QA-MSG-001, QA-STATE-002 | Covered |
+| NFR-006 | QA-SCHEMA-001, QA-MSG-001, QA-STATE-002 | Covered |
 | NFR-007 | QA-COMPAT-001 | Covered |
 | NFR-008 | QA-QA-001, QA-QA-002 | Covered |
 | NFR-009 | QA-RECOVERY-001, QA-RECOVERY-002 | Covered |
@@ -104,6 +104,13 @@ Implementation-stage status must replace these design-stage statements with exec
 
 ## 6. Message And State Scenarios
 
+### QA-SCHEMA-001 - Versioned Artifact Schema Selection
+
+- **Given**: A v1 manifest, message, or individual event object.
+- **When**: A standard Draft 2020-12 validator or the Solmate CLI selects the artifact contract.
+- **Then**: Top-level `oneOf` selects exactly one artifact shape, `schema_version: 1` is required, and every non-empty JSONL line validates as an event before ordered-log checks run.
+- **Failure**: The top-level schema accepts an unconstrained object, an unsupported version passes, or malformed JSONL is treated as a contract warning instead of an operational error.
+
 ### QA-MSG-001 - Valid Structured Handoff
 
 - **Given**: Architect completes an approved Architecture Decision Packet.
@@ -115,7 +122,7 @@ Implementation-stage status must replace these design-stage statements with exec
 
 - **Given**: Frontend Implementer asks Backend Implementer to change an accepted API response.
 - **When**: Backend replies directly with a scope-changing decision.
-- **Then**: The message is treated as `DECISION_REQUIRED`; no contract changes until Coordinator records and approves the decision.
+- **Then**: Direct peer messages are limited to `STATUS` or `QUESTION` with `INFO` or `PENDING`; PASS, FAIL, BLOCKED, decision, rework, and completion claims route through Coordinator.
 - **Failure**: The API and UI drift without an updated requirement or decision.
 
 ### QA-STATE-001 - Legal Transition Sequence
@@ -220,7 +227,7 @@ Implementation-stage status must replace these design-stage statements with exec
 ### QA-TOPO-002 - Parallel Write Ownership
 
 - **Given**: Frontend and Backend work can proceed in parallel.
-- **Then**: Exclusive paths are declared; shared contracts are frozen or owned serially.
+- **Then**: Exclusive paths are canonical project-relative paths; aliases and overlapping literal or recursive scopes are rejected, while shared contracts are frozen or owned serially.
 - **Failure**: Both agents modify the same shared file without coordination.
 
 ### QA-TOPO-003 - Hierarchy Depth Limit

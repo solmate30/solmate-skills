@@ -157,6 +157,8 @@ npm_config_cache=/private/tmp/solmate-npm-cache npm pack --dry-run
 npm test
 node bin/cli.js list
 node bin/cli.js preflight TASK-TEST --backlog /path/to/fixture.md --strict
+node bin/cli.js validate-harness manifest /path/to/manifest.json --strict
+node bin/cli.js validate-harness events /path/to/events.jsonl --manifest /path/to/manifest.json --strict
 ```
 
 - 체크:
@@ -167,6 +169,10 @@ node bin/cli.js preflight TASK-TEST --backlog /path/to/fixture.md --strict
   - [ ] `install agents`가 `.claude/agents/solmate-*.md`만 추가하고 기존 에이전트를 보존하는가?
   - [ ] `install rules-workflow`와 `install all`이 Claude 어댑터를 함께 설치하는가?
   - [ ] Codex 지침이 지원되지 않는 `.codex/agents/` 형식을 가정하지 않고 공통 계약을 참조하는가?
+  - [ ] v1 manifest, message, events fixture가 구조화 검증을 통과하는가?
+  - [ ] 불법 상태 전환, 비-Coordinator 전환, 증거 누락, 겹치는 쓰기 소유권이 strict에서 exit 1로 차단되는가?
+  - [ ] message와 events 검사가 유효한 manifest 없이 PASS를 반환하지 않는가?
+  - [ ] 기존 Receipt fixture를 수정하지 않고 `preflight`와 `verify` 회귀 테스트가 통과하는가?
 
 ---
 
