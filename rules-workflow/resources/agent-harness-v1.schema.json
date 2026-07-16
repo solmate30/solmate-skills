@@ -1,0 +1,432 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/solmate30/solmate-skills/agent-harness-v1.schema.json",
+  "title": "Solmate Agent Harness Contract v1",
+  "schema_version": 1,
+  "x-core-roles": [
+    "coordinator",
+    "context-reader",
+    "implementer",
+    "qa-inspector"
+  ],
+  "x-read-only-roles": [
+    "context-reader",
+    "qa-inspector"
+  ],
+  "x-state-transitions": {
+    "INTAKE": ["REQUIREMENTS_READY", "BLOCKED_DECISION", "CANCELLED"],
+    "REQUIREMENTS_READY": ["CONTEXT_LOCKED", "BLOCKED_CONTEXT", "BLOCKED_DECISION", "CANCELLED"],
+    "CONTEXT_LOCKED": ["DESIGN_READY", "BLOCKED_CONTEXT", "BLOCKED_DECISION", "CANCELLED"],
+    "DESIGN_READY": ["IMPLEMENTING", "BLOCKED_DECISION", "BLOCKED_DEPENDENCY", "DEGRADED", "CANCELLED"],
+    "IMPLEMENTING": ["CHANGE_READY", "REWORK", "BLOCKED_DECISION", "BLOCKED_DEPENDENCY", "DEGRADED", "CANCELLED"],
+    "CHANGE_READY": ["VERIFYING", "REWORK", "BLOCKED_DECISION", "BLOCKED_DEPENDENCY", "DEGRADED", "CANCELLED"],
+    "VERIFYING": ["COMPLETE", "REWORK", "BLOCKED_DECISION", "BLOCKED_DEPENDENCY", "DEGRADED", "CANCELLED"],
+    "BLOCKED_CONTEXT": ["CONTEXT_LOCKED", "CANCELLED"],
+    "BLOCKED_DECISION": ["INTAKE", "REQUIREMENTS_READY", "CONTEXT_LOCKED", "DESIGN_READY", "IMPLEMENTING", "CHANGE_READY", "VERIFYING", "CANCELLED"],
+    "BLOCKED_DEPENDENCY": ["DESIGN_READY", "IMPLEMENTING", "CHANGE_READY", "VERIFYING", "CANCELLED"],
+    "REWORK": ["IMPLEMENTING", "CANCELLED"],
+    "DEGRADED": ["DESIGN_READY", "IMPLEMENTING", "CHANGE_READY", "VERIFYING", "CANCELLED"],
+    "COMPLETE": [],
+    "CANCELLED": []
+  },
+  "x-event-evidence": {
+    "REQUIREMENTS_READY": ["artifact_refs"],
+    "CONTEXT_LOCKED": ["evidence_refs"],
+    "DESIGN_READY": ["artifact_refs"],
+    "IMPLEMENTING": ["evidence_refs"],
+    "CHANGE_READY": ["artifact_refs", "evidence_refs"],
+    "VERIFYING": ["evidence_refs"],
+    "COMPLETE": ["evidence_refs"]
+  },
+  "x-manifest-receipts": {
+    "REQUIREMENTS_READY": ["REQUIREMENTS"],
+    "CONTEXT_LOCKED": ["REQUIREMENTS", "CONTEXT"],
+    "DESIGN_READY": ["REQUIREMENTS", "CONTEXT", "DESIGN"],
+    "IMPLEMENTING": ["REQUIREMENTS", "CONTEXT", "DESIGN"],
+    "CHANGE_READY": ["REQUIREMENTS", "CONTEXT", "DESIGN", "CHANGE"],
+    "VERIFYING": ["REQUIREMENTS", "CONTEXT", "DESIGN", "CHANGE"],
+    "COMPLETE": ["REQUIREMENTS", "CONTEXT", "DESIGN", "CHANGE", "VERIFICATION"]
+  },
+  "oneOf": [
+    { "$ref": "#/$defs/manifest" },
+    { "$ref": "#/$defs/message" },
+    { "$ref": "#/$defs/event" }
+  ],
+  "$defs": {
+    "state": {
+      "type": "string",
+      "enum": [
+        "INTAKE",
+        "REQUIREMENTS_READY",
+        "CONTEXT_LOCKED",
+        "DESIGN_READY",
+        "IMPLEMENTING",
+        "CHANGE_READY",
+        "VERIFYING",
+        "COMPLETE",
+        "BLOCKED_CONTEXT",
+        "BLOCKED_DECISION",
+        "BLOCKED_DEPENDENCY",
+        "REWORK",
+        "DEGRADED",
+        "CANCELLED"
+      ]
+    },
+    "role_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "project_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z][A-Za-z0-9+.-]*:).+"
+    },
+    "project_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/project_path"
+      },
+      "uniqueItems": true
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?!0000)[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\\.[0-9]+)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$"
+    },
+    "manifest": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "task_id",
+        "work_type",
+        "current_state",
+        "active_attempt",
+        "topology",
+        "roles",
+        "write_ownership",
+        "canonical_documents",
+        "receipts"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "const": "task_manifest"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$"
+        },
+        "work_type": {
+          "type": "string",
+          "enum": ["code", "deploy", "docs", "prototype"]
+        },
+        "current_state": {
+          "$ref": "#/$defs/state"
+        },
+        "active_attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "topology": {
+          "type": "object",
+          "required": ["pattern", "reason", "agent_count", "fallback"],
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "enum": ["LINEAR", "EXPERT_POOL", "FAN_OUT_FAN_IN", "PRODUCER_REVIEWER", "SUPERVISOR"]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 3
+            },
+            "agent_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "fallback": {
+              "type": "string",
+              "minLength": 3
+            }
+          },
+          "additionalProperties": false
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["role_id", "activation", "reason"],
+            "properties": {
+              "role_id": {
+                "$ref": "#/$defs/role_id"
+              },
+              "activation": {
+                "type": "string",
+                "enum": ["ACTIVE", "SKIPPED"]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 3
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "write_ownership": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role_id", "paths", "mode"],
+            "properties": {
+              "role_id": {
+                "$ref": "#/$defs/role_id"
+              },
+              "paths": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/project_path"
+                },
+                "uniqueItems": true
+              },
+              "mode": {
+                "type": "string",
+                "const": "EXCLUSIVE"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "canonical_documents": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["kind", "path"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["REQUIREMENTS", "UI", "ARCHITECTURE", "LOGIC", "BACKLOG", "QA", "DECISION", "OTHER"]
+              },
+              "path": {
+                "$ref": "#/$defs/project_path"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "receipts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "status", "artifact_ref"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["REQUIREMENTS", "CONTEXT", "DESIGN", "CHANGE", "VERIFICATION", "ERROR", "RELEASE_READINESS"]
+              },
+              "status": {
+                "type": "string",
+                "enum": ["PASS", "FAIL", "PENDING", "SKIPPED"]
+              },
+              "artifact_ref": {
+                "$ref": "#/$defs/project_path"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 3
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "message": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "message_id",
+        "task_id",
+        "attempt",
+        "timestamp",
+        "from",
+        "to",
+        "type",
+        "status",
+        "summary",
+        "requirement_refs",
+        "artifact_refs",
+        "decision_refs",
+        "evidence_refs",
+        "blockers",
+        "next_action",
+        "retry_count"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "const": "agent_message"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^msg-[A-Za-z0-9_-]+$"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "timestamp": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "from": {
+          "$ref": "#/$defs/role_id"
+        },
+        "to": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/role_id"
+          },
+          "uniqueItems": true
+        },
+        "type": {
+          "type": "string",
+          "enum": ["REQUEST", "STATUS", "QUESTION", "DECISION_REQUIRED", "HANDOFF", "FINDING", "REWORK_REQUEST", "RESULT"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["INFO", "PENDING", "PASS", "FAIL", "BLOCKED"]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requirement_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:FR|NFR)-[0-9]{3}$"
+          },
+          "uniqueItems": true
+        },
+        "artifact_refs": {
+          "$ref": "#/$defs/project_refs"
+        },
+        "decision_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^DEC-[0-9]{3}$"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/project_refs"
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 3
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "event_id",
+        "task_id",
+        "attempt",
+        "sequence",
+        "timestamp",
+        "actor",
+        "from",
+        "to",
+        "reason",
+        "artifact_refs",
+        "evidence_refs"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "const": "state_event"
+        },
+        "event_id": {
+          "type": "string",
+          "pattern": "^evt-[A-Za-z0-9_-]+$"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "timestamp": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "actor": {
+          "$ref": "#/$defs/role_id"
+        },
+        "from": {
+          "$ref": "#/$defs/state"
+        },
+        "to": {
+          "$ref": "#/$defs/state"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 3
+        },
+        "artifact_refs": {
+          "$ref": "#/$defs/project_refs"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/project_refs"
+        },
+        "resume_state": {
+          "$ref": "#/$defs/state"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

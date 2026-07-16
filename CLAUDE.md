@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-`solmate-skills` is an npm package that ships curated AI skill files (SKILL.md) to downstream projects. It is **not** an application — it is a skill library and CLI tool. Each top-level directory (except `bin/`) is a skill that gets copied into `.agent/skills/<skill-name>` of a target project.
+`solmate-skills` is an npm package that ships curated AI skill files (SKILL.md) to downstream projects. It is **not** an application — it is a skill library and CLI tool. Each installable top-level directory contains `SKILL.md` and is copied into `.agent/skills/<skill-name>` of a target project.
 
 ## CLI Commands
 
@@ -17,13 +17,20 @@ npx solmate-skills install <skill-name>
 
 # Install all skills
 npx solmate-skills@latest install all
+
+# Refresh native Claude project agents
+npx solmate-skills@latest install agents
+
+# Check backlog context and verification receipts
+npx solmate-skills preflight TASK-000 --strict
+npx solmate-skills verify TASK-000 --strict
 ```
 
-There are no build, test, or lint scripts in this repo (`"test": "echo \"Error: no test specified\" && exit 1"`).
+Run `npm test` to validate the harness receipt parser and blocking behavior. There is no build or lint script.
 
 ## Installing Skills via Symlink (Dev)
 
-`init-skills.sh` creates symlinks from a target project's `.agent/skills/` to this repo, and links `AGENTS.md` and `USAGE.md` to the project root. Run it from inside the target project:
+`init-skills.sh` creates symlinks from a target project's `.agent/skills/` to this repo, links `AGENTS.md` and `USAGE.md` to the project root, and links the namespaced Claude project agents under `.claude/agents/`. Run it from inside the target project:
 
 ```bash
 bash /Users/namhyeongseog/Documents/solmate-skills/init-skills.sh
@@ -33,6 +40,7 @@ bash /Users/namhyeongseog/Documents/solmate-skills/init-skills.sh
 
 ```
 bin/cli.js          — CLI entrypoint; discovers skills as top-level dirs, copies them to .agent/skills/
+bin/harness-check.js — Backlog Context/Verification Receipt parser and blocking checks
 AGENTS.md           — Global AI collaboration rules (linked into target projects)
 init-skills.sh      — Symlink installer for local development
 <skill-name>/
@@ -40,6 +48,7 @@ init-skills.sh      — Symlink installer for local development
   templates/        — (optional) document templates
   resources/        — (optional) reference files
   examples/         — (optional) example outputs
+  adapters/         — (optional) runtime-specific thin adapters; canonical policy remains in resources/
 ```
 
 Skills discovered by `bin/cli.js` = any top-level directory not in `IGNORED_FOLDERS` (`bin`, `node_modules`, `.git`, `.github`, `.gemini`, `.agent`).
@@ -61,6 +70,7 @@ Skills discovered by `bin/cli.js` = any top-level directory not in `IGNORED_FOLD
 - **Conventional Commits in Korean**: `type(scope): 한글 요약` (e.g. `feat(login): 소셜 로그인 API 연동`).
 - **5-Layer doc structure**: `docs/01_Concept_Design/`, `02_UI_Screens/`, `03_Technical_Specs/`, `04_Logic_Progress/`, `05_QA_Validation/`.
 - **Backlogs and roadmaps** belong exclusively in `docs/04_Logic_Progress/`.
+- **Agent Harness Gate**: code/deploy work requires a passing Context Receipt before implementation and an independent Verification Receipt before completion or release.
 
 ## Skill Categories
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Implementation Workflow"
-  short_description: "Follow implementation with minimal gates"
-  default_prompt: "Use $rules-workflow to plan, apply YAGNI/KISS/DRY gates, implement, verify, and prepare this feature for shipping."
+  short_description: "Run context-aware implementation and verification"
+  default_prompt: "Use $rules-workflow to require a Context Receipt before code, apply minimal implementation gates, delegate independent verification, and require a Verification Receipt before shipping."

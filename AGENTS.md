@@ -99,6 +99,15 @@
 - **프로토타입 예외**: 프로토타입·스파이크·탐색 단계에서는 차단 조건이 아니라 기록성 체크로 적용한다.
 - **안전 예외**: 검증, 인증·인가, 에러 처리, 접근성, 보안, 데이터 보존, 테스트 가능성은 단순화를 이유로 제거하지 않는다.
 
+### 3.3. Agent Harness Gate (Context / Implementation / Verification)
+- **정본 위치**: 역할·권한·인계·Receipt 상세 형식은 `rules-workflow/resources/agent-harness-contract.md`를 따른다.
+- **적용 범위**: `Work Type`이 `code` 또는 `deploy`인 백로그 작업에 필수로 적용한다. `docs`, `prototype`은 기록성 체크로 적용한다.
+- **구현 전 차단**: `blocking` 모드에서는 읽기 전용 Context Agent가 모든 Related 문서를 읽고 PASS Context Receipt를 남기지 않으면 구현을 시작할 수 없다.
+- **완료 전 차단**: `blocking` 모드에서는 읽기 전용 Verification Agent가 명령 결과와 QA 문서 또는 PR 근거를 포함한 PASS Verification Receipt를 남기지 않으면 Done, PR, merge, publish, deploy로 이동할 수 없다.
+- **역할 분리**: Implementation Agent가 작성한 Change Receipt는 독립 검증이 아니다. Verification Agent는 발견 사항을 직접 수정하지 않고 Coordinator를 통해 Implementation Agent로 반환한다.
+- **Claude와 Codex**: Claude Code는 `.claude/agents/solmate-*.md`를 사용한다. Codex는 `rules-workflow` 정본을 사용 가능한 subagent 또는 별도 task에 전달한다.
+- **강제 수준**: 처음 5개 실제 작업은 `warning` 결과를 기록하고 사용자 확인 후 진행한다. 이후 `npx solmate-skills preflight TASK-ID --strict`와 `npx solmate-skills verify TASK-ID --strict`를 차단 게이트로 사용한다.
+
 ## 4. Skills & AI Capabilities
 AI 에이전트는 본 프로젝트에 설치된 다음 **26개 스킬**을 활용하여 작업을 수행하며, 모든 작업 결과물은 이 스킬들의 검증 가이드를 통과해야 한다.
 

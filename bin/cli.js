@@ -3,6 +3,16 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const {
+    checkHarnessTask,
+    formatHarnessResult,
+    getHarnessExitCode,
+} = require('./harness-check');
+const {
+    checkHarnessArtifact,
+    formatHarnessArtifactResult,
+    getHarnessArtifactExitCode,
+} = require('./harness-artifact');
 
 const IGNORED_FOLDERS = ['bin', 'node_modules', '.git', '.github', '.gemini', '.agent'];
 const IGNORED_FILES = ['package.json', 'package-lock.json', 'AGENTS.md', 'SKILL.md', 'init-skills.sh', 'README.md', '.DS_Store', 'old_AGENTS.md'];
@@ -19,6 +29,8 @@ const POST_INSTALL_SCRIPTS = {
 const packageRoot = path.join(__dirname, '..');
 const targetProjectRoot = process.cwd();
 const targetSkillsDir = path.join(targetProjectRoot, '.agent', 'skills');
+const claudeAgentSourceDir = path.join(packageRoot, 'rules-workflow', 'adapters', 'claude');
+const targetClaudeAgentsDir = path.join(targetProjectRoot, '.claude', 'agents');
 
 function getAvailableSkills() {
     return fs.readdirSync(packageRoot, { withFileTypes: true })
@@ -61,13 +73,40 @@ function copyFolderSync(from, to) {
     });
 }
 
+function installAgentAdapters() {
+    if (!fs.existsSync(claudeAgentSourceDir)) {
+        console.error('Error: Claude agent adapters not found in rules-workflow.');
+        process.exit(1);
+    }
+
+    fs.mkdirSync(targetClaudeAgentsDir, { recursive: true });
+    const agentFiles = fs.readdirSync(claudeAgentSourceDir)
+        .filter(fileName => fileName.startsWith('solmate-') && fileName.endsWith('.md'));
+
+    for (const fileName of agentFiles) {
+        fs.copyFileSync(
+            path.join(claudeAgentSourceDir, fileName),
+            path.join(targetClaudeAgentsDir, fileName),
+        );
+    }
+
+    console.log(`Installed ${agentFiles.length} Claude agent adapters to .claude/agents`);
+    console.log('Codex uses the same contract through rules-workflow; linked AGENTS.md reinforces it globally.');
+}
+
 function listSkills() {
     const skills = getAvailableSkills();
     console.log('\nAvailable skills to install:');
     skills.forEach(skill => console.log(` - ${skill}`));
     console.log('\nUtilities:');
     console.log(' - hooks (install with: npx solmate-skills install hooks)');
-    console.log('\nUsage: npx solmate-skills install <skill-name> | all | hooks\n');
+    console.log(' - agents (install with: npx solmate-skills install agents)');
+    console.log('\nHarness checks:');
+    console.log(' - npx solmate-skills preflight TASK-000 [--strict]');
+    console.log(' - npx solmate-skills verify TASK-000 [--strict]');
+    console.log(' - npx solmate-skills validate-harness <manifest|message|events> <path> [--manifest <path>] [--strict]');
+    console.log('   message and events validation require --manifest <path>');
+    console.log('\nUsage: npx solmate-skills install <skill-name> | all | hooks | agents\n');
 }
 
 function installHooks() {
@@ -123,6 +162,10 @@ function installSkill(skillName, options = {}) {
     copyFolderSync(sourcePath, destPath);
     console.log(`Successfully installed ${skillName} to .agent/skills/${skillName}`);
 
+    if (skillName === 'rules-workflow') {
+        installAgentAdapters();
+    }
+
     // Run post-install script if defined for this skill
     if (POST_INSTALL_SCRIPTS[skillName]) {
         const scriptPath = path.join(destPath, POST_INSTALL_SCRIPTS[skillName]);
@@ -141,6 +184,120 @@ function installSkill(skillName, options = {}) {
     }
 }
 
+function installHarnessAgents() {
+    installSkill('rules-workflow');
+}
+
+function parseHarnessOptions(rawArgs) {
+    const options = { mode: 'warning' };
+
+    for (let index = 0; index < rawArgs.length; index += 1) {
+        const arg = rawArgs[index];
+        if (arg === '--strict') {
+            options.mode = 'blocking';
+        } else if (arg === '--mode') {
+            if (!rawArgs[index + 1]) {
+                throw new Error('--mode requires warning or blocking.');
+            }
+            options.mode = rawArgs[index + 1];
+            index += 1;
+        } else if (arg === '--backlog') {
+            if (!rawArgs[index + 1]) {
+                throw new Error('--backlog requires a file path.');
+            }
+            options.backlogPath = rawArgs[index + 1];
+            index += 1;
+        } else if (arg === '--json') {
+            options.json = true;
+        } else {
+            throw new Error(`Unknown option: ${arg}`);
+        }
+    }
+
+    return options;
+}
+
+function runHarnessCommand(stage, taskId, rawArgs) {
+    let options;
+    try {
+        options = parseHarnessOptions(rawArgs);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exitCode = 2;
+        return;
+    }
+
+    const result = checkHarnessTask({
+        stage,
+        taskId,
+        mode: options.mode,
+        backlogPath: options.backlogPath,
+        cwd: targetProjectRoot,
+    });
+
+    if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+    } else {
+        console.log(formatHarnessResult(result));
+    }
+    process.exitCode = getHarnessExitCode(result);
+}
+
+function parseHarnessArtifactOptions(rawArgs) {
+    const options = { mode: 'warning' };
+
+    for (let index = 0; index < rawArgs.length; index += 1) {
+        const arg = rawArgs[index];
+        if (arg === '--strict') {
+            options.mode = 'blocking';
+        } else if (arg === '--mode') {
+            if (!rawArgs[index + 1]) {
+                throw new Error('--mode requires warning or blocking.');
+            }
+            options.mode = rawArgs[index + 1];
+            index += 1;
+        } else if (arg === '--manifest') {
+            if (!rawArgs[index + 1]) {
+                throw new Error('--manifest requires a file path.');
+            }
+            options.manifestPath = rawArgs[index + 1];
+            index += 1;
+        } else if (arg === '--json') {
+            options.json = true;
+        } else {
+            throw new Error(`Unknown option: ${arg}`);
+        }
+    }
+
+    return options;
+}
+
+function runHarnessArtifactCommand(artifactType, filePath, rawArgs) {
+    let options;
+    try {
+        options = parseHarnessArtifactOptions(rawArgs);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exitCode = 2;
+        return;
+    }
+
+    const result = checkHarnessArtifact({
+        artifactType,
+        filePath,
+        mode: options.mode,
+        manifestPath: options.manifestPath,
+        cwd: targetProjectRoot,
+    });
+
+    if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+    } else {
+        console.log(formatHarnessArtifactResult(result));
+    }
+    process.exitCode = getHarnessArtifactExitCode(result);
+}
+
 const args = process.argv.slice(2);
 const command = args[0];
 const subCommand = args[1];
@@ -157,6 +314,8 @@ if (!command || command === 'list') {
         installSkill('install-all');
     } else if (subCommand === 'hooks' || subCommand === 'install-hooks') {
         installHooks();
+    } else if (subCommand === 'agents' || subCommand === 'install-agents') {
+        installHarnessAgents();
     } else {
         installSkill(subCommand);
     }
@@ -164,6 +323,17 @@ if (!command || command === 'list') {
     installSkill('install-all');
 } else if (command === 'install-hooks' || command === 'hooks') {
     installHooks();
+} else if (command === 'install-agents' || command === 'agents') {
+    installHarnessAgents();
+} else if (command === 'preflight' || command === 'verify') {
+    if (!subCommand) {
+        console.error(`Error: ${command} requires a backlog task ID.`);
+        process.exitCode = 2;
+    } else {
+        runHarnessCommand(command, subCommand, args.slice(2));
+    }
+} else if (command === 'validate-harness') {
+    runHarnessArtifactCommand(subCommand, args[2], args.slice(3));
 } else {
     console.log(`Unknown command: ${command}`);
     listSkills();

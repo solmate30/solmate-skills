@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Solmate agent harness data flow</title>
+  <desc id="desc">User decisions flow through a coordinator to requirements, context, optional design specialists, implementation, independent QA, and release gates. Canonical documents and an execution workspace preserve artifacts and evidence.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+    <style>
+      .title { font: 700 30px system-ui, sans-serif; fill: #111827; }
+      .subtitle { font: 400 16px system-ui, sans-serif; fill: #4b5563; }
+      .label { font: 700 18px system-ui, sans-serif; fill: #111827; }
+      .small { font: 400 14px system-ui, sans-serif; fill: #374151; }
+      .box { stroke-width: 2; rx: 6; }
+      .line { stroke: #374151; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke: #6b7280; stroke-width: 2; stroke-dasharray: 8 7; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f9fafb"/>
+  <text x="80" y="65" class="title">Solmate Agent Harness</text>
+  <text x="80" y="94" class="subtitle">Canonical documents carry decisions; structured messages carry status and artifact references.</text>
+
+  <rect x="70" y="160" width="180" height="96" class="box" fill="#fef3c7" stroke="#b45309"/>
+  <text x="160" y="198" text-anchor="middle" class="label">User</text>
+  <text x="160" y="224" text-anchor="middle" class="small">scope and risk authority</text>
+
+  <rect x="315" y="145" width="220" height="126" class="box" fill="#dbeafe" stroke="#1d4ed8"/>
+  <text x="425" y="188" text-anchor="middle" class="label">Coordinator</text>
+  <text x="425" y="216" text-anchor="middle" class="small">state, topology, approvals</text>
+  <text x="425" y="240" text-anchor="middle" class="small">handoff acceptance</text>
+
+  <rect x="615" y="135" width="240" height="146" class="box" fill="#dcfce7" stroke="#15803d"/>
+  <text x="735" y="178" text-anchor="middle" class="label">Requirements Analyst</text>
+  <text x="735" y="206" text-anchor="middle" class="small">FR, NFR, AC, scope</text>
+  <text x="735" y="230" text-anchor="middle" class="small">questions and assumptions</text>
+  <text x="735" y="254" text-anchor="middle" class="small">conditional specialist</text>
+
+  <rect x="935" y="145" width="220" height="126" class="box" fill="#e0e7ff" stroke="#4338ca"/>
+  <text x="1045" y="188" text-anchor="middle" class="label">Context Reader</text>
+  <text x="1045" y="216" text-anchor="middle" class="small">linked documents</text>
+  <text x="1045" y="240" text-anchor="middle" class="small">Context Receipt</text>
+
+  <rect x="1240" y="120" width="270" height="176" class="box" fill="#f3e8ff" stroke="#7e22ce"/>
+  <text x="1375" y="163" text-anchor="middle" class="label">Expert Pool</text>
+  <text x="1375" y="195" text-anchor="middle" class="small">Architect</text>
+  <text x="1375" y="220" text-anchor="middle" class="small">Logic Builder</text>
+  <text x="1375" y="245" text-anchor="middle" class="small">Security Inspector</text>
+  <text x="1375" y="270" text-anchor="middle" class="small">activated only when justified</text>
+
+  <rect x="760" y="390" width="260" height="145" class="box" fill="#cffafe" stroke="#0e7490"/>
+  <text x="890" y="434" text-anchor="middle" class="label">Implementer</text>
+  <text x="890" y="462" text-anchor="middle" class="small">exclusive write scope</text>
+  <text x="890" y="486" text-anchor="middle" class="small">Change Receipt</text>
+  <text x="890" y="510" text-anchor="middle" class="small">new attempt on rework</text>
+
+  <rect x="1110" y="390" width="260" height="145" class="box" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="1240" y="434" text-anchor="middle" class="label">QA Inspector</text>
+  <text x="1240" y="462" text-anchor="middle" class="small">read-only independent checks</text>
+  <text x="1240" y="486" text-anchor="middle" class="small">boundary comparison</text>
+  <text x="1240" y="510" text-anchor="middle" class="small">Verification Receipt</text>
+
+  <rect x="470" y="390" width="250" height="145" class="box" fill="#fce7f3" stroke="#be185d"/>
+  <text x="595" y="434" text-anchor="middle" class="label">Release Guardian</text>
+  <text x="595" y="462" text-anchor="middle" class="small">package and deploy checks</text>
+  <text x="595" y="486" text-anchor="middle" class="small">rollback and monitoring</text>
+  <text x="595" y="510" text-anchor="middle" class="small">conditional specialist</text>
+
+  <path d="M250 208 H315" class="line"/>
+  <path d="M535 208 H615" class="line"/>
+  <path d="M855 208 H935" class="line"/>
+  <path d="M1155 208 H1240" class="line"/>
+  <path d="M1375 296 V345 H890 V390" class="line"/>
+  <path d="M1045 271 V330 H890 V390" class="line"/>
+  <path d="M1020 462 H1110" class="line"/>
+  <path d="M1110 500 H1045 V570 H890 V535" class="dashed"/>
+  <text x="1040" y="592" text-anchor="middle" class="small">FAIL / REWORK through Coordinator</text>
+  <path d="M1240 535 V625 H425 V271" class="line"/>
+  <path d="M760 500 H720" class="dashed"/>
+  <path d="M595 390 V325 H425 V271" class="dashed"/>
+
+  <rect x="160" y="690" width="560" height="140" class="box" fill="#ffffff" stroke="#374151"/>
+  <text x="440" y="732" text-anchor="middle" class="label">Canonical Project Documents</text>
+  <text x="440" y="764" text-anchor="middle" class="small">Requirements, Architecture, Logic, Backlog, QA</text>
+  <text x="440" y="791" text-anchor="middle" class="small">approved decisions and long-lived evidence</text>
+
+  <rect x="880" y="690" width="560" height="140" class="box" fill="#ffffff" stroke="#374151"/>
+  <text x="1160" y="732" text-anchor="middle" class="label">Execution Workspace</text>
+  <text x="1160" y="764" text-anchor="middle" class="small">manifest.json, events.jsonl, attempts, messages</text>
+  <text x="1160" y="791" text-anchor="middle" class="small">runtime transport, recovery, and audit trail</text>
+
+  <path d="M425 271 V655 H440 V690" class="dashed"/>
+  <path d="M890 535 V645 H1160 V690" class="dashed"/>
+  <path d="M1240 535 V635 H1160 V690" class="dashed"/>
+</svg>

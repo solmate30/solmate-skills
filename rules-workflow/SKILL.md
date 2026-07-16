@@ -1,6 +1,6 @@
 ---
 name: rules-workflow
-description: Guides the full implementation lifecycle from planning through PR. Use when implementing a new feature, planning implementation, before committing or creating a PR, avoiding overengineering, or following the 18-step workflow. Requires product phase preflight, HTML UI Preview Gate, UI-First Gate, Component & Library Planning Gate, Backlog Context Lock, YAGNI/KISS/DRY minimal implementation checks, implementation quality checks, and deployment readiness.
+description: Guides the full implementation lifecycle from planning through PR. Use when implementing a feature or preparing a PR. Requires product/UI gates, Backlog Context Lock, Agent Harness Context and Verification Receipts, minimal implementation checks, and deployment readiness.
 ---
 
 # Implementation & Execution Workflow (18 Steps)
@@ -8,11 +8,27 @@ description: Guides the full implementation lifecycle from planning through PR. 
 > **Human Quick Reference**
 > - **When**: Feature implementation, commit/PR prep, 18-step workflow
 > - **Invoke**: `/rules-workflow` after gates and backlog links are ready
-> - **Prerequisites**: HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, Component & Library Plan
+> - **Prerequisites**: HTML UI Preview Gate, UI-First Gate, Backlog Context Lock, Component & Library Plan, Context Receipt
 > - **Next**: `verify-implementation` before PR
 > - **Guide**: project root `USAGE.md` (English default, Korean below; copied on install)
 
 Follow this workflow for feature implementation and significant code changes. Complete each phase before advancing; use the checklists to avoid skipping steps.
+
+## Agent Harness Gate (Code / Deploy)
+
+`code`와 `deploy` 백로그 작업은 [Agent Harness Contract](./resources/agent-harness-contract.md)를 정본으로 사용한다. Coordinator는 메인 대화가 담당하며 Context, Implementation, Verification 역할을 순서대로 위임한다.
+
+- Claude Code: `.claude/agents/solmate-*.md` 네이티브 프로젝트 에이전트를 사용한다.
+- Codex: 사용 가능한 subagent 또는 별도 task에 정본의 역할 계약을 전달한다.
+- Context Agent와 Verification Agent는 읽기 전용이다.
+- `blocking` 모드에서 Context Receipt가 없으면 구현을 시작하지 않는다.
+- `blocking` 모드에서 Verification Receipt가 없으면 Done, PR, merge, publish, deploy로 이동하지 않는다.
+- 처음 5개 실제 작업은 `warning`, 이후에는 `blocking` 모드를 권장한다.
+- 런타임이 독립 에이전트를 제공하지 않으면 `Degraded`로 보고하고 완료 전 사용자 승인을 받는다.
+
+기계 검사는 `npx solmate-skills preflight TASK-ID`와 `npx solmate-skills verify TASK-ID`를 사용한다. `--strict`는 누락 시 non-zero로 차단한다.
+
+v1 구조화 산출물을 선택한 작업은 `npx solmate-skills validate-harness manifest|message|events <path>`를 warning 모드로 실행한다. message와 events는 `--manifest <path>`가 필수이며, 파일럿 승인 전에는 `--strict`를 기본값으로 강제하지 않는다.
 
 ---
 
@@ -30,14 +46,16 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 1. 계획 수립
 - 요구사항·목적을 문서 또는 이슈 기준으로 정리한다.
-- 백로그 항목이 있으면 `Related Concept Docs`, `Related UI Docs`, `Related Technical Docs`, `Related QA Docs`를 먼저 읽고 구현 입력값으로 요약한다.
+- 백로그 항목에 `Work Type`을 `code`, `deploy`, `docs`, `prototype` 중 하나로 기록한다.
+- `code`와 `deploy` 작업은 Context Agent가 `Related Concept Docs`, `Related UI Docs`, `Related HTML Preview`, `Related Technical Docs`, `Related QA Docs`를 모두 읽고 Context Receipt를 백로그에 기록한다.
+- Coordinator는 Context Receipt의 `Required References Read`가 모든 링크 문서를 포함하는지 확인하고 `preflight TASK-ID`를 실행한다.
 - 코드 작성보다 먼저 HTML UI Preview Gate를 확인한다. `docs/02_UI_Screens/previews/`의 HTML Preview가 없거나 UI 문서에 링크되지 않았거나 사용자 확인 기록이 없으면 구현 계획을 보류하고 `docs-plan` 문서/HTML 보완을 제안한다.
 - 그 다음 UI-First Gate를 확인한다. 화면 구조, 사용자 동선, 데이터 흐름, 로딩·빈 상태·오류 상태가 문서화되지 않았으면 구현 계획을 보류하고 `docs-plan` 또는 `docs-dev` 문서 보완을 제안한다.
 - Pre-Code Technical Brief를 확인한다. 데이터 소스, 최소 필드, mutation, 상태 관리 방식, acceptance criteria가 불명확하면 구현 전에 사용자와 합의한다.
 - Component & Library Planning Gate를 확인한다. 사용할 shadcn/ui 컴포넌트, 커스텀 컴포넌트, 기존 재사용 컴포넌트, 새 라이브러리, 설치하지 않을 라이브러리, shadcn `init`/`apply` 적용 여부가 불명확하면 구현 전에 `tools-shadcn`, `rules-react`, `docs-dev` 보완을 제안한다.
 - Step 4에서 `rules-dev`의 Minimal Implementation Gate 정본을 기준으로 과잉 구현 후보를 확인한다.
 - 변경할 파일·추가할 컴포넌트·API·DB 영향 범위를 나열한다.
-- 체크: [ ] 목적이 명확한가? [ ] 관련 문서를 읽었는가? [ ] HTML UI Preview를 확인했는가? [ ] UI-First Gate가 확인되었는가? [ ] 최소 기술 계약이 확인되었는가? [ ] Component & Library Plan이 확인되었는가? [ ] 영향 범위가 정리되었는가?
+- 체크: [ ] 목적이 명확한가? [ ] Work Type이 기록되었는가? [ ] Context Receipt가 PASS인가? [ ] 관련 문서를 읽었는가? [ ] HTML UI Preview를 확인했는가? [ ] UI-First Gate가 확인되었는가? [ ] 최소 기술 계약이 확인되었는가? [ ] Component & Library Plan이 확인되었는가? [ ] 영향 범위가 정리되었는가?
 
 ### Step 2. 계획 검토
 - 계획이 요구사항과 일치하는지, 누락된 시나리오는 없는지 검토한다.
@@ -59,17 +77,21 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 5. 구현
 - 승인된 계획대로 구현한다. AGENTS.md·프로젝트 컨벤션(커밋, Zod, Luxon 등)을 따른다.
+- `code`와 `deploy` 작업은 Context Receipt를 먼저 확인한다. 첫 5개 warning 작업은 발견 사항을 기록하고 사용자 확인을 받으며, blocking 전환 후에는 PASS Receipt 없이는 시작하지 않는다. `preflight TASK-ID --strict`가 차단되면 문서·Receipt를 보완한 뒤 재실행한다.
+- Implementation Agent는 승인 범위만 수정하고 Change Receipt를 남긴다. Change Receipt는 독립 검증을 대체하지 않는다.
 - 코드 작성 전 백로그 항목의 `Implementation Preconditions`와 `Acceptance Criteria`를 확인한다. 관련 문서 링크가 비어 있거나 `N/A - 사유`가 부실하면 구현을 보류하고 문서 보완 필요 여부를 사용자에게 확인한다.
 - HTML UI Preview Gate가 통과되지 않았거나 사용자가 HTML Preview를 확인하지 않았다면 구현을 시작하지 않는다.
 - UI-First Gate가 통과되지 않았거나 사용자가 화면/UI를 먼저 확인하지 않았다면 구현을 시작하지 않는다.
 - Component & Library Planning Gate가 통과되지 않았다면 구현을 시작하지 않는다. 새 컴포넌트·새 라이브러리·shadcn preset 적용이 필요하면 현재 화면과 acceptance criteria 기준의 근거를 먼저 설명한다.
 - 비프로토타입 작업에서 `rules-dev`의 Minimal Implementation Gate를 통과하지 못했다면 구현을 시작하지 않는다. 새 추상화·새 의존성·새 설정이 필요하면 현재 요구사항 근거를 먼저 설명한다.
 - 구현을 시작하기 직전에 `Flow Status Block`을 출력하고, 현재 위치가 `Phase 3 — React 변환` 또는 해당 기능 구현 단계인지 명시한다.
-- 체크: [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가? [ ] HTML Preview 확인 후 구현했는가? [ ] 화면·동선·데이터 흐름 확인 후 구현했는가? [ ] Component & Library Plan을 반영했는가? [ ] 최소 구현 원칙을 지켰는가?
+- 체크: [ ] Context Receipt가 PASS인가? [ ] 계획 대비 변경 사항이 일치하는가? [ ] 백로그의 관련 문서 기준을 반영했는가? [ ] HTML Preview 확인 후 구현했는가? [ ] 화면·동선·데이터 흐름 확인 후 구현했는가? [ ] Component & Library Plan을 반영했는가? [ ] 최소 구현 원칙을 지켰는가? [ ] Change Receipt를 남겼는가?
 
 ---
 
 ## Phase 3: Verify Implementation (Steps 6–10)
+
+`code`와 `deploy` 작업은 Implementation Agent와 분리된 Verification Agent가 이 단계를 수행한다. 검증자는 발견 사항을 직접 수정하지 않고 Verification Receipt로 Coordinator에 반환한다. 수정이 필요하면 Implementation Agent가 처리한 뒤 새 검증을 실행한다.
 
 ### Step 6. 목적 부합 검토
 - 구현이 원래 목적과 요구사항에 맞게 동작하는지 확인한다.
@@ -127,8 +149,10 @@ Follow this workflow for feature implementation and significant code changes. Co
 
 ### Step 17. 배포 가능 퀄리티 최종 검토
 - "이대로 배포해도 될 수준인가?"를 한 번 더 검토한다. 1–16단계에서 누락된 항목이 없는지 확인한다.
+- `code`와 `deploy` 작업은 Verification Receipt에 `Status: PASS`, 실행 명령 결과, 미실행 항목의 사유, QA 문서 또는 PR 상세 근거 링크가 있어야 한다.
+- 첫 5개 warning 작업은 검증 발견 사항을 기록하고 사용자 확인을 받는다. blocking 전환 후 `npx solmate-skills verify TASK-ID --strict`가 통과하지 않으면 Done, PR, merge, publish, deploy를 차단한다.
 - 최종 검토 시 `Flow Status Block`을 출력하고, 다음 위치가 `Phase 6 — Ship/Handoff`인지 명시한다.
-- 체크: [ ] 배포 전 필수 조건 충족 [ ] 롤백·모니터링 고려 여부
+- 체크: [ ] 독립 Verification Receipt PASS [ ] 검증 근거 링크 존재 [ ] strict verify 통과 [ ] 배포 전 필수 조건 충족 [ ] 롤백·모니터링 고려 여부
 
 ---
 
@@ -137,7 +161,8 @@ Follow this workflow for feature implementation and significant code changes. Co
 ### Step 18. 커밋 및 PR 작성
 - 프로젝트 커밋 컨벤션(`type(scope): subject`, 한글, 상세 3줄 이상)에 맞춰 커밋한다.
 - PR에는 변경 목적, 영향 범위, 테스트/검증 방법을 요약해 적는다.
-- 체크: [ ] 커밋 메시지 규칙 준수 [ ] PR 설명으로 리뷰어가 맥락 파악 가능
+- warning 기간에는 Verification Receipt 발견 사항과 사용자 진행 승인을 PR에 기록한다. blocking 전환 후에는 Verification Receipt가 PASS가 아니거나 상세 검증 근거가 없으면 PR을 생성하지 않는다.
+- 체크: [ ] Verification Receipt PASS 또는 warning 사용자 승인 [ ] 커밋 메시지 규칙 준수 [ ] PR 설명으로 리뷰어가 맥락 파악 가능
 
 ---
 

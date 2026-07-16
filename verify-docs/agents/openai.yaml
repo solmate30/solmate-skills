@@ -1,4 +1,4 @@
 interface:
   display_name: "Docs Verification"
-  short_description: "Audit docs, metadata, and HTML previews"
-  default_prompt: "Use $verify-docs to audit five-layer docs, metadata, links, and HTML UI previews."
+  short_description: "Audit docs, links, previews, and receipts"
+  default_prompt: "Use $verify-docs to audit five-layer docs, metadata, links, HTML UI previews, and Agent Harness Context and Verification Receipts."

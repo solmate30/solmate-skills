@@ -1,4 +1,4 @@
 interface:
   display_name: "Product Workflow"
-  short_description: "Orchestrate planning, UI previews, docs, QA"
-  default_prompt: "Use $rules-product to diagnose the current phase, gates, HTML previews, and next skill."
+  short_description: "Orchestrate product phases and agent gates"
+  default_prompt: "Use $rules-product to diagnose the current phase, UI and component gates, Context Receipt readiness, independent verification, and the next skill."
