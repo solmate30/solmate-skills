@@ -1,6 +1,6 @@
 {
   "name": "solmate-skills",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "description": "AI agent harness and workflow skills for context-aware planning, implementation, verification, docs, and QA",
   "main": "bin/cli.js",
   "bin": {

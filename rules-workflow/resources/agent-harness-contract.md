@@ -22,6 +22,8 @@ The main conversation owns phase diagnosis, user approval, handoffs, and final s
 - to Done, PR, merge, publish, or deploy without a passing Verification Receipt;
 - past a failed receipt without returning the task to the responsible role.
 
+The Coordinator owns internal harness operation. It resolves the backlog task, runs `preflight`, `verify`, and any opted-in structured validation, then reports results in plain language. It must never tell the user to type an internal CLI command, supply a task ID, or create a Receipt merely to advance a normal feature request.
+
 ### Context Agent
 
 Read-only. Read every linked backlog reference and return a Context Receipt. Do not edit files, run destructive commands, or implement the task.
@@ -62,7 +64,7 @@ The two mandatory failures are always visible in both modes:
 1. a linked required document was not recorded as read;
 2. a code or deploy task has no passing verification evidence.
 
-Run the machine checks with:
+The Coordinator or CI runs the machine checks internally:
 
 ```bash
 npx solmate-skills preflight TASK-000
@@ -72,6 +74,8 @@ npx solmate-skills verify TASK-000 --strict
 ```
 
 `--strict` is an alias for `--mode blocking`. The default backlog path is `docs/04_Logic_Progress/00_BACKLOG.md`; override it with `--backlog <path>`.
+
+These commands are runtime and CI interfaces, not the normal human workflow. When a check blocks progress, explain the missing document, evidence, or failed verification and the decision needed from the user.
 
 ## 5. Receipt Contracts
 
@@ -134,7 +138,7 @@ Rules:
 
 ## 6. Versioned Structured Artifacts
 
-The existing backlog Receipts remain valid. Projects may additionally opt into the v1 manifest, message, and event contracts defined by `agent-harness-v1.schema.json` in this directory.
+The existing backlog Receipts remain valid. Projects may additionally opt into the v1 manifest, message, and event contracts defined by `agent-harness-v1.schema.json` in this directory. The Coordinator or CI manages these artifacts; a normal feature requester does not create or validate them manually.
 
 ```bash
 npx solmate-skills validate-harness manifest _workspace/harness/TASK-000/manifest.json

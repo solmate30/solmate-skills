@@ -1,6 +1,6 @@
 # Agent Harness Architecture
 > Created: 2026-07-17 01:04
-> Last Updated: 2026-07-17 01:53
+> Last Updated: 2026-07-17 03:19
 
 ## 1. Architecture Goal
 
@@ -21,6 +21,7 @@ The architecture is deliberately split into two layers:
 6. **Failures are states, not prose**: the Coordinator records a typed state and legal next action.
 7. **No silent degradation**: missing critical context, design, code, or verification cannot be hidden by a partial final report.
 8. **Adapters are thin**: runtime-specific tool names never become canonical workflow rules.
+9. **Human requests stay simple**: the Coordinator runs Harness checks internally and reports evidence or a blocked decision without requiring users to know CLI commands, task IDs, or Receipt formats.
 
 ## 3. System Context And Data Flow
 
@@ -34,7 +35,7 @@ The Coordinator owns the task state. Specialists produce versioned artifacts. Th
 
 | Role | Activation | Primary Responsibility | Write Authority |
 |---|---|---|---|
-| Coordinator | Always | User communication, topology selection, state transitions, approvals, handoffs, completion decision | Backlog, decision and receipt summaries only |
+| Coordinator | Always | User communication, topology selection, state transitions, approvals, handoffs, internal Harness checks, and completion decision | Backlog, decision and receipt summaries only |
 | Context Reader | Code and deploy; advisory elsewhere | Read all linked references, detect conflicts, return Context Receipt | None |
 | Implementer | After required design and Context gates pass | Change only approved files and return Change Receipt | Declared implementation ownership |
 | QA Inspector | After a Change Receipt; incrementally for complex work | Independently inspect boundaries, execute checks, return findings and Verification Receipt | None, except a separately approved QA report written by Coordinator |
@@ -346,6 +347,7 @@ Rules:
 
 - Existing backlog tasks remain valid until they opt into the enhanced fields.
 - Existing `Context Receipt`, `Change Receipt`, `Verification Receipt`, `preflight`, and `verify` behavior remains compatible.
+- Coordinator and CI own those commands; ordinary feature requests do not expose them as a user action.
 - New structured manifests begin in warning mode.
 - The first five real code/deploy tasks collect false-positive and missing-capability evidence.
 - Blocking mode activates only after the pilot review and user approval.

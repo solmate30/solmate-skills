@@ -124,7 +124,12 @@ Coordinator
 - Codex uses available subagents or separate tasks with the same canonical contract from `rules-workflow/resources/agent-harness-contract.md`.
 - The verifier reports findings but does not modify source files.
 - Receipt summaries stay in the backlog; detailed verification links to a QA document or GitHub PR.
-- Use warning mode for the first five real tasks, then switch to blocking checks:
+- For normal feature work, the Coordinator runs Context and Verification checks internally. Do not ask the user to run a Harness command, choose a task ID, or fill in a Receipt. Report only a PASS/FAIL result or the missing decision and document.
+
+<details>
+<summary>Advanced: runtime and CI commands</summary>
+
+Use warning mode for the first five real tasks, then let the Coordinator or CI switch to blocking checks:
 
 ```bash
 npx solmate-skills preflight TASK-000 --strict
@@ -141,11 +146,14 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
 
 Add `--strict` for blocking validation. Contract failures then exit `1`; malformed JSON, missing files, and invalid command input exit `2`. Existing backlog-only projects do not need to create these files.
 
+</details>
+
 ### Individual verify-* vs master
 
 | Situation | Use |
 |:---|:---|
-| Full pre-PR / pre-release | `verify-implementation` |
+| Feature implementation just finished | Coordinator automatically invokes `verify-implementation` |
+| Explicit full audit request | `verify-implementation` |
 | Docs only changed | `verify-docs` |
 | TSX screens only | `verify-ui` |
 | API / auth / env changed | `verify-security` (+ `verify-code` if needed) |
@@ -477,6 +485,7 @@ Use `N/A - reason` when a doc does not exist. Pause implementation if a missing 
 - Context and Verification agents are read-only
 - Verification details must link to an existing `docs/05_QA_Validation/` document or GitHub PR
 - Default CLI mode is `warning`; `--strict` returns a blocking non-zero exit
+- `preflight`, `verify`, and `validate-harness` are Coordinator/CI interfaces, not commands a normal user needs to run
 
 ### YAGNI/KISS/DRY Gate
 
@@ -707,7 +716,12 @@ Coordinator
 - Codex는 `rules-workflow/resources/agent-harness-contract.md`의 같은 계약을 subagent 또는 별도 task에 전달합니다.
 - 검증자는 문제를 직접 수정하지 않고 Implementation Agent로 돌려보냅니다.
 - Receipt 요약은 백로그에, 상세 검증 근거는 QA 문서 또는 GitHub PR에 남깁니다.
-- 처음 5개 실제 작업은 warning으로 확인한 뒤 blocking으로 전환합니다.
+- 일반 기능 작업에서는 Coordinator가 Context·Verification 검사를 내부적으로 실행합니다. 사용자에게 Harness 명령, Task ID, Receipt 작성을 요구하지 않고 통과/실패 결과 또는 필요한 결정과 문서만 설명합니다.
+
+<details>
+<summary>고급: 런타임·CI 명령</summary>
+
+처음 5개 실제 작업은 Coordinator 또는 CI가 warning으로 확인한 뒤 blocking으로 전환합니다.
 
 ```bash
 npx solmate-skills preflight TASK-000 --strict
@@ -724,11 +738,14 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
 
 차단 검증에는 `--strict`를 추가합니다. 계약 위반은 종료 코드 `1`, JSON 파싱·파일·명령 입력 오류는 종료 코드 `2`입니다. 기존 백로그 Receipt만 사용하는 프로젝트는 이 파일을 만들 필요가 없습니다.
 
+</details>
+
 ### verify-* 개별 vs 통합
 
 | 상황 | 사용 |
 |:---|:---|
-| PR·배포 전 전체 점검 | `verify-implementation` |
+| 기능 구현 직후 | Coordinator가 `verify-implementation`을 자동 실행 |
+| 명시적 전체 점검 요청 | `verify-implementation` |
 | 문서만 수정함 | `verify-docs` |
 | TSX 화면만 수정함 | `verify-ui` |
 | API·auth·env 수정함 | `verify-security` (+ 필요 시 `verify-code`) |

@@ -45,9 +45,9 @@ The installer copies each selected skill folder into `.agent/skills/<skill-name>
 - **Versioned harness artifacts**: `validate-harness` checks v1 task manifests, structured messages, ordered state events, role activation, evidence gates, and exclusive write ownership.
 - **Release verification**: `/verify-implementation` runs the verification family for docs, UI, code, security, performance, DB schema, and skill package readiness.
 
-## What's New in 2.0.13: Agent Harness Contracts
+## Agent Harness
 
-`solmate-skills@2.0.13` strengthens the existing Solmate workflow with a shared Claude/Codex agent harness. It addresses two recurring failure modes in long AI-assisted projects:
+The shared Claude/Codex agent harness strengthens the existing Solmate workflow. It addresses two recurring failure modes in long AI-assisted projects:
 
 1. An implementation starts from a backlog item without reading the linked concept, UI, technical, and QA documents.
 2. An agent marks work complete based only on its own summary, without independent verification evidence.
@@ -71,27 +71,28 @@ Coordinator
 
 The canonical contract lives at [`rules-workflow/resources/agent-harness-contract.md`](./rules-workflow/resources/agent-harness-contract.md).
 
-### Backlog Receipt checks
+### Default behavior: ask for a feature, receive a verified result
 
-Existing projects can keep their current `00_BACKLOG.md` workflow and add the checks incrementally:
+You do not run Harness commands during normal feature work. Ask the coding agent to implement the feature; the Coordinator finds the backlog task, checks the linked documents before coding, and starts independent verification immediately after implementation.
+
+| You say | The agent does internally | You receive |
+|:---|:---|:---|
+| "Implement file upload" | Finds the related backlog task, reads its linked documents, and runs the Context gate | Either implementation begins or a plain-language explanation of the missing decision or document |
+| "The feature is done" | Runs `verify-implementation`, relevant checks, and the Verification gate | A concise PASS/FAIL report, remaining risks, and the next decision only when needed |
+
+The agent must not ask you to type `preflight`, `verify`, `validate-harness`, a task ID, or Receipt content. When a gate blocks progress, it explains what is missing rather than exposing its internal command.
+
+### Advanced automation and CI
+
+The following interfaces are for Coordinator runtimes, CI, and teams building custom automation. They are optional; existing backlog Receipt projects do not need structured artifacts.
+
+<details>
+<summary>Internal Receipt and structured-artifact commands</summary>
 
 ```bash
-# Confirm required linked documents were read before coding
-npx solmate-skills preflight TASK-000
-
-# Confirm independent command and QA/PR evidence before completion
-npx solmate-skills verify TASK-000
-
-# Turn findings into blocking exit codes for CI or release gates
 npx solmate-skills preflight TASK-000 --strict
 npx solmate-skills verify TASK-000 --strict
-```
 
-### Versioned manifest, message, and event checks
-
-Projects that need structured multi-agent coordination can opt into the v1 contract without rewriting existing backlog Receipts:
-
-```bash
 npx solmate-skills validate-harness manifest _workspace/harness/TASK-000/manifest.json
 npx solmate-skills validate-harness message _workspace/harness/TASK-000/attempt-01/messages/msg-001.json \
   --manifest _workspace/harness/TASK-000/manifest.json
@@ -99,7 +100,7 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
   --manifest _workspace/harness/TASK-000/manifest.json
 ```
 
-[`agent-harness-v1.schema.json`](./rules-workflow/resources/agent-harness-v1.schema.json) defines the manifest, message, and state-event shapes. The validator additionally checks task identity, legal state transitions, active roles, message authority, required evidence, canonical file paths, and exclusive write ownership.
+[`agent-harness-v1.schema.json`](./rules-workflow/resources/agent-harness-v1.schema.json) defines the manifest, message, and state-event shapes. The validator checks task identity, legal state transitions, active roles, message authority, required evidence, canonical file paths, and exclusive write ownership.
 
 | Mode / result | Exit code | Behavior |
 |:---|:---:|:---|
@@ -107,6 +108,8 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
 | Default warning mode, contract finding | `0` | Reports findings without blocking migration |
 | `--strict`, contract finding | `1` | Blocks the workflow or CI step |
 | Invalid command input, unreadable file, malformed JSON/JSONL | `2` | Reports an operational error |
+
+</details>
 
 ### Compatibility and current scope
 
@@ -116,6 +119,19 @@ npx solmate-skills validate-harness events _workspace/harness/TASK-000/events.js
 - Claude Code can install the current namespaced `solmate-*` project agents with `install agents`; Codex follows the same canonical contract through its available delegation mechanism.
 - Specialist personas, runtime orchestration, persistent recovery, pilot automation, and blocking rollout remain separate follow-up work.
 - This release ships the contract and validation foundation; specialist personas and runtime orchestration remain separately gated follow-up work.
+
+## What's New in 2.0.14
+
+`solmate-skills@2.0.14` makes verification an agent responsibility instead of a user checklist.
+
+- After implementation, the Coordinator automatically starts `verify-implementation` and the required Harness Receipt checks before reporting completion.
+- Context and Verification agents run their applicable checks internally and return plain-language results or a blocked decision.
+- `npx solmate-skills list` now describes automatic workflow verification rather than presenting internal Harness commands as the default path.
+- README and `USAGE.md` keep `preflight`, `verify`, and `validate-harness` in advanced runtime/CI guidance.
+
+## What's New in 2.0.13
+
+`solmate-skills@2.0.13` introduced the shared Agent Harness contract, versioned artifacts, Context/Change/Verification Receipts, and the `validate-harness` validator.
 
 ## What's New in 2.0.12
 
@@ -176,7 +192,8 @@ Install skills, then invoke one command based on your situation.
 |:---|:---|:---|
 | New project or "where do I start?" | `/rules-product` | Diagnoses phase and delegates to the right skill |
 | Implement one feature | `/rules-product` then `/rules-workflow` | Gates must pass before coding |
-| Pre-PR / pre-release check | `/verify-implementation` | Runs the verify-* family in order |
+| Feature implementation just finished | No extra command | The Coordinator automatically starts `verify-implementation` and reports the result |
+| Explicit audit request | `/verify-implementation` | Runs the verify-* family in order |
 
 **Recommended first line:**
 
@@ -218,12 +235,7 @@ npx solmate-skills@latest install hooks
 npx solmate-skills@latest install agents
 ```
 
-For a `code` or `deploy` backlog item:
-
-```bash
-npx solmate-skills preflight TASK-000 --strict
-npx solmate-skills verify TASK-000 --strict
-```
+For a `code` or `deploy` backlog item, ask the agent to implement the feature. The Coordinator handles the Context and Verification gates internally and reports only the result or the decision needed to unblock it.
 
 Example prompts: [USAGE.md §9 Recommended Prompts](./USAGE.md#9-recommended-prompts) (EN) · [§9 권장 프롬프트](./USAGE.md#9-권장-프롬프트-모음) (KO)
 

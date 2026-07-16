@@ -156,4 +156,13 @@ for (const fileName of ['solmate-context-reader.md', 'solmate-implementer.md', '
     assert(fs.existsSync(path.join(customAgentDir, fileName)), `${fileName} was not installed`);
 }
 
+const listOutput = childProcess.spawnSync(
+    process.execPath,
+    [cliPath, 'list'],
+    { cwd: root, encoding: 'utf8' },
+);
+assert.strictEqual(listOutput.status, 0, listOutput.stderr || listOutput.stdout);
+assert(listOutput.stdout.includes('Feature work is verified automatically'));
+assert(!listOutput.stdout.includes('preflight TASK-000'));
+
 console.log('harness checks ok');
